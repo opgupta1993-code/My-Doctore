@@ -80,7 +80,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
       title: "Hello My Doctor",
       theme: ThemeUtils.lightTheme,
       darkTheme: ThemeUtils.darkTheme,

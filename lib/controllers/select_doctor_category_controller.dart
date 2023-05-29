@@ -1,11 +1,14 @@
 import 'package:flutter_hello_my_doctor/models/doctor_category_model.dart';
 import 'package:flutter_hello_my_doctor/networking/network_calls.dart';
+import 'package:flutter_hello_my_doctor/routes/routes.dart';
 import 'package:flutter_hello_my_doctor/utils/utils.dart';
 import 'package:get/get.dart';
 
 class SelectDoctorCategoryController extends GetxController {
   late final RxBool loading;
   late final List<DoctorCategoryModel> _dataList;
+
+  DoctorCategoryModel? _selectedDoctorCategory;
 
   @override
   void onInit() {
@@ -35,5 +38,13 @@ class SelectDoctorCategoryController extends GetxController {
     loading.value = false;
   }
 
+  Future<void> onCategorySelected(DoctorCategoryModel data) async {
+    _selectedDoctorCategory = data;
+
+    await Future.delayed(const Duration(milliseconds: 100));
+    Routes.selectCityScreen();
+  }
+
   List<DoctorCategoryModel> get dataList => _dataList;
+  DoctorCategoryModel? get selectedDoctorCategory => _selectedDoctorCategory;
 }

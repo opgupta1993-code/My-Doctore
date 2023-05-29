@@ -1,11 +1,15 @@
 import 'package:flutter_hello_my_doctor/bindings/auth_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/drawer_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/login_without_login_binding.dart';
+import 'package:flutter_hello_my_doctor/bindings/make_appointment_binding.dart';
+import 'package:flutter_hello_my_doctor/bindings/select_city_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/select_doctor_category_binding.dart';
 import 'package:flutter_hello_my_doctor/screens/auth/login_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/auth/signup_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/drawer/drawer_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/login_without_login_screen.dart';
+import 'package:flutter_hello_my_doctor/screens/make_appointment_screen.dart';
+import 'package:flutter_hello_my_doctor/screens/select_city_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/select_doctor_category_screen.dart';
 import 'package:get/get.dart';
 
@@ -65,6 +69,20 @@ class Routes {
       binding: SelectDoctorCategoryBinding(),
       showCupertinoParallax: true,
     ),
+    GetPage(
+      name: "/selectCityScreen",
+      page: () => SelectCityScreen(),
+      popGesture: true,
+      binding: SelectCityBinding(),
+      showCupertinoParallax: true,
+    ),
+    GetPage(
+      name: "/makeAppointmentScreen",
+      page: () => MakeAppointmentScreen(),
+      popGesture: true,
+      binding: MakeAppointmentBinding(),
+      showCupertinoParallax: true,
+    ),
   ];
 
   static Future<void> splashScreen() async {
@@ -93,5 +111,13 @@ class Routes {
 
   static Future<void> selectDoctorCategoryScreen() async {
     return await Get.toNamed("/selectDoctorCategoryScreen");
+  }
+
+  static Future<void> selectCityScreen() async {
+    return await Get.toNamed("/selectCityScreen");
+  }
+
+  static Future<void> makeAppointmentScreen() async {
+    return await Get.toNamed("/makeAppointmentScreen");
   }
 }

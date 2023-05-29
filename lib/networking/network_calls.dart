@@ -181,4 +181,9 @@ class NetworkCalls {
     const String path = "/categories";
     return await _postRequest(path);
   }
+
+  static Future<Map> getCities() async {
+    const String path = "/locations";
+    return await _postRequest(path);
+  }
 }

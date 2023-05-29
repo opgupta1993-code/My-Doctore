@@ -1,23 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_hello_my_doctor/controllers/select_doctor_category_controller.dart';
-import 'package:flutter_hello_my_doctor/models/doctor_category_model.dart';
+import 'package:flutter_hello_my_doctor/models/city_model.dart';
 import 'package:flutter_hello_my_doctor/widgets/circular_loading_widget.dart';
-import 'package:flutter_hello_my_doctor/widgets/no_data_found_widget.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../controllers/select_city_controller.dart';
 import '../utils/theme_utils.dart';
 import '../widgets/back_button_widget.dart';
+import '../widgets/no_data_found_widget.dart';
 
 // ignore: must_be_immutable
-class SelectDoctorCategoryScreen extends StatelessWidget {
-  SelectDoctorCategoryScreen({super.key});
+class SelectCityScreen extends StatelessWidget {
+  SelectCityScreen({super.key});
 
   final double _height = Get.height, _width = Get.width;
 
-  SelectDoctorCategoryController? _controller;
+  SelectCityController? _controller;
 
   PreferredSizeWidget get _buildAppbarWidget => PreferredSize(
         preferredSize: AppBar().preferredSize,
@@ -37,7 +37,7 @@ class SelectDoctorCategoryScreen extends StatelessWidget {
                 SizedBox(width: _width * 0.03),
                 Expanded(
                   child: Text(
-                    "Select Category",
+                    "Select Your City",
                     style: GoogleFonts.rubik(
                       fontWeight: FontWeight.bold,
                       fontSize: cons.maxHeight * 0.32,
@@ -51,19 +51,19 @@ class SelectDoctorCategoryScreen extends StatelessWidget {
         ),
       );
 
-  Widget _buildCategoryItemWidget(DoctorCategoryModel data) => Stack(
+  Widget _buildCategoryItemWidget(CityModel data) => Stack(
         children: [
           LayoutBuilder(builder: (context, cons) {
             return Column(
               children: [
                 SizedBox(
-                  height: cons.maxHeight * 0.78,
+                  height: cons.maxHeight * 0.72,
                   width: double.infinity,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(_width * 0.02),
                     child: CachedNetworkImage(
                       imageUrl: data.image,
-                      height: cons.maxHeight * 0.78,
+                      height: cons.maxHeight * 0.72,
                       width: double.infinity,
                       fit: BoxFit.cover,
                       progressIndicatorBuilder: (context, _, __) => SizedBox(
@@ -87,13 +87,13 @@ class SelectDoctorCategoryScreen extends StatelessWidget {
                 SizedBox(height: cons.maxHeight * 0.02),
                 Expanded(
                   child: Text(
-                    data.categoryName,
+                    data.name,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.rubik(
                       fontWeight: FontWeight.w600,
-                      fontSize: cons.maxHeight * 0.076,
+                      fontSize: cons.maxHeight * 0.11,
                       color: Colors.black,
                     ),
                   ),
@@ -106,7 +106,7 @@ class SelectDoctorCategoryScreen extends StatelessWidget {
               color: Colors.transparent,
               child: InkWell(
                 borderRadius: BorderRadius.circular(_width * 0.02),
-                onTap: () => _controller!.onCategorySelected(data),
+                onTap: () => _controller!.onCitySelected(data),
               ),
             ),
           ),
@@ -121,7 +121,7 @@ class SelectDoctorCategoryScreen extends StatelessWidget {
           horizontal: _width * 0.13,
         ),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
+          crossAxisCount: 3,
           crossAxisSpacing: _width * 0.1,
           mainAxisSpacing: _height * 0.02,
           childAspectRatio: 0.65,
@@ -133,7 +133,7 @@ class SelectDoctorCategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _controller ??= Get.find<SelectDoctorCategoryController>();
+    _controller ??= Get.find<SelectCityController>();
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: ThemeUtils.getStatusNavBarTheme(context),
@@ -172,6 +172,16 @@ class SelectDoctorCategoryScreen extends StatelessWidget {
               Column(
                 children: [
                   _buildAppbarWidget,
+                  SizedBox(height: _height * 0.02),
+                  SizedBox(
+                    height: _height * 0.15,
+                    width: double.infinity,
+                    child: Image.asset(
+                      "assets/images/select_city_artwork.webp",
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  SizedBox(height: _height * 0.02),
                   Expanded(
                     child: Obx(
                       () => _controller!.loading.value

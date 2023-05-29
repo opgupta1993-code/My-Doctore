@@ -13,7 +13,7 @@ class ProfileButtonWidget extends StatelessWidget {
 
   ProfileButtonWidget({this.onPressed, this.radius, Key? key})
       : super(key: key);
-  final double _height = Get.height, _width = Get.width;
+  final double _height = Get.height;
 
   UserController? _userController;
 
