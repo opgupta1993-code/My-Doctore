@@ -48,6 +48,10 @@ dependencies:
   pin_code_fields: ^7.4.0
   mime: ^1.0.4
   flutter_rating_bar: ^4.0.1
+  dropdown_search: ^5.0.6
+  syncfusion_flutter_gauges: ^21.2.8
+  paytm_allinonesdk: ^1.2.1
+  modal_bottom_sheet: ^3.0.0-pre
 
 dev_dependencies:
   flutter_test:

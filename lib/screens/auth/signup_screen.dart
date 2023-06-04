@@ -148,8 +148,24 @@ class SignupScreen extends StatelessWidget {
                 ),
                 SizedBox(height: _height * 0.025),
                 _buildTextFieldWidget(
+                  _controller!.mobileController,
+                  "Mobile",
+                  inputType: TextInputType.phone,
+                  validator: (val) => Utils.validator2(
+                    val,
+                    "Required",
+                    isMobile: true,
+                  ),
+                ),
+                SizedBox(height: _height * 0.025),
+                _buildTextFieldWidget(
                   _controller!.emailController,
                   "Email",
+                  validator: (val) => Utils.validator2(
+                    val,
+                    "Required",
+                    isEmail: true,
+                  ),
                 ),
                 SizedBox(height: _height * 0.025),
                 _buildTextFieldWidget(
@@ -186,7 +202,7 @@ class SignupScreen extends StatelessWidget {
           ),
           SizedBox(height: _height * 0.04),
           _buildSignUpButtonWidget,
-          SizedBox(height: _height * 0.105),
+          SizedBox(height: _height * 0.02),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

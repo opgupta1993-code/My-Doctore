@@ -48,6 +48,8 @@ Future<void> _dependencyInjection() async {
     final String userDataString = preferences.getString("userData") ?? "{}";
     final Map userData = jsonDecode(userDataString);
 
+    print("userDataString --> $userDataString");
+
     userController.setUser = UserModel.fromJson(userData);
   }
 

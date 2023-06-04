@@ -8,7 +8,7 @@ class LoginWithoutLoginController extends GetxController {
     if (type == 0) {
       Routes.loginScreen();
     } else {
-      Routes.drawerScreen();
+      Routes.selectCityScreen();
     }
   }
 }

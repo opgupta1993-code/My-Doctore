@@ -5,6 +5,6 @@ import '../controllers/select_city_controller.dart';
 class SelectCityBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => SelectCityController());
+    Get.put(SelectCityController(), permanent: true);
   }
 }

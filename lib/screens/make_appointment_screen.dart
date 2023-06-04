@@ -85,7 +85,7 @@ class MakeAppointmentScreen extends StatelessWidget {
           hintText: hint,
           hintStyle: GoogleFonts.rubik(
             fontWeight: FontWeight.w300,
-            color: HexColor(CustomColors.grey5),
+            color: HexColor(CustomColors.grey1),
             fontSize: _height * 0.017,
           ),
           border: _buildOutlineInputBorder(),

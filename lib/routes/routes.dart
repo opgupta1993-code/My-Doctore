@@ -1,16 +1,22 @@
 import 'package:flutter_hello_my_doctor/bindings/auth_binding.dart';
+import 'package:flutter_hello_my_doctor/bindings/doctor_details_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/drawer_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/login_without_login_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/make_appointment_binding.dart';
+import 'package:flutter_hello_my_doctor/bindings/profile_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/select_city_binding.dart';
+import 'package:flutter_hello_my_doctor/bindings/select_doctor_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/select_doctor_category_binding.dart';
 import 'package:flutter_hello_my_doctor/screens/auth/login_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/auth/signup_screen.dart';
+import 'package:flutter_hello_my_doctor/screens/doctor_details_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/drawer/drawer_screen.dart';
+import 'package:flutter_hello_my_doctor/screens/drawer/profile_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/login_without_login_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/make_appointment_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/select_city_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/select_doctor_category_screen.dart';
+import 'package:flutter_hello_my_doctor/screens/select_doctor_screen.dart';
 import 'package:get/get.dart';
 
 import '../bindings/intro_page_view_binding.dart';
@@ -77,10 +83,31 @@ class Routes {
       showCupertinoParallax: true,
     ),
     GetPage(
+      name: "/selectDoctorScreen",
+      page: () => SelectDoctorScreen(),
+      popGesture: true,
+      binding: SelectDoctorBinding(),
+      showCupertinoParallax: true,
+    ),
+    GetPage(
       name: "/makeAppointmentScreen",
       page: () => MakeAppointmentScreen(),
       popGesture: true,
       binding: MakeAppointmentBinding(),
+      showCupertinoParallax: true,
+    ),
+    GetPage(
+      name: "/doctorDetailsScreen",
+      page: () => DoctorDetailsScreen(),
+      popGesture: true,
+      binding: DoctorDetailsBinding(),
+      showCupertinoParallax: true,
+    ),
+    GetPage(
+      name: "/profileScreen",
+      page: () => ProfileScreen(),
+      popGesture: true,
+      binding: ProfileBinding(),
       showCupertinoParallax: true,
     ),
   ];
@@ -117,7 +144,19 @@ class Routes {
     return await Get.toNamed("/selectCityScreen");
   }
 
+  static Future<void> selectDoctorScreen() async {
+    return await Get.toNamed("/selectDoctorScreen");
+  }
+
   static Future<void> makeAppointmentScreen() async {
     return await Get.toNamed("/makeAppointmentScreen");
+  }
+
+  static Future<void> doctorDetailsScreen() async {
+    return await Get.toNamed("/doctorDetailsScreen");
+  }
+
+  static Future<void> profileScreen() async {
+    return await Get.toNamed("/profileScreen");
   }
 }

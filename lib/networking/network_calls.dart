@@ -1,32 +1,11 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import '../utils/utils.dart';
 import 'dio_api.dart';
 
 class NetworkCalls {
   static final List<CancelToken> _cancelTokenList = [];
-
-  static Future<bool> _isSesssionExpired(Map res) async {
-    if (!(res.containsKey("success") &&
-            res["success"] != null &&
-            res["success"]) &&
-        "${res["msg"]}".trim().toUpperCase() == "TOKEN EXPIRED") {
-      Utils.showToast("Session Expired");
-
-      // Cancel all pending network requests
-      for (CancelToken cancelToken in _cancelTokenList) {
-        cancelToken.cancel("Session Expired");
-      }
-
-      await Utils.logout();
-      return true;
-    }
-
-    return false;
-  }
 
   static Future<Map> _getRequest(
     String path, {
@@ -38,7 +17,7 @@ class NetworkCalls {
 
     Map res = {
       "success": false,
-      "msg": "Something went wrong, please try again later"
+      "message": "Something went wrong, please try again later"
     };
 
     try {
@@ -56,11 +35,6 @@ class NetworkCalls {
       );
 
       log("Response :: $path ::${response.data}");
-      final bool isSessionExpired = await _isSesssionExpired(response.data);
-
-      if (isSessionExpired) {
-        return {"success": false, "msg": "Session Expired"};
-      }
 
       res = response.data;
     } catch (err) {
@@ -84,7 +58,7 @@ class NetworkCalls {
 
     Map res = {
       "success": false,
-      "msg": "Something went wrong, please try again later"
+      "message": "Something went wrong, please try again later"
     };
 
     try {
@@ -103,11 +77,6 @@ class NetworkCalls {
       );
 
       log("Res :: $path :: ${response.data}");
-      final bool isSessionExpired = await _isSesssionExpired(response.data);
-
-      if (isSessionExpired) {
-        return {"success": false, "msg": "Session Expired"};
-      }
 
       res = response.data;
     } catch (err) {
@@ -131,7 +100,7 @@ class NetworkCalls {
 
     Map res = {
       "success": false,
-      "msg": "Something went wrong, please try again later"
+      "message": "Something went wrong, please try again later"
     };
 
     try {
@@ -150,11 +119,6 @@ class NetworkCalls {
       );
 
       log("Res :: $path :: ${response.data}");
-      final bool isSessionExpired = await _isSesssionExpired(response.data);
-
-      if (isSessionExpired) {
-        return {"success": false, "msg": "Session Expired"};
-      }
 
       res = response.data;
     } catch (err) {
@@ -168,13 +132,13 @@ class NetworkCalls {
   }
 
   static Future<Map> login(Map<String, dynamic> data) async {
-    const String path = "/auth/login";
-    return await _postRequest(path, data: jsonEncode(data));
+    const String path = "/login";
+    return await _postRequest(path, data: FormData.fromMap(data));
   }
 
   static Future<Map> signup(Map<String, dynamic> data) async {
-    const String path = "/auth/signup";
-    return await _postRequest(path, data: jsonEncode(data));
+    const String path = "/signup";
+    return await _postRequest(path, data: FormData.fromMap(data));
   }
 
   static Future<Map> getDoctorCategories() async {
@@ -185,5 +149,15 @@ class NetworkCalls {
   static Future<Map> getCities() async {
     const String path = "/locations";
     return await _postRequest(path);
+  }
+
+  static Future<Map> getDoctors(Map<String, dynamic> data) async {
+    const String path = "/doctors";
+    return await _postRequest(path, data: FormData.fromMap(data));
+  }
+
+  static Future<Map> getDoctorDetails(Map<String, dynamic> data) async {
+    const String path = "/doctor_details";
+    return await _postRequest(path, data: FormData.fromMap(data));
   }
 }

@@ -1,25 +1,42 @@
+import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/user_model.dart';
 import '../networking/network_calls.dart';
 import '../routes/routes.dart';
-import '../utils/firebase_util.dart';
 import '../utils/utils.dart';
 import 'user_controller.dart';
 
 class AuthController extends GetxController {
   late final RxBool loading;
   late final RxBool agree;
+  late final RxBool _forgotOneSheet;
+  late final RxBool _forgotTwoSheet;
+  late final RxBool _forgotThreeSheet;
 
   late final GlobalKey<FormState> _formKey;
+  late final GlobalKey<FormState> _forgotOneFormKey;
+  late final GlobalKey<FormState> _forgotTwoFormKey;
+  late final GlobalKey<FormState> _forgotThreeFormKey;
 
   late final TextEditingController nameController;
+  late final TextEditingController mobileController;
   late final TextEditingController emailController;
   late final TextEditingController pwdController;
+  late final TextEditingController fEmailController;
+  late final TextEditingController fOTPController;
+  late final TextEditingController fPwdController;
+  late final TextEditingController fCPwdController;
+
+  StreamSubscription? _forgotOneBottomSheetStateSubscription,
+      _forgotTwoBottomSheetStateSubscription,
+      _forgotThreeBottomSheetStateSubscription;
+
+  bool? _isForgotOneSheetOpen, _isForgotTwoSheetOpen, _isForgotThreeSheetOpen;
 
   late final UserController _userController;
 
@@ -40,6 +57,7 @@ class AuthController extends GetxController {
 
         nameController = TextEditingController();
         emailController = TextEditingController();
+        mobileController = TextEditingController();
         pwdController = TextEditingController();
 
         agree = false.obs;
@@ -47,9 +65,23 @@ class AuthController extends GetxController {
         break;
 
       case "loginScreen":
+        _forgotOneSheet = false.obs;
+        _forgotTwoSheet = false.obs;
+        _forgotThreeSheet = false.obs;
+        _isForgotOneSheetOpen = false;
+        _isForgotTwoSheetOpen = false;
+        _isForgotThreeSheetOpen = false;
+
         _formKey = GlobalKey<FormState>();
-        emailController = TextEditingController();
+        _forgotOneFormKey = GlobalKey<FormState>();
+        _forgotTwoFormKey = GlobalKey<FormState>();
+        _forgotThreeFormKey = GlobalKey<FormState>();
+        mobileController = TextEditingController();
         pwdController = TextEditingController();
+        fEmailController = TextEditingController();
+        fOTPController = TextEditingController();
+        fPwdController = TextEditingController();
+        fCPwdController = TextEditingController();
 
         break;
     }
@@ -57,22 +89,23 @@ class AuthController extends GetxController {
 
   Future<void> _login() async {
     final Map<String, dynamic> data = {
-      "email": emailController.text,
+      "mobile_no": mobileController.text,
       "password": pwdController.text,
-      "device_id": await FirebaseUtil.getFCMToken(),
+      "device_id": "1",
     };
 
     final Map res = await NetworkCalls.login(data);
 
     if (res["status"] == "200") {
-      final Map data = res["result"] ?? {};
+      final Map data = res["data"] ?? {};
 
       final UserModel userModel = UserModel.fromJson(data);
+
       _userController.setUser = userModel;
 
       await _performAfterLoginTask(data);
     } else {
-      Utils.showToast("${res["msg"]}");
+      Utils.showToast("${res["message"]}");
     }
 
     loading.value = false;
@@ -86,22 +119,26 @@ class AuthController extends GetxController {
 
     _userController.setIsLogin = true;
 
-    Routes.drawerScreen();
+    Routes.selectCityScreen();
   }
 
   Future<void> _signup() async {
     final Map<String, dynamic> data = {
-      "name": nameController.text,
+      "username": nameController.text,
+      "mobile_no": mobileController.text,
       "email": emailController.text,
       "password": pwdController.text,
-      "cpassword": pwdController.text,
+      "confirm_password": pwdController.text,
+      "device_id": "1",
     };
 
     final Map res = await NetworkCalls.signup(data);
 
     if (res["status"] == "200") {
+      Utils.showToast("Registered Successfully", color: Colors.green);
+      Get.until((route) => route.settings.name == "/loginScreen");
     } else {
-      Utils.showToast("${res["msg"]}");
+      Utils.showToast("${res["message"]}");
     }
 
     loading.value = false;
@@ -137,26 +174,130 @@ class AuthController extends GetxController {
 
     if (!_formKey.currentState!.validate()) return;
 
+    if (!agree.value) {
+      Utils.showToast("Please accept terms of service & privacy policy");
+      return;
+    }
+
     await Future.delayed(const Duration(milliseconds: 100));
     loading.value = true;
 
     await _signup();
   }
 
+  Future<void> onForgotPasswordPressed() async {
+    Utils.removeFocus();
+
+    _forgotOneSheet.value = !_forgotOneSheet.value;
+  }
+
+  Future<void> listenForgotOneBottomSheetState(Function showBottomSheet) async {
+    _forgotOneBottomSheetStateSubscription =
+        _forgotOneSheet.listen((data) async {
+      if (_isForgotOneSheetOpen == null || !_isForgotOneSheetOpen!) {
+        // sheet is open
+        _isForgotOneSheetOpen = true;
+
+        await showBottomSheet();
+
+        // sheet is closed
+        _isForgotOneSheetOpen = false;
+      } else {
+        _isForgotThreeSheetOpen = false;
+        Get.back(closeOverlays: true);
+      }
+    });
+  }
+
+  Future<void> listenForgotTwoBottomSheetState(Function showBottomSheet) async {
+    _forgotTwoBottomSheetStateSubscription =
+        _forgotTwoSheet.listen((data) async {
+      if (_isForgotTwoSheetOpen == null || !_isForgotTwoSheetOpen!) {
+        // sheet is open
+        _isForgotTwoSheetOpen = true;
+
+        await showBottomSheet();
+
+        // sheet is closed
+        _isForgotTwoSheetOpen = false;
+      } else {
+        _isForgotTwoSheetOpen = false;
+        Get.back(closeOverlays: true);
+      }
+    });
+  }
+
+  Future<void> listenForgotThreeBottomSheetState(
+      Function showBottomSheet) async {
+    _forgotThreeBottomSheetStateSubscription =
+        _forgotThreeSheet.listen((data) async {
+      if (_isForgotThreeSheetOpen == null || !_isForgotThreeSheetOpen!) {
+        // sheet is open
+        _isForgotThreeSheetOpen = true;
+
+        await showBottomSheet();
+
+        // sheet is closed
+        _isForgotThreeSheetOpen = false;
+      } else {
+        _isForgotThreeSheetOpen = false;
+        Get.back(closeOverlays: true);
+      }
+    });
+  }
+
+  Future<void> onForgotOneContinuePressed() async {
+    Utils.removeFocus();
+    if (_isForgotOneSheetOpen != null && _isForgotOneSheetOpen!) {
+      _forgotOneSheet.value = !_forgotOneSheet.value;
+      await Future.delayed(const Duration(milliseconds: 150));
+
+      _forgotTwoSheet.value = !_forgotTwoSheet.value;
+    }
+  }
+
+  Future<void> onForgotTwoContinuePressed() async {
+    Utils.removeFocus();
+    if (_isForgotTwoSheetOpen != null && _isForgotTwoSheetOpen!) {
+      _forgotTwoSheet.value = !_forgotTwoSheet.value;
+
+      await Future.delayed(const Duration(milliseconds: 150));
+
+      _forgotThreeSheet.value = !_forgotThreeSheet.value;
+    }
+  }
+
+  Future<void> onForgotUpdatePasswordPressed() async {
+    Utils.removeFocus();
+  }
+
   GlobalKey<FormState> get formKey => _formKey;
+  GlobalKey<FormState> get forgotOneFormKey => _forgotOneFormKey;
+  GlobalKey<FormState> get forgotTwoFormKey => _forgotTwoFormKey;
+  GlobalKey<FormState> get forgotThreeFormKey => _forgotThreeFormKey;
 
   @override
   void onClose() {
     switch (_tag) {
       case "signupScreen":
         nameController.dispose();
+        mobileController.dispose();
         emailController.dispose();
         pwdController.dispose();
         break;
 
       case "loginScreen":
-        emailController.dispose();
+        mobileController.dispose();
         pwdController.dispose();
+        fEmailController.dispose();
+        fOTPController.dispose();
+        fPwdController.dispose();
+        fCPwdController.dispose();
+
+        _forgotOneBottomSheetStateSubscription?.cancel();
+        _forgotTwoBottomSheetStateSubscription?.cancel();
+        _forgotThreeBottomSheetStateSubscription?.cancel();
+
         break;
     }
     super.onClose();

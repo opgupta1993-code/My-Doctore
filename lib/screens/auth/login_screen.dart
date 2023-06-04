@@ -4,6 +4,8 @@ import 'package:flutter_hello_my_doctor/widgets/button_widget.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
 import '../../constants/custom_colors.dart';
 import '../../controllers/auth_controller.dart';
@@ -32,7 +34,7 @@ class LoginScreen extends StatelessWidget {
     TextEditingController controller,
     String hint, {
     bool obscureText = false,
-    TextInputType inputType = TextInputType.emailAddress,
+    TextInputType inputType = TextInputType.text,
     String? Function(String?)? validator,
   }) =>
       TextFormField(
@@ -144,7 +146,7 @@ class LoginScreen extends StatelessWidget {
             ),
           ),
         ),
-        onPressed: () {},
+        onPressed: _controller!.onForgotPasswordPressed,
         child: const Text("Forgot Password"),
       );
 
@@ -175,8 +177,14 @@ class LoginScreen extends StatelessWidget {
             child: Column(
               children: [
                 _buildTextFieldWidget(
-                  _controller!.emailController,
-                  "Email",
+                  _controller!.mobileController,
+                  "Mobile",
+                  inputType: TextInputType.phone,
+                  validator: (val) => Utils.validator2(
+                    val,
+                    "Required",
+                    isMobile: true,
+                  ),
                 ),
                 SizedBox(height: _height * 0.025),
                 _buildTextFieldWidget(
@@ -210,9 +218,274 @@ class LoginScreen extends StatelessWidget {
         ],
       );
 
+  Widget get _buildForgotThreeContentWidget => Container(
+        padding: EdgeInsets.only(
+          bottom: _height * 0.025,
+          top: _height * 0.022,
+          left: _width * 0.05,
+          right: _width * 0.05,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                height: _height * 0.007,
+                width: _width * 0.33,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(_width),
+                  color: HexColor(CustomColors.grey6),
+                ),
+              ),
+            ),
+            SizedBox(height: _height * 0.06),
+            Text(
+              "Reset Password",
+              style: GoogleFonts.rubik(
+                fontWeight: FontWeight.w500,
+                fontSize: _height * 0.023,
+              ),
+            ),
+            SizedBox(height: _height * 0.012),
+            Text(
+              "Set the new password for your account so you can login and access all the features.",
+              style: GoogleFonts.rubik(
+                fontWeight: FontWeight.w400,
+                fontSize: _height * 0.016,
+                color: HexColor(CustomColors.grey1),
+              ),
+            ),
+            SizedBox(height: _height * 0.03),
+            _buildTextFieldWidget(
+              _controller!.fPwdController,
+              "New Password",
+            ),
+            SizedBox(height: _height * 0.02),
+            _buildTextFieldWidget(
+              _controller!.fCPwdController,
+              "Re-enter Password",
+            ),
+            SizedBox(height: _height * 0.025),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: _width * 0.07),
+              child: ButtonWidget(
+                text: "Update Password",
+                onPressed: _controller!.onForgotUpdatePasswordPressed,
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Widget get _buildForgotTwoContentWidget => Container(
+        padding: EdgeInsets.only(
+          bottom: _height * 0.025,
+          top: _height * 0.022,
+          left: _width * 0.05,
+          right: _width * 0.05,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                height: _height * 0.007,
+                width: _width * 0.33,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(_width),
+                  color: HexColor(CustomColors.grey6),
+                ),
+              ),
+            ),
+            SizedBox(height: _height * 0.06),
+            Text(
+              "Enter 4 Digits Code",
+              style: GoogleFonts.rubik(
+                fontWeight: FontWeight.w500,
+                fontSize: _height * 0.023,
+              ),
+            ),
+            SizedBox(height: _height * 0.012),
+            Text(
+              "Enter the 4 digits code that you received on your email.",
+              style: GoogleFonts.rubik(
+                fontWeight: FontWeight.w400,
+                fontSize: _height * 0.016,
+                color: HexColor(CustomColors.grey1),
+              ),
+            ),
+            SizedBox(height: _height * 0.03),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: _width * 0.07),
+              child: _buildPinFieldWidget,
+            ),
+            SizedBox(height: _height * 0.025),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: _width * 0.07),
+              child: ButtonWidget(
+                text: "Continue",
+                onPressed: _controller!.onForgotTwoContinuePressed,
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Widget get _buildForgotOneContentWidget => Container(
+        padding: EdgeInsets.only(
+          bottom: _height * 0.025,
+          top: _height * 0.022,
+          left: _width * 0.05,
+          right: _width * 0.05,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                height: _height * 0.007,
+                width: _width * 0.33,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(_width),
+                  color: HexColor(CustomColors.grey6),
+                ),
+              ),
+            ),
+            SizedBox(height: _height * 0.06),
+            Text(
+              "Forgot Password",
+              style: GoogleFonts.rubik(
+                fontWeight: FontWeight.w500,
+                fontSize: _height * 0.023,
+              ),
+            ),
+            SizedBox(height: _height * 0.012),
+            Text(
+              "Enter your email for the verification proccesss, we will send 4 digits code to your email.",
+              style: GoogleFonts.rubik(
+                fontWeight: FontWeight.w400,
+                fontSize: _height * 0.016,
+                color: HexColor(CustomColors.grey1),
+              ),
+            ),
+            SizedBox(height: _height * 0.03),
+            _buildTextFieldWidget(
+              _controller!.fEmailController,
+              "Email",
+            ),
+            SizedBox(height: _height * 0.025),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: _width * 0.07),
+              child: ButtonWidget(
+                text: "Continue",
+                onPressed: _controller!.onForgotOneContinuePressed,
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Future<void> _showForgotBottomSheet(Widget content) async {
+    return showMaterialModalBottomSheet(
+      context: Get.context!,
+      isDismissible: false,
+      enableDrag: true,
+      backgroundColor: Get.theme.scaffoldBackgroundColor,
+      barrierColor: Colors.black.withOpacity(0.5),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(_height * 0.015),
+          topRight: Radius.circular(_height * 0.015),
+        ),
+      ),
+      builder: (context) {
+        return SingleChildScrollView(
+          padding: EdgeInsets.only(
+            bottom: Get.mediaQuery.viewInsets.bottom +
+                Get.mediaQuery.padding.bottom,
+            top: Get.mediaQuery.viewInsets.top,
+          ),
+          child: content,
+        );
+      },
+    );
+  }
+
+  Widget get _buildPinFieldWidget => SizedBox(
+        width: double.infinity,
+        child: LayoutBuilder(builder: (context, cons) {
+          return PinCodeTextField(
+            controller: _controller!.fOTPController,
+            appContext: Get.context!,
+            length: 4,
+            obscureText: true,
+            animationType: AnimationType.fade,
+            autoDismissKeyboard: false,
+            keyboardType: const TextInputType.numberWithOptions(decimal: false),
+            validator: (val) => Utils.validator2(
+              val,
+              "Required",
+              isOTP: true,
+              otpLength: 4,
+            ),
+            autoDisposeControllers: false,
+            pinTheme: PinTheme(
+              borderRadius: BorderRadius.circular(_width * 0.025),
+              shape: PinCodeFieldShape.box,
+              fieldHeight: cons.maxWidth * 0.21,
+              fieldWidth: cons.maxWidth * 0.2,
+              activeFillColor: Colors.transparent,
+              activeColor: HexColor(CustomColors.grey1).withOpacity(0.16),
+              inactiveColor: HexColor(CustomColors.grey1).withOpacity(0.16),
+              disabledColor: HexColor(CustomColors.grey1).withOpacity(0.16),
+              selectedColor: HexColor(CustomColors.blue1),
+              errorBorderColor: Colors.red,
+              borderWidth: _height * 0.001,
+              inactiveFillColor: Colors.transparent,
+              selectedFillColor: Colors.transparent,
+            ),
+            cursorHeight: cons.maxWidth * 0.1,
+            textStyle: GoogleFonts.rubik(
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+              fontSize: _height * 0.018,
+            ),
+            hintStyle: GoogleFonts.rubik(
+              fontWeight: FontWeight.w400,
+              color: HexColor(CustomColors.black1),
+              fontSize: _height * 0.018,
+            ),
+            backgroundColor: Colors.transparent,
+            enableActiveFill: true,
+            onCompleted: (v) {},
+            onChanged: (value) {},
+          );
+        }),
+      );
+
   @override
   Widget build(BuildContext context) {
-    _controller ??= Get.find<AuthController>(tag: "loginScreen");
+    if (_controller == null) {
+      _controller = Get.find<AuthController>(tag: "loginScreen");
+
+      _controller!.listenForgotOneBottomSheetState(
+        () => _showForgotBottomSheet(_buildForgotOneContentWidget),
+      );
+
+      _controller!.listenForgotTwoBottomSheetState(
+        () => _showForgotBottomSheet(_buildForgotTwoContentWidget),
+      );
+
+      _controller!.listenForgotThreeBottomSheetState(
+        () => _showForgotBottomSheet(_buildForgotThreeContentWidget),
+      );
+    }
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: ThemeUtils.getStatusNavBarTheme(context),

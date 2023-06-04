@@ -32,7 +32,7 @@ class SelectDoctorCategoryController extends GetxController {
         }
       }
     } else {
-      Utils.showToast("${res["msg"]}");
+      Utils.showToast("${res["message"]}");
     }
 
     loading.value = false;
@@ -42,7 +42,7 @@ class SelectDoctorCategoryController extends GetxController {
     _selectedDoctorCategory = data;
 
     await Future.delayed(const Duration(milliseconds: 100));
-    Routes.selectCityScreen();
+    Routes.selectDoctorScreen();
   }
 
   List<DoctorCategoryModel> get dataList => _dataList;

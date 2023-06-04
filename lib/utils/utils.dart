@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../controllers/user_controller.dart';
 import '../models/user_model.dart';
+import '../routes/routes.dart';
 
 class Utils {
   static void removeFocus({BuildContext? context}) {
@@ -109,13 +111,40 @@ class Utils {
     return (double.tryParse(data) ?? int.tryParse(data) ?? 0).toInt();
   }
 
+  static String getTomorrowDayName() {
+    final DateTime now = DateTime.now();
+    final DateTime tomorrow = now.add(const Duration(days: 1));
+
+    final DateFormat formatter =
+        DateFormat.EEEE(); // EEEE gives the full day name
+    final String dayName = formatter.format(tomorrow);
+
+    return dayName;
+  }
+
+  static String getAmPmOfTime(String time) {
+    final DateFormat formatter = DateFormat.jm();
+    final DateTime dateTime = DateFormat.Hm().parse(time);
+    final String amPm = formatter.format(dateTime);
+
+    return amPm;
+  }
+
+  static String convertTo12HourFormat(String time) {
+    final DateFormat formatter = DateFormat('h:mm');
+    final DateTime dateTime = DateFormat.Hm().parse(time);
+    final String formattedTime = formatter.format(dateTime);
+
+    return formattedTime;
+  }
+
   static Future<void> logout() async {
     final SharedPreferences preferences = Get.find();
     final UserController userController = Get.find();
 
     await preferences.remove("login");
     await preferences.remove("userData");
-    // Routes.loginScreen();
+    Routes.loginWithoutLoginScreen();
 
     await Future.delayed(const Duration(milliseconds: 300));
 

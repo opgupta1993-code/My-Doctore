@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hello_my_doctor/controllers/home_controller.dart';
+import 'package:flutter_hello_my_doctor/controllers/user_controller.dart';
 import 'package:flutter_hello_my_doctor/widgets/profile_button_widget.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
@@ -17,6 +18,7 @@ class HomeScreen extends StatelessWidget {
 
   final double _height = Get.height, _width = Get.width;
 
+  UserController? _userController;
   HomeController? _controller;
 
   Widget get _buildTopWidget => Container(
@@ -61,7 +63,7 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     SizedBox(height: cons.maxHeight * 0.05),
                     Text(
-                      "Hi Pragya!",
+                      "Hi ${_userController!.user.value.userName}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
@@ -340,6 +342,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _userController ??= Get.find<UserController>();
     _controller ??= Get.find<HomeController>();
 
     return AnnotatedRegion<SystemUiOverlayStyle>(

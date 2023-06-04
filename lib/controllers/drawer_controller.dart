@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hello_my_doctor/routes/routes.dart';
+import 'package:flutter_hello_my_doctor/utils/utils.dart';
 import 'package:get/get.dart';
 
 class DrawerController extends GetxController {
@@ -16,6 +18,16 @@ class DrawerController extends GetxController {
     if (_sfKey.currentState != null && !_sfKey.currentState!.isDrawerOpen) {
       _sfKey.currentState!.openDrawer();
     }
+  }
+
+  Future<void> onProfilePressed() async {
+    await Future.delayed(const Duration(milliseconds: 100));
+    if (_sfKey.currentState != null && _sfKey.currentState!.isDrawerOpen) {
+      _sfKey.currentState!.closeDrawer();
+    }
+    await Future.delayed(const Duration(milliseconds: 130));
+
+    Routes.profileScreen();
   }
 
   Future<void> onDrawerItemPressed(int type) async {
@@ -36,6 +48,10 @@ class DrawerController extends GetxController {
         break;
 
       case 3:
+        break;
+
+      case 8:
+        Utils.logout();
         break;
     }
   }

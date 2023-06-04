@@ -32,7 +32,7 @@ class SelectCityController extends GetxController {
         }
       }
     } else {
-      Utils.showToast("${res["msg"]}");
+      Utils.showToast("${res["message"]}");
     }
 
     loading.value = false;
@@ -42,7 +42,8 @@ class SelectCityController extends GetxController {
     _selectedCity = data;
 
     await Future.delayed(const Duration(milliseconds: 100));
-    Routes.makeAppointmentScreen();
+    // Routes.selectDoctorScreen();
+    Routes.drawerScreen();
   }
 
   List<CityModel> get dataList => _dataList;
