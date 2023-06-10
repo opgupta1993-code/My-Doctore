@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 class DioAPI {
   static Dio? _dio;
 
-  static String baseURL = "https://hellomydoctor.in/dev/wb";
+  static String baseURL = "https://hellomydoctor.in/dev";
 
   static Dio? getDioInstance() {
     try {

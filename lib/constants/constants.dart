@@ -14,4 +14,10 @@ class Constants {
       "assets/images/intro_two_artwork.webp";
   static const String introThreeArtworkPath =
       "assets/images/intro_three_artwork.webp";
+
+  static const String paytmMID = "PpkHMk87524024229029";
+  static const String paytmStagingCallbackUrl =
+      "https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=";
+  static const String paytmProductionCallbackUrl =
+      "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=";
 }

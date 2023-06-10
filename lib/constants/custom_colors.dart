@@ -13,4 +13,5 @@ class CustomColors {
   static const String grey4 = "#E5E5E5";
   static const String grey5 = "#CBCBCB";
   static const String grey6 = "#C4C4C4";
+  static const String grey7 = "#B3C8CA";
 }

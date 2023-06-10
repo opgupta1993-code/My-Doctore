@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hello_my_doctor/controllers/make_appointment_controller.dart';
 import 'package:flutter_hello_my_doctor/widgets/button_widget.dart';
+import 'package:flutter_hello_my_doctor/widgets/circular_loading_widget.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -125,6 +126,117 @@ class MakeAppointmentScreen extends StatelessWidget {
         ),
       );
 
+  Widget get _buildContentWidget => Column(
+        children: [
+          _buildAppbarWidget,
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(_width * 0.025),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Get.isDarkMode
+                              ? Colors.white.withOpacity(0.09)
+                              : const Color(0x10002958),
+                          offset: const Offset(0, 0),
+                          blurRadius: _width * 0.02,
+                        ),
+                      ],
+                    ),
+                    margin: EdgeInsets.only(
+                      top: _height * 0.02,
+                      bottom: _height * 0.03,
+                      left: _width * 0.05,
+                      right: _width * 0.05,
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: _width * 0.035,
+                      // vertical: _height * 0.05,
+                    ),
+                    child: Form(
+                      key: _controller!.formKey,
+                      autovalidateMode: AutovalidateMode.disabled,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: _height * 0.05),
+                          _buildTitleWidget("Patient Name : "),
+                          SizedBox(height: _height * 0.015),
+                          _buildTextFieldWidget(
+                            _controller!.nameController,
+                            "Add Patient Name",
+                          ),
+                          SizedBox(height: _height * 0.025),
+                          _buildTitleWidget("Patient Age : "),
+                          SizedBox(height: _height * 0.015),
+                          _buildTextFieldWidget(
+                            _controller!.ageController,
+                            "Add Patient Age",
+                            inputType: TextInputType.number,
+                          ),
+                          SizedBox(height: _height * 0.025),
+                          _buildTitleWidget("Father/Husband's name :"),
+                          SizedBox(height: _height * 0.015),
+                          _buildTextFieldWidget(
+                            _controller!.fhNameController,
+                            "Enter Father/Husband's name",
+                          ),
+                          SizedBox(height: _height * 0.025),
+                          _buildTitleWidget("Mobile Number :"),
+                          SizedBox(height: _height * 0.015),
+                          _buildTextFieldWidget(
+                            _controller!.mobileController,
+                            "Add Mobile Number",
+                            inputType: TextInputType.phone,
+                            validator: (val) => Utils.validator2(
+                              val,
+                              "Required",
+                              isMobile: true,
+                            ),
+                          ),
+                          SizedBox(height: _height * 0.025),
+                          _buildTitleWidget("Address :"),
+                          SizedBox(height: _height * 0.015),
+                          _buildTextFieldWidget(
+                            _controller!.addressController,
+                            "Add Address",
+                          ),
+                          SizedBox(height: _height * 0.025),
+                          _buildTitleWidget("Date :"),
+                          SizedBox(height: _height * 0.015),
+                          _buildDatePickerWidget(
+                            _controller!.dateController,
+                            "Enter Date of Birth",
+                          ),
+                          SizedBox(height: _height * 0.05),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: _width * 0.1),
+                    child: Obx(
+                      () => _controller!.loading.value
+                          ? CircularLoadingWidget(_width, center: true)
+                          : ButtonWidget(
+                              text: "Continue",
+                              onPressed: _controller!.onContinuePressed,
+                            ),
+                    ),
+                  ),
+                  SizedBox(height: _height * 0.03),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+
   @override
   Widget build(BuildContext context) {
     _controller ??= Get.find<MakeAppointmentController>();
@@ -163,103 +275,7 @@ class MakeAppointmentScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Column(
-                children: [
-                  _buildAppbarWidget,
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.circular(_width * 0.025),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Get.isDarkMode
-                                      ? Colors.white.withOpacity(0.09)
-                                      : const Color(0x10002958),
-                                  offset: const Offset(0, 0),
-                                  blurRadius: _width * 0.02,
-                                ),
-                              ],
-                            ),
-                            margin: EdgeInsets.only(
-                              top: _height * 0.02,
-                              bottom: _height * 0.03,
-                              left: _width * 0.05,
-                              right: _width * 0.05,
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: _width * 0.035,
-                              // vertical: _height * 0.05,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: _height * 0.05),
-                                _buildTitleWidget("Patient Name : "),
-                                SizedBox(height: _height * 0.015),
-                                _buildTextFieldWidget(
-                                  _controller!.nameController,
-                                  "Add Patient Name",
-                                ),
-                                SizedBox(height: _height * 0.025),
-                                _buildTitleWidget("Patient Age : "),
-                                SizedBox(height: _height * 0.015),
-                                _buildTextFieldWidget(
-                                  _controller!.ageController,
-                                  "Add Patient Age",
-                                ),
-                                SizedBox(height: _height * 0.025),
-                                _buildTitleWidget("Father/Husband's name :"),
-                                SizedBox(height: _height * 0.015),
-                                _buildTextFieldWidget(
-                                  _controller!.fhNameController,
-                                  "Enter Father/Husband's name",
-                                ),
-                                SizedBox(height: _height * 0.025),
-                                _buildTitleWidget("Mobile Number :"),
-                                SizedBox(height: _height * 0.015),
-                                _buildTextFieldWidget(
-                                  _controller!.mobileController,
-                                  "Add Mobile Number",
-                                ),
-                                SizedBox(height: _height * 0.025),
-                                _buildTitleWidget("Address :"),
-                                SizedBox(height: _height * 0.015),
-                                _buildTextFieldWidget(
-                                  _controller!.addressController,
-                                  "Add Address",
-                                ),
-                                SizedBox(height: _height * 0.025),
-                                _buildTitleWidget("Date :"),
-                                SizedBox(height: _height * 0.015),
-                                _buildDatePickerWidget(
-                                  _controller!.dateController,
-                                  "Enter Date",
-                                ),
-                                SizedBox(height: _height * 0.05),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                EdgeInsets.symmetric(horizontal: _width * 0.1),
-                            child: ButtonWidget(
-                              text: "Continue",
-                              onPressed: _controller!.onContinuePressed,
-                            ),
-                          ),
-                          SizedBox(height: _height * 0.03),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              _buildContentWidget,
             ],
           ),
         ),

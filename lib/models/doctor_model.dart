@@ -1,3 +1,5 @@
+import 'package:flutter_hello_my_doctor/utils/utils.dart';
+
 class DoctorModel {
   String _id = "";
   String _categoryId = "";
@@ -24,6 +26,9 @@ class DoctorModel {
   String _registrationNo = "";
   String _oldPrescriptionValid = "";
   String _adminApproval = "";
+  double _rating = 0.0;
+  String _locationName = "";
+  String _categoryName = "";
 
   DoctorModel.fromJson(Map json) {
     _id = json['id'] ?? "";
@@ -51,14 +56,13 @@ class DoctorModel {
     _registrationNo = json['registration_no'] ?? "";
     _oldPrescriptionValid = json['old_prescription_valid'] ?? "";
     _adminApproval = json['admin_approval'] ?? "";
+    _rating = Utils.getDoubleFromString("${json['rating']}");
+    _locationName = json['location_name'] ?? "";
+    _categoryName = json['category_name'] ?? "";
   }
 
   String getNextAvailability(String inputDay) {
     final List<String> days = this.days.split(",");
-    // const List<String> days=["Tuesday","Wednesday","Thursday","Saturday"];
-
-
-    print("DAYS --> ${days}");
 
     if (days.contains(inputDay)) {
       return "Tomorrow";
@@ -101,6 +105,9 @@ class DoctorModel {
     data['registration_no'] = _registrationNo;
     data['old_prescription_valid'] = _oldPrescriptionValid;
     data['admin_approval'] = _adminApproval;
+    data['rating'] = _rating;
+    data['location_name'] = _locationName;
+    data['category_name'] = _categoryName;
     return data;
   }
 
@@ -129,4 +136,7 @@ class DoctorModel {
   String get registrationNo => _registrationNo;
   String get oldPrescriptionValid => _oldPrescriptionValid;
   String get adminApproval => _adminApproval;
+  double get rating => _rating;
+  String get locationName => _locationName;
+  String get categoryName => _categoryName;
 }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
@@ -52,6 +53,7 @@ class NetworkCalls {
     Map<String, dynamic>? queryParam,
     dynamic data,
     CancelToken? cancelToken,
+    bool jsondecode = false,
   }) async {
     cancelToken ??= CancelToken();
     _cancelTokenList.add(cancelToken);
@@ -78,7 +80,11 @@ class NetworkCalls {
 
       log("Res :: $path :: ${response.data}");
 
-      res = response.data;
+      if (jsondecode) {
+        res = jsonDecode(response.data);
+      } else {
+        res = response.data;
+      }
     } catch (err) {
       debugPrint("Error - NetworkCalls - $path :- ${err.toString()}");
       return res;
@@ -132,32 +138,51 @@ class NetworkCalls {
   }
 
   static Future<Map> login(Map<String, dynamic> data) async {
-    const String path = "/login";
+    const String path = "/wb/login";
     return await _postRequest(path, data: FormData.fromMap(data));
   }
 
   static Future<Map> signup(Map<String, dynamic> data) async {
-    const String path = "/signup";
+    const String path = "/wb/signup";
     return await _postRequest(path, data: FormData.fromMap(data));
   }
 
   static Future<Map> getDoctorCategories() async {
-    const String path = "/categories";
+    const String path = "/wb/categories";
     return await _postRequest(path);
   }
 
   static Future<Map> getCities() async {
-    const String path = "/locations";
+    const String path = "/wb/locations";
     return await _postRequest(path);
   }
 
   static Future<Map> getDoctors(Map<String, dynamic> data) async {
-    const String path = "/doctors";
+    const String path = "/wb/doctors";
     return await _postRequest(path, data: FormData.fromMap(data));
   }
 
   static Future<Map> getDoctorDetails(Map<String, dynamic> data) async {
-    const String path = "/doctor_details";
+    const String path = "/wb/doctor_details";
+    return await _postRequest(path, data: FormData.fromMap(data));
+  }
+
+  static Future<Map> initiatePayment(Map<String, dynamic> data) async {
+    const String path = "/paytm/initiate_transaction";
+    return await _postRequest(
+      path,
+      data: FormData.fromMap(data),
+      jsondecode: true,
+    );
+  }
+
+  static Future<Map> bookAppointment(Map<String, dynamic> data) async {
+    const String path = "/wb/appointment_booking";
+    return await _postRequest(path, data: FormData.fromMap(data));
+  }
+
+  static Future<Map> getHome(Map<String, dynamic> data) async {
+    const String path = "/wb/home";
     return await _postRequest(path, data: FormData.fromMap(data));
   }
 }

@@ -1,16 +1,22 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hello_my_doctor/controllers/home_controller.dart';
 import 'package:flutter_hello_my_doctor/controllers/user_controller.dart';
+import 'package:flutter_hello_my_doctor/models/doctor_model.dart';
+import 'package:flutter_hello_my_doctor/widgets/no_data_found_widget.dart';
 import 'package:flutter_hello_my_doctor/widgets/profile_button_widget.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../constants/custom_colors.dart';
 import '../../utils/theme_utils.dart';
+import '../../widgets/circular_loading_widget.dart';
 
 // ignore: must_be_immutable
 class HomeScreen extends StatelessWidget {
@@ -93,6 +99,70 @@ class HomeScreen extends StatelessWidget {
             ],
           );
         }),
+      );
+
+  Widget get _buildCarouselWidget => Column(
+        children: [
+          SizedBox(
+            height: _height * 0.23,
+            width: _width * 0.95,
+            child: CarouselSlider.builder(
+              carouselController: _controller!.carouselController,
+              options: CarouselOptions(
+                height: _height * 0.23,
+                viewportFraction: 1.0,
+                initialPage: 0,
+                enableInfiniteScroll: true,
+                reverse: false,
+                autoPlay: true,
+                autoPlayInterval: const Duration(seconds: 5),
+                autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                autoPlayCurve: Curves.fastOutSlowIn,
+                enlargeCenterPage: false,
+                scrollDirection: Axis.horizontal,
+                onPageChanged: _controller!.onSliderChanged,
+              ),
+              itemCount: _controller!.data?.sliders.length,
+              itemBuilder: (context, index, _) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: _width * 0.025),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(_width * 0.025),
+                    child: SizedBox(
+                      height: double.infinity,
+                      width: double.infinity,
+                      child: CachedNetworkImage(
+                        imageUrl: _controller!.data!.sliders[index].image,
+                        height: _height * 0.23,
+                        width: double.infinity,
+                        progressIndicatorBuilder: (context, _, __) =>
+                            CircularLoadingWidget(_width, center: true),
+                        fit: BoxFit.cover,
+                        errorWidget: (context, _, __) => Image.asset(
+                          "assets/images/logo.webp",
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          SizedBox(height: _height * 0.01),
+          Obx(
+            () => AnimatedSmoothIndicator(
+              activeIndex: _controller!.currentIndex.value,
+              count: _controller!.data!.sliders.length,
+              effect: ScrollingDotsEffect(
+                dotColor: HexColor(CustomColors.grey7),
+                activeDotColor: HexColor(CustomColors.blue1),
+                dotHeight: _height * 0.008,
+                dotWidth: _height * 0.008,
+                spacing: _width * 0.018,
+              ),
+            ),
+          ),
+        ],
       );
 
   Widget _buildServiceWidget(String title, String iconPath) => Stack(
@@ -225,7 +295,7 @@ class HomeScreen extends StatelessWidget {
         ),
       );
 
-  Widget _buildPopularDoctorItemWidget() =>
+  Widget _buildPopularDoctorItemWidget(DoctorModel data) =>
       LayoutBuilder(builder: (context, cons) {
         return Container(
           width: _width * 0.5,
@@ -236,10 +306,36 @@ class HomeScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              SizedBox(
-                height: cons.maxHeight * 0.65,
-                width: double.infinity,
-                child: Image.asset("assets/sample/sample1.png"),
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(_width * 0.04),
+                  topRight: Radius.circular(_width * 0.04),
+                ),
+                child: SizedBox(
+                  height: cons.maxHeight * 0.65,
+                  width: double.infinity,
+                  child: CachedNetworkImage(
+                    imageUrl: data.image,
+                    height: cons.maxHeight * 0.65,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    progressIndicatorBuilder: (context, _, __) => SizedBox(
+                      height: cons.maxHeight * 0.65,
+                      width: double.infinity,
+                      child: CircularLoadingWidget(
+                        _width * 0.5,
+                        center: true,
+                      ),
+                    ),
+                    errorWidget: (context, _, __) => SizedBox(
+                      height: double.infinity,
+                      width: double.infinity,
+                      child: Image.asset(
+                        "assets/images/logo.webp",
+                      ),
+                    ),
+                  ),
+                ),
               ),
               Expanded(
                 child: Padding(
@@ -252,7 +348,7 @@ class HomeScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Dr. Shruti Grab",
+                        data.name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
@@ -264,7 +360,8 @@ class HomeScreen extends StatelessWidget {
                       ),
                       SizedBox(height: cons.maxHeight * 0.01),
                       Text(
-                        "Medicine Specialist",
+                        data.degree,
+                        textAlign: TextAlign.center,
                         style: GoogleFonts.rubik(
                           fontWeight: FontWeight.w300,
                           fontSize: cons.maxHeight * 0.05,
@@ -275,7 +372,7 @@ class HomeScreen extends StatelessWidget {
                       RatingBar.builder(
                         tapOnlyMode: true,
                         ignoreGestures: true,
-                        initialRating: 4.5,
+                        initialRating: data.rating,
                         minRating: 1,
                         direction: Axis.horizontal,
                         allowHalfRating: true,
@@ -340,6 +437,80 @@ class HomeScreen extends StatelessWidget {
         );
       });
 
+  Widget get _buildContentWidget => SingleChildScrollView(
+        child: Column(
+          children: [
+            if (_controller!.data!.sliders.isNotEmpty)
+              Column(
+                children: [
+                  SizedBox(height: _height * 0.02),
+                  _buildCarouselWidget,
+                ],
+              ),
+            _buildServicesGridViewWidget,
+            SizedBox(height: _height * 0.01),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(child: _buildTitleWidget("Popular Doctor")),
+                  _buildSeeAllDoctorsButtonWidget,
+                ],
+              ),
+            ),
+            if (_controller!.data!.doctors.isNotEmpty)
+              Column(
+                children: [
+                  SizedBox(height: _height * 0.01),
+                  SizedBox(
+                    height: _height * 0.3,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: _controller!.data!.doctors.length,
+                      padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(width: _width * 0.05);
+                      },
+                      itemBuilder: (BuildContext context, int index) {
+                        return _buildPopularDoctorItemWidget(
+                          _controller!.data!.doctors[index],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            SizedBox(height: _height * 0.04),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+                child: _buildTitleWidget("Reviews From Happy Customers"),
+              ),
+            ),
+            SizedBox(height: _height * 0.01),
+            SizedBox(
+              height: _height * 0.23,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: 5,
+                padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+                separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(width: _width * 0.06);
+                },
+                itemBuilder: (BuildContext context, int index) {
+                  return _buildReviewItemWidget();
+                },
+              ),
+            ),
+            SizedBox(height: _height * 0.015),
+          ],
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     _userController ??= Get.find<UserController>();
@@ -352,68 +523,12 @@ class HomeScreen extends StatelessWidget {
           children: [
             _buildTopWidget,
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _buildServicesGridViewWidget,
-                    SizedBox(height: _height * 0.01),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(child: _buildTitleWidget("Popular Doctor")),
-                          _buildSeeAllDoctorsButtonWidget,
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: _height * 0.01),
-                    SizedBox(
-                      height: _height * 0.3,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        itemCount: 5,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: _width * 0.04),
-                        separatorBuilder: (BuildContext context, int index) {
-                          return SizedBox(width: _width * 0.05);
-                        },
-                        itemBuilder: (BuildContext context, int index) {
-                          return _buildPopularDoctorItemWidget();
-                        },
-                      ),
-                    ),
-                    SizedBox(height: _height * 0.04),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: _width * 0.04),
-                        child:
-                            _buildTitleWidget("Reviews From Happy Customers"),
-                      ),
-                    ),
-                    SizedBox(height: _height * 0.01),
-                    SizedBox(
-                      height: _height * 0.23,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        itemCount: 5,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: _width * 0.04),
-                        separatorBuilder: (BuildContext context, int index) {
-                          return SizedBox(width: _width * 0.06);
-                        },
-                        itemBuilder: (BuildContext context, int index) {
-                          return _buildReviewItemWidget();
-                        },
-                      ),
-                    ),
-                    SizedBox(height: _height * 0.015),
-                  ],
-                ),
+              child: Obx(
+                () => _controller!.loading.value
+                    ? CircularLoadingWidget(_width, center: true)
+                    : _controller!.data == null
+                        ? NoDataFoundWidget("An error accured")
+                        : _buildContentWidget,
               ),
             )
           ],
