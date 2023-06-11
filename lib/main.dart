@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hello_my_doctor/utils/firebase_util.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'controllers/user_controller.dart';
@@ -23,6 +25,14 @@ Future<void> main() async {
   try {
     await Firebase.initializeApp();
     await FirebaseNotifications.setupFCMListener();
+
+    final bool value = await Permission.notification.isDenied;
+
+    if (value) {
+      Permission.notification.request();
+    }
+
+    FirebaseUtil.getFCMToken().then((value) => print(value));
   } catch (err) {
     //print("ERROR :: main :: $err");
   }

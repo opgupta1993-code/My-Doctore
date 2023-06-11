@@ -7,12 +7,15 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import '../constants/custom_colors.dart';
 import '../controllers/doctor_details_controller.dart';
 import '../utils/theme_utils.dart';
+import '../utils/utils.dart';
 import '../widgets/back_button_widget.dart';
+import '../widgets/button_widget.dart';
 
 // ignore: must_be_immutable
 class DoctorDetailsScreen extends StatelessWidget {
@@ -51,6 +54,57 @@ class DoctorDetailsScreen extends StatelessWidget {
               ],
             );
           }),
+        ),
+      );
+
+  OutlineInputBorder _buildOutlineInputBorder({Color? color}) =>
+      OutlineInputBorder(
+        borderRadius: BorderRadius.circular(_width * 0.02),
+        borderSide: BorderSide(
+          color: color ?? HexColor(CustomColors.grey1).withOpacity(0.16),
+          width: _height * 0.001,
+        ),
+      );
+
+  Widget _buildTextFieldWidget(
+    TextEditingController controller,
+    String hint, {
+    bool obscureText = false,
+    TextInputType inputType = TextInputType.text,
+    String? Function(String?)? validator,
+  }) =>
+      TextFormField(
+        controller: controller,
+        obscureText: obscureText,
+        keyboardType: inputType,
+        maxLines: 5,
+        style: GoogleFonts.rubik(
+          fontWeight: FontWeight.w500,
+          color: Colors.black,
+          fontSize: _height * 0.018,
+        ),
+        validator:
+            validator ?? (val) => Utils.notEmptyValidator(val, "Required"),
+        decoration: InputDecoration(
+          isDense: true,
+          hintText: hint,
+          hintStyle: GoogleFonts.rubik(
+            fontWeight: FontWeight.w400,
+            color: HexColor(CustomColors.black1),
+            fontSize: _height * 0.018,
+          ),
+          border: _buildOutlineInputBorder(),
+          disabledBorder: _buildOutlineInputBorder(),
+          enabledBorder: _buildOutlineInputBorder(),
+          focusedBorder: _buildOutlineInputBorder(
+            color: HexColor(CustomColors.blue1),
+          ),
+          errorBorder: _buildOutlineInputBorder(color: Colors.red),
+          focusedErrorBorder: _buildOutlineInputBorder(color: Colors.red),
+          contentPadding: EdgeInsets.symmetric(
+            vertical: _height * 0.021,
+            horizontal: _width * 0.04,
+          ),
         ),
       );
 
@@ -613,6 +667,108 @@ class DoctorDetailsScreen extends StatelessWidget {
         ],
       );
 
+  Widget get _buildReviewRatingContentWidget => Container(
+        padding: EdgeInsets.only(
+          bottom: _height * 0.025,
+          top: _height * 0.022,
+          left: _width * 0.05,
+          right: _width * 0.05,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                height: _height * 0.007,
+                width: _width * 0.33,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(_width),
+                  color: HexColor(CustomColors.grey6),
+                ),
+              ),
+            ),
+            SizedBox(height: _height * 0.06),
+            Text(
+              "Review & Rating",
+              style: GoogleFonts.rubik(
+                fontWeight: FontWeight.w500,
+                fontSize: _height * 0.023,
+              ),
+            ),
+            SizedBox(height: _height * 0.015),
+            // Text(
+            //   "Enter your mobile number for the verification proccesss, we will send 4 digits code.",
+            //   style: GoogleFonts.rubik(
+            //     fontWeight: FontWeight.w400,
+            //     fontSize: _height * 0.018,
+            //     color: HexColor(CustomColors.grey1),
+            //   ),
+            // ),
+            RatingBar.builder(
+              tapOnlyMode: false,
+              ignoreGestures: false,
+              initialRating: 0.0,
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: true,
+              itemCount: 5,
+              itemSize: _height * 0.07,
+              itemPadding: EdgeInsets.zero,
+              itemBuilder: (context, _) => const Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              onRatingUpdate: _controller!.onRate,
+            ),
+            SizedBox(height: _height * 0.04),
+            _buildTextFieldWidget(
+              _controller!.descController,
+              "Description",
+            ),
+            SizedBox(height: _height * 0.025),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: _width * 0.07),
+              child: Obx(
+                () => _controller!.reviewRatingLoading.value
+                    ? CircularLoadingWidget(_width, center: true)
+                    : ButtonWidget(
+                        text: "Submit",
+                        onPressed: _controller!.onSubmitReviewPressed,
+                      ),
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Future<void> _showReviewRatingBottomSheet() async {
+    return showMaterialModalBottomSheet(
+      context: Get.context!,
+      isDismissible: true,
+      enableDrag: true,
+      backgroundColor: Get.theme.scaffoldBackgroundColor,
+      barrierColor: Colors.black.withOpacity(0.5),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(_height * 0.015),
+          topRight: Radius.circular(_height * 0.015),
+        ),
+      ),
+      builder: (context) {
+        return SingleChildScrollView(
+          padding: EdgeInsets.only(
+            bottom: Get.mediaQuery.viewInsets.bottom +
+                Get.mediaQuery.padding.bottom,
+            top: Get.mediaQuery.viewInsets.top,
+          ),
+          child: _buildReviewRatingContentWidget,
+        );
+      },
+    );
+  }
+
   Widget get _buildContentWidget => SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: _width * 0.05),
         child: Column(
@@ -656,7 +812,12 @@ class DoctorDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _controller ??= Get.find<DoctorDetailsController>();
+    if (_controller == null) {
+      _controller = Get.find<DoctorDetailsController>();
+
+      _controller!
+          .listenReviewRatingBottomSheetState(_showReviewRatingBottomSheet);
+    }
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: ThemeUtils.getStatusNavBarTheme(context),

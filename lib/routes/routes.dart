@@ -21,6 +21,7 @@ import 'package:get/get.dart';
 
 import '../bindings/intro_page_view_binding.dart';
 import '../bindings/splash_binding.dart';
+import '../screens/drawer/coming_soon_screen.dart';
 import '../screens/intro/intro_page_view_screen.dart';
 import '../screens/splash_screen.dart';
 
@@ -110,6 +111,12 @@ class Routes {
       binding: ProfileBinding(),
       showCupertinoParallax: true,
     ),
+    GetPage(
+      name: "/comingSoonScreen",
+      page: () => ComingSoonScreen(),
+      popGesture: true,
+      showCupertinoParallax: true,
+    ),
   ];
 
   static Future<void> splashScreen() async {
@@ -158,5 +165,9 @@ class Routes {
 
   static Future<void> profileScreen() async {
     return await Get.toNamed("/profileScreen");
+  }
+
+  static Future<void> comingSoonScreen() async {
+    return await Get.toNamed("/comingSoonScreen");
   }
 }

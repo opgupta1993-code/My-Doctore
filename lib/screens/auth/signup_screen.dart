@@ -111,7 +111,7 @@ class SignupScreen extends StatelessWidget {
         ),
         onPressed: _controller!.onSignupLoginPressed,
         child: const Text(
-          "Log in",
+          "Have an account? Log in",
           overflow: TextOverflow.ellipsis,
         ),
       );
@@ -157,16 +157,16 @@ class SignupScreen extends StatelessWidget {
                     isMobile: true,
                   ),
                 ),
-                SizedBox(height: _height * 0.025),
-                _buildTextFieldWidget(
-                  _controller!.emailController,
-                  "Email",
-                  validator: (val) => Utils.validator2(
-                    val,
-                    "Required",
-                    isEmail: true,
-                  ),
-                ),
+                // SizedBox(height: _height * 0.025),
+                // _buildTextFieldWidget(
+                //   _controller!.emailController,
+                //   "Email",
+                //   validator: (val) => Utils.validator2(
+                //     val,
+                //     "Required",
+                //     isEmail: true,
+                //   ),
+                // ),
                 SizedBox(height: _height * 0.025),
                 _buildTextFieldWidget(
                   _controller!.pwdController,
@@ -202,22 +202,8 @@ class SignupScreen extends StatelessWidget {
           ),
           SizedBox(height: _height * 0.04),
           _buildSignUpButtonWidget,
-          SizedBox(height: _height * 0.02),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "Have an account?",
-                style: GoogleFonts.rubik(
-                  color: HexColor(CustomColors.green1),
-                  fontWeight: FontWeight.w400,
-                  fontSize: _height * 0.016,
-                ),
-              ),
-              _buildLogInButtonWidget,
-            ],
-          ),
+          SizedBox(height: _height * 0.16),
+          _buildLogInButtonWidget
         ],
       );
 

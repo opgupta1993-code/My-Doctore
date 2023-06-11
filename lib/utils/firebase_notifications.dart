@@ -2,6 +2,7 @@ import "dart:async";
 import 'dart:convert';
 import "dart:io";
 import "package:firebase_messaging/firebase_messaging.dart";
+import "package:flutter/material.dart";
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FirebaseNotifications {
@@ -11,15 +12,17 @@ class FirebaseNotifications {
   static late final AndroidNotificationChannel _channel;
 
   static Future<void> setupFCMListener() async {
-    if (Platform.isIOS) await _getPermissionsOnIOS();
+    // for ios only
+    if (Platform.isIOS) {
+      await _getPermissionsOnIOS();
 
-    // // for ios only
-    // await FirebaseMessaging.instance
-    //     .setForegroundNotificationPresentationOptions(
-    //   alert: true, // Required to display a heads up notification
-    //   badge: true,
-    //   sound: true,
-    // );
+      await FirebaseMessaging.instance
+          .setForegroundNotificationPresentationOptions(
+        alert: true, // Required to display a heads up notification
+        badge: true,
+        sound: true,
+      );
+    }
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       // debugPrint('Got a message whilst in the foreground!');
@@ -46,7 +49,8 @@ class FirebaseNotifications {
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      // debugPrint('Got a message when app opened from bg state (not terminated)');
+      // debugPrint(
+      //     'Got a message when app opened from bg state (not terminated)');
       // debugPrint('Message Data: ${message.data}');
 
       if (message.notification != null) {

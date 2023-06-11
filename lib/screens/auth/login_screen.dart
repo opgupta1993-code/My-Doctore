@@ -113,7 +113,7 @@ class LoginScreen extends StatelessWidget {
         ),
         onPressed: _controller!.onLoginJoinUsPressed,
         child: const Text(
-          "Join us",
+          "Don't have an account? Join us",
           overflow: TextOverflow.ellipsis,
         ),
       );
@@ -200,21 +200,7 @@ class LoginScreen extends StatelessWidget {
           SizedBox(height: _height * 0.02),
           _buildForgotPwdButtonWidget,
           SizedBox(height: _height * 0.2),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "Don't have an account?",
-                style: GoogleFonts.rubik(
-                  color: HexColor(CustomColors.green1),
-                  fontWeight: FontWeight.w400,
-                  fontSize: _height * 0.016,
-                ),
-              ),
-              _buildJoinUsButtonWidget,
-            ],
-          ),
+          _buildJoinUsButtonWidget,
         ],
       );
 
@@ -311,10 +297,10 @@ class LoginScreen extends StatelessWidget {
             ),
             SizedBox(height: _height * 0.012),
             Text(
-              "Enter the 4 digits code that you received on your email.",
+              "Enter the 4 digits code that you received on your mobile.",
               style: GoogleFonts.rubik(
                 fontWeight: FontWeight.w400,
-                fontSize: _height * 0.016,
+                fontSize: _height * 0.018,
                 color: HexColor(CustomColors.grey1),
               ),
             ),
@@ -367,17 +353,17 @@ class LoginScreen extends StatelessWidget {
             ),
             SizedBox(height: _height * 0.012),
             Text(
-              "Enter your email for the verification proccesss, we will send 4 digits code to your email.",
+              "Enter your mobile number for the verification proccesss, we will send 4 digits code.",
               style: GoogleFonts.rubik(
                 fontWeight: FontWeight.w400,
-                fontSize: _height * 0.016,
+                fontSize: _height * 0.018,
                 color: HexColor(CustomColors.grey1),
               ),
             ),
             SizedBox(height: _height * 0.03),
             _buildTextFieldWidget(
-              _controller!.fEmailController,
-              "Email",
+              _controller!.fMobileController,
+              "Mobile Number",
             ),
             SizedBox(height: _height * 0.025),
             Padding(

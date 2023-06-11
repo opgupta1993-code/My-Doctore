@@ -38,16 +38,19 @@ class DrawerController extends GetxController {
     await Future.delayed(const Duration(milliseconds: 130));
 
     switch (type) {
+      case -1:
+        Routes.selectCityScreen();
+        break;
+
       case 0:
-        break;
-
       case 1:
-        break;
-
       case 2:
-        break;
-
       case 3:
+      case 4:
+      case 5:
+      case 6:
+      case 7:
+        Routes.comingSoonScreen();
         break;
 
       case 8:

@@ -154,6 +154,11 @@ class DrawerScreen extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
+                       _buildDrawerItemButtonWidget(
+                        -1,
+                        "Change Location",
+                        "assets/images/location.webp",
+                      ),
                       _buildDrawerItemButtonWidget(
                         0,
                         "My Doctors",

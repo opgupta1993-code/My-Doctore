@@ -185,4 +185,9 @@ class NetworkCalls {
     const String path = "/wb/home";
     return await _postRequest(path, data: FormData.fromMap(data));
   }
+
+  static Future<Map> submitReviewRating(Map<String, dynamic> data) async {
+    const String path = "/wb/doctor_rating";
+    return await _postRequest(path, data: FormData.fromMap(data));
+  }
 }

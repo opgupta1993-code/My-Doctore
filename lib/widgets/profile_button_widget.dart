@@ -55,9 +55,9 @@ class ProfileButtonWidget extends StatelessWidget {
         child: CircleAvatar(
           radius: radius ?? _height * 0.026,
           foregroundImage: const CachedNetworkImageProvider(
-              "https://imageio.forbes.com/specials-images/imageserve/5ecebee7938ec500060ab34f/0x0.jpg?format=jpg&crop=2336,2337,x1064,y702,safe&height=416&width=416&fit=bounds"),
+              "https://cdn-icons-png.flaticon.com/512/1053/1053244.png"),
           backgroundImage: const CachedNetworkImageProvider(
-              "https://imageio.forbes.com/specials-images/imageserve/5ecebee7938ec500060ab34f/0x0.jpg?format=jpg&crop=2336,2337,x1064,y702,safe&height=416&width=416&fit=bounds"),
+              "https://cdn-icons-png.flaticon.com/512/1053/1053244.png"),
         ),
       ),
     );

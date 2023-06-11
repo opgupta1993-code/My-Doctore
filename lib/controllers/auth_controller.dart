@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hello_my_doctor/utils/firebase_util.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,7 +28,7 @@ class AuthController extends GetxController {
   late final TextEditingController mobileController;
   late final TextEditingController emailController;
   late final TextEditingController pwdController;
-  late final TextEditingController fEmailController;
+  late final TextEditingController fMobileController;
   late final TextEditingController fOTPController;
   late final TextEditingController fPwdController;
   late final TextEditingController fCPwdController;
@@ -78,7 +79,7 @@ class AuthController extends GetxController {
         _forgotThreeFormKey = GlobalKey<FormState>();
         mobileController = TextEditingController();
         pwdController = TextEditingController();
-        fEmailController = TextEditingController();
+        fMobileController = TextEditingController();
         fOTPController = TextEditingController();
         fPwdController = TextEditingController();
         fCPwdController = TextEditingController();
@@ -91,7 +92,7 @@ class AuthController extends GetxController {
     final Map<String, dynamic> data = {
       "mobile_no": mobileController.text,
       "password": pwdController.text,
-      "device_id": "1",
+      "device_id": await FirebaseUtil.getFCMToken(),
     };
 
     final Map res = await NetworkCalls.login(data);
@@ -126,10 +127,10 @@ class AuthController extends GetxController {
     final Map<String, dynamic> data = {
       "username": nameController.text,
       "mobile_no": mobileController.text,
-      "email": emailController.text,
+      // "email": emailController.text,
       "password": pwdController.text,
       "confirm_password": pwdController.text,
-      "device_id": "1",
+      "device_id": await FirebaseUtil.getFCMToken(),
     };
 
     final Map res = await NetworkCalls.signup(data);
@@ -185,7 +186,7 @@ class AuthController extends GetxController {
     await _signup();
   }
 
-  Future<void> onForgotPasswordPressed() async {
+  void onForgotPasswordPressed() {
     Utils.removeFocus();
 
     _forgotOneSheet.value = !_forgotOneSheet.value;
@@ -289,7 +290,7 @@ class AuthController extends GetxController {
       case "loginScreen":
         mobileController.dispose();
         pwdController.dispose();
-        fEmailController.dispose();
+        fMobileController.dispose();
         fOTPController.dispose();
         fPwdController.dispose();
         fCPwdController.dispose();

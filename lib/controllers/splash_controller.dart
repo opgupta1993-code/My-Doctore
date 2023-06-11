@@ -17,6 +17,12 @@ class SplashController extends GetxController {
   Future<void> onGetStartedPressed() async {
     await Future.delayed(const Duration(milliseconds: 100));
 
+    // if (Platform.isAndroid) {
+    //   SystemNavigator.pop();
+    // } else if (Platform.isIOS) {
+    //   exit(0);
+    // }
+
     Routes.introPageViewScreen();
   }
 }

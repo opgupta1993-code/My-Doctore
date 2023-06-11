@@ -5,6 +5,7 @@ import 'package:flutter_hello_my_doctor/controllers/select_city_controller.dart'
 import 'package:flutter_hello_my_doctor/controllers/select_doctor_controller.dart';
 import 'package:flutter_hello_my_doctor/controllers/user_controller.dart';
 import 'package:flutter_hello_my_doctor/networking/network_calls.dart';
+import 'package:flutter_hello_my_doctor/routes/routes.dart';
 import 'package:flutter_hello_my_doctor/utils/payment_gateway.dart';
 import 'package:flutter_hello_my_doctor/utils/utils.dart';
 import 'package:get/get.dart';
@@ -101,6 +102,11 @@ class MakeAppointmentController extends GetxController {
     Utils.removeFocus();
 
     if (!_formKey.currentState!.validate()) return;
+
+    if (!_userController.isLogin.value) {
+      Routes.loginScreen();
+      return;
+    }
 
     await Future.delayed(const Duration(milliseconds: 100));
     loading.value = true;
