@@ -149,6 +149,7 @@ class MakeAppointmentController extends GetxController {
           "TXNAMOUNT": gatewayResponse["TXNAMOUNT"],
           "TXNDATE": gatewayResponse["TXNDATE"],
           "BANKTXNID": gatewayResponse["BANKTXNID"],
+          "TXNID": gatewayResponse["TXNID"],
           "GATEWAYNAME": gatewayResponse["GATEWAYNAME"],
           "CHECKSUMHASH": gatewayResponse["CHECKSUMHASH"],
           "STATUS": gatewayResponse["STATUS"],

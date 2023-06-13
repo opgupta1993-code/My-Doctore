@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_options.dart';
+import 'package:flutter_hello_my_doctor/constants/service_enum.dart';
 import 'package:flutter_hello_my_doctor/controllers/drawer_controller.dart';
 import 'package:flutter_hello_my_doctor/controllers/select_city_controller.dart';
 import 'package:flutter_hello_my_doctor/models/home_model.dart';
@@ -60,9 +61,20 @@ class HomeController extends GetxController {
 
   void onSeeAllDoctorsPressed() {}
 
-  Future<void> onServiceSelected() async {
+  Future<void> onServiceSelected(ServiceEnum type) async {
     await Future.delayed(const Duration(milliseconds: 100));
-    Routes.selectDoctorCategoryScreen();
+
+    switch (type) {
+      case ServiceEnum.doctorAppointment:
+        Routes.selectDoctorCategoryScreen();
+        break;
+
+      case ServiceEnum.medicineDelivery:
+      case ServiceEnum.pathologyService:
+      case ServiceEnum.covid19RTPCRTest:
+        Routes.comingSoonScreen();
+        break;
+    }
   }
 
   void onSliderChanged(int index, CarouselPageChangedReason reason) {

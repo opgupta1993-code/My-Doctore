@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hello_my_doctor/constants/service_enum.dart';
 import 'package:flutter_hello_my_doctor/controllers/home_controller.dart';
 import 'package:flutter_hello_my_doctor/controllers/user_controller.dart';
 import 'package:flutter_hello_my_doctor/models/doctor_model.dart';
@@ -165,7 +166,8 @@ class HomeScreen extends StatelessWidget {
         ],
       );
 
-  Widget _buildServiceWidget(String title, String iconPath) => Stack(
+  Widget _buildServiceWidget(String title, String iconPath, ServiceEnum type) =>
+      Stack(
         children: [
           Container(
             decoration: BoxDecoration(
@@ -211,7 +213,7 @@ class HomeScreen extends StatelessWidget {
               color: Colors.transparent,
               child: InkWell(
                 borderRadius: BorderRadius.circular(_width * 0.04),
-                onTap: _controller!.onServiceSelected,
+                onTap: () => _controller!.onServiceSelected(type),
               ),
             ),
           ),
@@ -235,18 +237,22 @@ class HomeScreen extends StatelessWidget {
           _buildServiceWidget(
             "Doctor Appointment",
             "assets/images/doctor_appointment.webp",
+            ServiceEnum.doctorAppointment,
           ),
           _buildServiceWidget(
             "Medicine Delivery",
             "assets/images/medicine_delivery.webp",
+            ServiceEnum.medicineDelivery,
           ),
           _buildServiceWidget(
             "Pathology Service",
             "assets/images/pathology_service.webp",
+            ServiceEnum.pathologyService,
           ),
           _buildServiceWidget(
             "Covid-19 RT-PCR Test",
             "assets/images/covid.webp",
+            ServiceEnum.covid19RTPCRTest,
           ),
         ],
       );
