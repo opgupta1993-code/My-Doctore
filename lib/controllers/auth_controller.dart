@@ -13,7 +13,7 @@ import '../utils/utils.dart';
 import 'user_controller.dart';
 
 class AuthController extends GetxController {
-  late final RxBool loading;
+  late final RxBool loading, fOneLoading, fTwoLoading, fThreeLoading;
   late final RxBool agree;
   late final RxBool _forgotOneSheet;
   late final RxBool _forgotTwoSheet;
@@ -66,6 +66,10 @@ class AuthController extends GetxController {
         break;
 
       case "loginScreen":
+        fOneLoading = false.obs;
+        fTwoLoading = false.obs;
+        fThreeLoading = false.obs;
+
         _forgotOneSheet = false.obs;
         _forgotTwoSheet = false.obs;
         _forgotThreeSheet = false.obs;
@@ -120,7 +124,19 @@ class AuthController extends GetxController {
 
     _userController.setIsLogin = true;
 
-    Routes.selectCityScreen();
+    final bool isDirectLogin = Get.arguments["isDirectLogin"];
+
+    if (isDirectLogin) {
+      Routes.selectCityScreen(afterLogin: true);
+    } else {
+      final String? previousRoute = Get.arguments["previousRoute"];
+
+      if (previousRoute == null) {
+        Get.back();
+      } else {
+        Get.until((route) => route.settings.name == previousRoute);
+      }
+    }
   }
 
   Future<void> _signup() async {
@@ -143,6 +159,72 @@ class AuthController extends GetxController {
     }
 
     loading.value = false;
+  }
+
+  Future<void> _sendForgotPasswordOTP() async {
+    final Map<String, dynamic> data = {"mobile_no": fMobileController.text};
+
+    final Map res = await NetworkCalls.sendForgotPasswordOTP(data);
+
+    if (res["status"] == "200") {
+      if (_isForgotOneSheetOpen != null && _isForgotOneSheetOpen!) {
+        _forgotOneSheet.value = !_forgotOneSheet.value;
+        await Future.delayed(const Duration(milliseconds: 150));
+
+        _forgotTwoSheet.value = !_forgotTwoSheet.value;
+      }
+    } else {
+      Utils.showToast("${res["message"]}");
+    }
+
+    fOneLoading.value = false;
+  }
+
+  Future<void> _verifyForgotPasswordOTP() async {
+    final Map<String, dynamic> data = {
+      "mobile_no": fMobileController.text,
+      "otp": fOTPController.text,
+    };
+
+    final Map res = await NetworkCalls.verifyForgotPasswordOTP(data);
+
+    if (res["status"] == "200") {
+      if (_isForgotTwoSheetOpen != null && _isForgotTwoSheetOpen!) {
+        _forgotTwoSheet.value = !_forgotTwoSheet.value;
+
+        await Future.delayed(const Duration(milliseconds: 150));
+
+        _forgotThreeSheet.value = !_forgotThreeSheet.value;
+      }
+    } else {
+      Utils.showToast("${res["message"]}");
+    }
+
+    fTwoLoading.value = false;
+  }
+
+  Future<void> _resetPassword() async {
+    final Map<String, dynamic> data = {
+      "mobile_no": fMobileController.text,
+      "new_password": fPwdController.text,
+      "confirm_password": fCPwdController.text,
+    };
+
+    final Map res = await NetworkCalls.resetPassword(data);
+
+    if (res["status"] == "200") {
+      if (_isForgotThreeSheetOpen != null && _isForgotThreeSheetOpen!) {
+        _forgotThreeSheet.value = !_forgotThreeSheet.value;
+
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
+
+      Utils.showToast("Password reset successfully", color: Colors.green);
+    } else {
+      Utils.showToast("${res["message"]}");
+    }
+
+    fThreeLoading.value = false;
   }
 
   void onAgreePressed() {
@@ -249,27 +331,50 @@ class AuthController extends GetxController {
 
   Future<void> onForgotOneContinuePressed() async {
     Utils.removeFocus();
-    if (_isForgotOneSheetOpen != null && _isForgotOneSheetOpen!) {
-      _forgotOneSheet.value = !_forgotOneSheet.value;
-      await Future.delayed(const Duration(milliseconds: 150));
 
-      _forgotTwoSheet.value = !_forgotTwoSheet.value;
+    if (!_forgotOneFormKey.currentState!.validate()) {
+      return;
     }
+
+    fOneLoading.value = true;
+    await _sendForgotPasswordOTP();
+
+    // if (_isForgotOneSheetOpen != null && _isForgotOneSheetOpen!) {
+    //   _forgotOneSheet.value = !_forgotOneSheet.value;
+    //   await Future.delayed(const Duration(milliseconds: 150));
+
+    //   _forgotTwoSheet.value = !_forgotTwoSheet.value;
+    // }
   }
 
   Future<void> onForgotTwoContinuePressed() async {
     Utils.removeFocus();
-    if (_isForgotTwoSheetOpen != null && _isForgotTwoSheetOpen!) {
-      _forgotTwoSheet.value = !_forgotTwoSheet.value;
 
-      await Future.delayed(const Duration(milliseconds: 150));
-
-      _forgotThreeSheet.value = !_forgotThreeSheet.value;
+    if (!_forgotTwoFormKey.currentState!.validate()) {
+      return;
     }
+
+    fTwoLoading.value = true;
+    await _verifyForgotPasswordOTP();
+
+    // if (_isForgotTwoSheetOpen != null && _isForgotTwoSheetOpen!) {
+    //   _forgotTwoSheet.value = !_forgotTwoSheet.value;
+
+    //   await Future.delayed(const Duration(milliseconds: 150));
+
+    //   _forgotThreeSheet.value = !_forgotThreeSheet.value;
+    // }
   }
 
   Future<void> onForgotUpdatePasswordPressed() async {
     Utils.removeFocus();
+
+    if (!_forgotThreeFormKey.currentState!.validate()) {
+      return;
+    }
+
+    fThreeLoading.value = true;
+    await _resetPassword();
   }
 
   GlobalKey<FormState> get formKey => _formKey;

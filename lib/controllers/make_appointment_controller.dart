@@ -1,9 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hello_my_doctor/controllers/select_city_controller.dart';
-import 'package:flutter_hello_my_doctor/controllers/select_doctor_controller.dart';
 import 'package:flutter_hello_my_doctor/controllers/user_controller.dart';
+import 'package:flutter_hello_my_doctor/models/doctor_model.dart';
 import 'package:flutter_hello_my_doctor/networking/network_calls.dart';
 import 'package:flutter_hello_my_doctor/routes/routes.dart';
 import 'package:flutter_hello_my_doctor/utils/payment_gateway.dart';
@@ -13,6 +14,9 @@ import 'package:intl/intl.dart';
 
 class MakeAppointmentController extends GetxController {
   late final RxBool loading;
+  late final RxBool togglePaymentSuccessDialog;
+
+  StreamSubscription? _paymentSuccessDialogStateSubscription;
 
   late final GlobalKey<FormState> _formKey;
 
@@ -24,7 +28,8 @@ class MakeAppointmentController extends GetxController {
   late final TextEditingController dateController;
 
   late final SelectCityController _selectCityController;
-  late final SelectDoctorController _selectDoctorController;
+  DoctorDetailsModel? _selectedDoctor;
+  // late final SelectDoctorController _selectDoctorController;
   late final UserController _userController;
 
   @override
@@ -32,10 +37,13 @@ class MakeAppointmentController extends GetxController {
     super.onInit();
 
     loading = false.obs;
+    togglePaymentSuccessDialog = false.obs;
 
     _selectCityController = Get.find<SelectCityController>();
-    _selectDoctorController = Get.find<SelectDoctorController>();
+    // _selectDoctorController = Get.find<SelectDoctorController>();
     _userController = Get.find<UserController>();
+
+    _selectedDoctor = Get.arguments["data"];
 
     _formKey = GlobalKey<FormState>(debugLabel: "Make Appointment Form Key");
 
@@ -50,7 +58,7 @@ class MakeAppointmentController extends GetxController {
   Future<Map?> _initiatePayment() async {
     final Map res = await NetworkCalls.initiatePayment({
       "user_id": _userController.user.value.userId,
-      "amount": _selectDoctorController.selectedDoctor?.fees,
+      "amount": _selectedDoctor?.fees,
     });
 
     if (res.containsKey("body")) {
@@ -75,7 +83,8 @@ class MakeAppointmentController extends GetxController {
     final Map res = await NetworkCalls.bookAppointment(data);
 
     if (res["status"] == "200") {
-      Utils.showToast("Appointment booked successfully", color: Colors.green);
+      // Utils.showToast("Appointment booked successfully", color: Colors.green);
+      togglePaymentSuccessDialog.value = !togglePaymentSuccessDialog.value;
     } else {
       Utils.showToast("${res["message"]}");
     }
@@ -84,18 +93,32 @@ class MakeAppointmentController extends GetxController {
   }
 
   Future<void> openDatePicker() async {
-    final DateTime current = DateTime.now();
+    DateTime current = DateTime.now();
+
+    final TimeOfDay currentTime = TimeOfDay.now();
+
+    if (currentTime.hour > 9) {
+      current = current.add(const Duration(days: 1));
+    }
 
     final DateTime? dateTime = await showDatePicker(
       context: Get.context!,
+      currentDate: current,
       initialDate: current,
       firstDate: current,
-      lastDate: DateTime(current.year + 50),
+      lastDate: current,
     );
 
     if (dateTime != null) {
       dateController.text = DateFormat("dd-MM-yyyy").format(dateTime);
     }
+  }
+
+  Future<void> listenPaymentSuccessDialogState(Function showDialog) async {
+    _paymentSuccessDialogStateSubscription =
+        togglePaymentSuccessDialog.listen((data) async {
+      showDialog();
+    });
   }
 
   Future<void> onContinuePressed() async {
@@ -104,7 +127,10 @@ class MakeAppointmentController extends GetxController {
     if (!_formKey.currentState!.validate()) return;
 
     if (!_userController.isLogin.value) {
-      Routes.loginScreen();
+      Routes.loginScreen(
+        isDirectLogin: false,
+        previousRoute: "/makeAppointmentScreen",
+      );
       return;
     }
 
@@ -116,7 +142,7 @@ class MakeAppointmentController extends GetxController {
     if (data != null) {
       final Map? res = await PaymentGateway.pay(
         trnxToken: data["txnToken"],
-        amount: _selectDoctorController.selectedDoctor?.fees ?? "0",
+        amount: _selectedDoctor?.fees ?? "0",
         orderId: "${data["orderId"]}",
       );
 
@@ -136,8 +162,8 @@ class MakeAppointmentController extends GetxController {
         final Map<String, dynamic> data = {
           "user_id": _userController.user.value.userId,
           "location_id": _selectCityController.selectedCity?.id,
-          "category_id": _selectDoctorController.selectedDoctor?.categoryId,
-          "doctor_id": _selectDoctorController.selectedDoctor?.id,
+          "category_id": _selectedDoctor?.categoryId,
+          "doctor_id": _selectedDoctor?.id,
           "patient_name": nameController.text,
           "age": ageController.text,
           "father_name": fhNameController.text,
@@ -145,9 +171,10 @@ class MakeAppointmentController extends GetxController {
           "mobile_number": mobileController.text,
           "address": addressController.text,
           "date": dateController.text,
-          "fees": _selectDoctorController.selectedDoctor?.fees,
+          "fees": _selectedDoctor?.fees,
           "TXNAMOUNT": gatewayResponse["TXNAMOUNT"],
           "TXNDATE": gatewayResponse["TXNDATE"],
+          "BANKNAME": gatewayResponse["BANKNAME"],
           "BANKTXNID": gatewayResponse["BANKTXNID"],
           "TXNID": gatewayResponse["TXNID"],
           "GATEWAYNAME": gatewayResponse["GATEWAYNAME"],
@@ -168,7 +195,12 @@ class MakeAppointmentController extends GetxController {
     }
   }
 
+  Future<void> onDonePressed() async {
+    Get.back();
+  }
+
   GlobalKey<FormState> get formKey => _formKey;
+  DoctorDetailsModel? get selectedDoctor => _selectedDoctor;
 
   @override
   void onClose() {
@@ -179,6 +211,7 @@ class MakeAppointmentController extends GetxController {
     addressController.dispose();
     dateController.dispose();
 
+    _paymentSuccessDialogStateSubscription?.cancel();
     super.onClose();
   }
 }

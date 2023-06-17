@@ -125,7 +125,9 @@ class DoctorDetailsScreen extends StatelessWidget {
           ),
           elevation: const MaterialStatePropertyAll(0),
           backgroundColor: MaterialStatePropertyAll(
-            HexColor(CustomColors.blue1),
+            _controller!.data?.doctorDetails.isDoctorOnLeave == true
+                ? Colors.grey
+                : HexColor(CustomColors.blue1),
           ),
           overlayColor: MaterialStatePropertyAll(
             Colors.white.withOpacity(0.4),
@@ -183,7 +185,8 @@ class DoctorDetailsScreen extends StatelessWidget {
                             cons1.maxWidth * 0.03,
                           ),
                           child: CachedNetworkImage(
-                            imageUrl: _controller!.data?.image ?? "",
+                            imageUrl:
+                                _controller!.data?.doctorDetails.image ?? "",
                             height: cons1.maxHeight,
                             width: cons1.maxHeight,
                             fit: BoxFit.cover,
@@ -219,7 +222,8 @@ class DoctorDetailsScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      _controller!.data?.name ?? "",
+                                      _controller!.data?.doctorDetails.name ??
+                                          "",
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.rubik(
@@ -230,7 +234,8 @@ class DoctorDetailsScreen extends StatelessWidget {
                                     ),
                                     SizedBox(height: cons1.maxHeight * 0.03),
                                     Text(
-                                      _controller!.data?.degree ?? "",
+                                      _controller!.data?.doctorDetails.degree ??
+                                          "",
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.ptSans(
@@ -275,7 +280,9 @@ class DoctorDetailsScreen extends StatelessWidget {
                                         ),
                                         children: [
                                           TextSpan(
-                                            text: _controller!.data?.fees ?? "",
+                                            text: _controller!
+                                                    .data?.doctorDetails.fees ??
+                                                "",
                                             style: GoogleFonts.rubik(
                                               color:
                                                   HexColor(CustomColors.grey1),
@@ -543,7 +550,8 @@ class DoctorDetailsScreen extends StatelessWidget {
         ),
         child: Column(
           children: [
-            _buildTitleWidget("Ratings & Reviews (273)"),
+            _buildTitleWidget(
+                "Ratings & Reviews (${_controller!.getTotalReviewa})"),
             SizedBox(height: _height * 0.025),
             Text(
               "Summary",
@@ -560,15 +568,30 @@ class DoctorDetailsScreen extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    _buildReviewRatingBarWidget("5", 100),
+                    _buildReviewRatingBarWidget(
+                      "5",
+                      _controller!.data!.rating.d5RatingPercent,
+                    ),
                     SizedBox(height: _height * 0.015),
-                    _buildReviewRatingBarWidget("4", 90),
+                    _buildReviewRatingBarWidget(
+                      "4",
+                      _controller!.data!.rating.d4RatingPercent,
+                    ),
                     SizedBox(height: _height * 0.015),
-                    _buildReviewRatingBarWidget("3", 80),
+                    _buildReviewRatingBarWidget(
+                      "3",
+                      _controller!.data!.rating.d3RatingPercent,
+                    ),
                     SizedBox(height: _height * 0.015),
-                    _buildReviewRatingBarWidget("2", 70),
+                    _buildReviewRatingBarWidget(
+                      "2",
+                      _controller!.data!.rating.d2RatingPercent,
+                    ),
                     SizedBox(height: _height * 0.015),
-                    _buildReviewRatingBarWidget("1", 60),
+                    _buildReviewRatingBarWidget(
+                      "1",
+                      _controller!.data!.rating.d1RatingPercent,
+                    ),
                   ],
                 ),
                 SizedBox(width: _width * 0.05),
@@ -577,15 +600,15 @@ class DoctorDetailsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildReviewRatingInfoWidget(
-                        "4.5",
-                        "273 Reviews",
+                        "${_controller!.data?.doctorDetails.rating}",
+                        "${_controller!.getTotalReviewa} Reviews",
                       ),
-                      SizedBox(height: _height * 0.04),
-                      _buildReviewRatingInfoWidget(
-                        "88%",
-                        "Recommended",
-                        hasIcon: false,
-                      ),
+                      // SizedBox(height: _height * 0.04),
+                      // _buildReviewRatingInfoWidget(
+                      //   "88%",
+                      //   "Recommended",
+                      //   hasIcon: false,
+                      // ),
                     ],
                   ),
                 ),
@@ -619,7 +642,7 @@ class DoctorDetailsScreen extends StatelessWidget {
               RatingBar.builder(
                 tapOnlyMode: true,
                 ignoreGestures: true,
-                initialRating: 4.5,
+                initialRating: _controller!.data?.doctorDetails.rating ?? 0,
                 minRating: 1,
                 direction: Axis.horizontal,
                 allowHalfRating: true,
@@ -709,7 +732,8 @@ class DoctorDetailsScreen extends StatelessWidget {
             RatingBar.builder(
               tapOnlyMode: false,
               ignoreGestures: false,
-              initialRating: 0.0,
+              initialRating:
+                  _controller!.data?.myRatingInfo.howManyRated ?? 0.0,
               minRating: 1,
               direction: Axis.horizontal,
               allowHalfRating: true,
@@ -769,13 +793,88 @@ class DoctorDetailsScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildDoctorDetailTextWidget(String title, String value) => RichText(
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        text: TextSpan(
+          text: title,
+          style: GoogleFonts.rubik(
+            color: HexColor(CustomColors.grey3),
+            fontSize: _height * 0.018,
+            fontWeight: FontWeight.w500,
+          ),
+          children: [
+            TextSpan(
+              text: value,
+              style: GoogleFonts.rubik(
+                color: Colors.black,
+                fontSize: _height * 0.018,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Widget get _buildDoctorDetailsWidget => Container(
+        width: _width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(_width * 0.025),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Get.isDarkMode
+                  ? Colors.white.withOpacity(0.09)
+                  : const Color(0x10002958),
+              offset: const Offset(0, 0),
+              blurRadius: _width * 0.02,
+            ),
+          ],
+        ),
+        padding: EdgeInsets.symmetric(
+          horizontal: _width * 0.03,
+          vertical: _height * 0.02,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildDoctorDetailTextWidget(
+              "Hostital : ",
+              "${_controller!.data?.doctorDetails.hospitalName}",
+            ),
+            SizedBox(height: _height * 0.01),
+            _buildDoctorDetailTextWidget(
+              "Experience : ",
+              "${_controller!.data?.doctorDetails.startExperience}",
+            ),
+            SizedBox(height: _height * 0.01),
+            _buildDoctorDetailTextWidget(
+              "Time : ",
+              "${_controller!.data?.doctorDetails.fromTime} - ${_controller!.data?.doctorDetails.toTime}",
+            ),
+            SizedBox(height: _height * 0.01),
+            _buildDoctorDetailTextWidget(
+              "Days : ",
+              "${_controller!.data?.doctorDetails.days}",
+            ),
+            SizedBox(height: _height * 0.01),
+            _buildDoctorDetailTextWidget(
+              "Address : ",
+              "${_controller!.data?.doctorDetails.address}",
+            ),
+          ],
+        ),
+      );
+
   Widget get _buildContentWidget => SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: _width * 0.05),
         child: Column(
           children: [
             _buildDoctorWidget,
+            // SizedBox(height: _height * 0.035),
+            // _buildInformationWidget,
             SizedBox(height: _height * 0.035),
-            _buildInformationWidget,
+            _buildDoctorDetailsWidget,
             SizedBox(height: _height * 0.035),
             _buildRatingsReviewsWidget,
             SizedBox(height: _height * 0.05),

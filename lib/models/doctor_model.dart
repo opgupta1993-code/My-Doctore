@@ -1,6 +1,39 @@
 import 'package:flutter_hello_my_doctor/utils/utils.dart';
 
 class DoctorModel {
+  DoctorDetailsModel _doctorDetails = DoctorDetailsModel();
+  MyRatingInfoModel _myRatingInfo = MyRatingInfoModel();
+  RatingModel _rating = RatingModel();
+
+  DoctorModel.fromJson(Map json) {
+    if (json.containsKey("doctor_details") && json["doctor_details"] is Map) {
+      _doctorDetails = DoctorDetailsModel.fromJson(json["doctor_details"]);
+    }
+
+    if (json.containsKey("rating-info") && json["rating-info"] is Map) {
+      _myRatingInfo = MyRatingInfoModel.fromJson(json["rating-info"]);
+    }
+
+    if (json.containsKey("rating_count_and_percent") &&
+        json["rating_count_and_percent"] is Map) {
+      _rating = RatingModel.fromJson(json["rating_count_and_percent"]);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['doctor_details'] = _doctorDetails;
+    data['rating-info'] = _myRatingInfo;
+    data['rating_count_and_percent'] = _rating;
+    return data;
+  }
+
+  DoctorDetailsModel get doctorDetails => _doctorDetails;
+  MyRatingInfoModel get myRatingInfo => _myRatingInfo;
+  RatingModel get rating => _rating;
+}
+
+class DoctorDetailsModel {
   String _id = "";
   String _categoryId = "";
   String _locationId = "";
@@ -29,8 +62,14 @@ class DoctorModel {
   double _rating = 0.0;
   String _locationName = "";
   String _categoryName = "";
+  String _description = "";
+  bool _isDoctorOnLeave = false;
+  String _fromDate = "";
+  String _toDate = "";
 
-  DoctorModel.fromJson(Map json) {
+  DoctorDetailsModel();
+
+  DoctorDetailsModel.fromJson(Map json) {
     _id = json['id'] ?? "";
     _categoryId = json['category_id'] ?? "";
     _locationId = json['location_id'] ?? "";
@@ -59,6 +98,10 @@ class DoctorModel {
     _rating = Utils.getDoubleFromString("${json['rating']}");
     _locationName = json['location_name'] ?? "";
     _categoryName = json['category_name'] ?? "";
+    _description = json['description'] ?? "";
+    _isDoctorOnLeave = json['is_doctor_on_leave'] == 1;
+    _fromDate = json['from_date'] ?? "";
+    _toDate = json['to_date'] ?? "";
   }
 
   String getNextAvailability(String inputDay) {
@@ -108,6 +151,10 @@ class DoctorModel {
     data['rating'] = _rating;
     data['location_name'] = _locationName;
     data['category_name'] = _categoryName;
+    data['description'] = _description;
+    data['is_doctor_on_leave'] = _isDoctorOnLeave;
+    data['from_date'] = _fromDate;
+    data['to_date'] = _toDate;
     return data;
   }
 
@@ -139,4 +186,88 @@ class DoctorModel {
   double get rating => _rating;
   String get locationName => _locationName;
   String get categoryName => _categoryName;
+  String get description => _description;
+  bool get isDoctorOnLeave => _isDoctorOnLeave;
+  String get fromDate => _fromDate;
+  String get toDate => _toDate;
+}
+
+class MyRatingInfoModel {
+  bool _isDoctorRated = false;
+  double _howManyRated = 0.0;
+  String _description = "";
+
+  MyRatingInfoModel();
+
+  MyRatingInfoModel.fromJson(Map<String, dynamic> json) {
+    _isDoctorRated = json['is_doctor_rated'] == 1;
+    _howManyRated = Utils.getDoubleFromString("${json['how_many_rated']}");
+    _description = json['msg'] ?? "";
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['is_doctor_rated'] = _isDoctorRated;
+    data['how_many_rated'] = _howManyRated;
+    data['msg'] = _description;
+    return data;
+  }
+
+  bool get isDoctorRated => _isDoctorRated;
+  double get howManyRated => _howManyRated;
+  String get description => _description;
+}
+
+class RatingModel {
+  int _noOfRating1 = 0;
+  double _d1RatingPercent = 0.0;
+  int _noOfRating2 = 0;
+  double _d2RatingPercent = 0.0;
+  int _noOfRating3 = 0;
+  double _d3RatingPercent = 0.0;
+  int _noOfRating4 = 0;
+  double _d4RatingPercent = 0.0;
+  int _noOfRating5 = 0;
+  double _d5RatingPercent = 0.0;
+
+  RatingModel();
+
+  RatingModel.fromJson(Map<String, dynamic> json) {
+    _noOfRating1 = Utils.getIntFromString("${json['no_of_rating_1']}");
+    _d1RatingPercent = Utils.getDoubleFromString("${json['1_rating_percent']}");
+    _noOfRating2 = Utils.getIntFromString("${json['no_of_rating_2']}");
+    _d2RatingPercent = Utils.getDoubleFromString("${json['2_rating_percent']}");
+    _noOfRating3 = Utils.getIntFromString("${json['no_of_rating_3']}");
+    _d3RatingPercent = Utils.getDoubleFromString("${json['3_rating_percent']}");
+    _noOfRating4 = Utils.getIntFromString("${json['no_of_rating_4']}");
+    _d4RatingPercent = Utils.getDoubleFromString("${json['4_rating_percent']}");
+    _noOfRating5 = Utils.getIntFromString("${json['']}");
+    _d5RatingPercent = Utils.getDoubleFromString("${json['5_rating_percent']}");
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['no_of_rating_1'] = _noOfRating1;
+    data['1_rating_percent'] = _d1RatingPercent;
+    data['no_of_rating_2'] = _noOfRating2;
+    data['2_rating_percent'] = _d2RatingPercent;
+    data['no_of_rating_3'] = _noOfRating3;
+    data['3_rating_percent'] = _d3RatingPercent;
+    data['no_of_rating_4'] = _noOfRating4;
+    data['4_rating_percent'] = _d4RatingPercent;
+    data['no_of_rating_5'] = _noOfRating5;
+    data['5_rating_percent'] = _d5RatingPercent;
+    return data;
+  }
+
+  int get noOfRating1 => _noOfRating1;
+  double get d1RatingPercent => _d1RatingPercent;
+  int get noOfRating2 => _noOfRating2;
+  double get d2RatingPercent => _d2RatingPercent;
+  int get noOfRating3 => _noOfRating3;
+  double get d3RatingPercent => _d3RatingPercent;
+  int get noOfRating4 => _noOfRating4;
+  double get d4RatingPercent => _d4RatingPercent;
+  int get noOfRating5 => _noOfRating5;
+  double get d5RatingPercent => _d5RatingPercent;
 }

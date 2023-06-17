@@ -7,6 +7,7 @@ import 'package:flutter_hello_my_doctor/bindings/profile_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/select_city_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/select_doctor_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/select_doctor_category_binding.dart';
+import 'package:flutter_hello_my_doctor/models/doctor_model.dart';
 import 'package:flutter_hello_my_doctor/screens/auth/login_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/auth/signup_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/doctor_details_screen.dart';
@@ -127,8 +128,17 @@ class Routes {
     return await Get.offAllNamed("/introPageViewScreen");
   }
 
-  static Future<void> loginScreen() async {
-    return await Get.toNamed("/loginScreen");
+  static Future<void> loginScreen({
+    bool isDirectLogin = true,
+    String? previousRoute,
+  }) async {
+    return await Get.toNamed(
+      "/loginScreen",
+      arguments: {
+        "isDirectLogin": isDirectLogin,
+        "previousRoute": previousRoute,
+      },
+    );
   }
 
   static Future<void> signupScreen() async {
@@ -147,20 +157,36 @@ class Routes {
     return await Get.toNamed("/selectDoctorCategoryScreen");
   }
 
-  static Future<void> selectCityScreen() async {
-    return await Get.toNamed("/selectCityScreen");
+  static Future<void> selectCityScreen({bool afterLogin = false}) async {
+    if (afterLogin) {
+      return await Get.offAllNamed(
+        "/selectCityScreen",
+        arguments: {"data": afterLogin},
+      );
+    }
+
+    return await Get.toNamed(
+      "/selectCityScreen",
+      arguments: {"data": afterLogin},
+    );
   }
 
   static Future<void> selectDoctorScreen() async {
     return await Get.toNamed("/selectDoctorScreen");
   }
 
-  static Future<void> makeAppointmentScreen() async {
-    return await Get.toNamed("/makeAppointmentScreen");
+  static Future<void> makeAppointmentScreen(DoctorDetailsModel data) async {
+    return await Get.toNamed(
+      "/makeAppointmentScreen",
+      arguments: {"data": data},
+    );
   }
 
-  static Future<void> doctorDetailsScreen() async {
-    return await Get.toNamed("/doctorDetailsScreen");
+  static Future<void> doctorDetailsScreen(DoctorDetailsModel data) async {
+    return await Get.toNamed(
+      "/doctorDetailsScreen",
+      arguments: {"data": data},
+    );
   }
 
   static Future<void> profileScreen() async {

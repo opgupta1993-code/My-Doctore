@@ -105,7 +105,7 @@ class SignupScreen extends StatelessWidget {
           textStyle: MaterialStateProperty.all(
             GoogleFonts.rubik(
               fontWeight: FontWeight.w400,
-              fontSize: _height * 0.016,
+              fontSize: _height * 0.019,
             ),
           ),
         ),
@@ -194,7 +194,7 @@ class SignupScreen extends StatelessWidget {
                   style: GoogleFonts.rubik(
                     color: HexColor(CustomColors.grey1),
                     fontWeight: FontWeight.w400,
-                    fontSize: _height * 0.0145,
+                    fontSize: _height * 0.016,
                   ),
                 ),
               ),

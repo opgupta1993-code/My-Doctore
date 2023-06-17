@@ -69,15 +69,17 @@ class HomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: cons.maxHeight * 0.05),
-                    Text(
-                      "Hi ${_userController!.user.value.userName}",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.rubik(
-                        fontWeight: FontWeight.w300,
-                        fontSize: cons.maxHeight * 0.2,
-                        color: Colors.white,
+                    Obx(
+                      () => Text(
+                        "Hi ${_userController!.user.value.userName}",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.rubik(
+                          fontWeight: FontWeight.w300,
+                          fontSize: cons.maxHeight * 0.2,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                     SizedBox(height: cons.maxHeight * 0.04),
@@ -96,7 +98,9 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(width: _width * 0.02),
-              ProfileButtonWidget(),
+              ProfileButtonWidget(
+                onPressed: _controller!.onProfilePressed,
+              ),
             ],
           );
         }),
@@ -301,102 +305,116 @@ class HomeScreen extends StatelessWidget {
         ),
       );
 
-  Widget _buildPopularDoctorItemWidget(DoctorModel data) =>
+  Widget _buildPopularDoctorItemWidget(DoctorDetailsModel data) =>
       LayoutBuilder(builder: (context, cons) {
-        return Container(
-          width: _width * 0.5,
-          height: cons.maxHeight,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(_width * 0.04),
-          ),
-          child: Column(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(_width * 0.04),
-                  topRight: Radius.circular(_width * 0.04),
-                ),
-                child: SizedBox(
-                  height: cons.maxHeight * 0.65,
-                  width: double.infinity,
-                  child: CachedNetworkImage(
-                    imageUrl: data.image,
-                    height: cons.maxHeight * 0.65,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    progressIndicatorBuilder: (context, _, __) => SizedBox(
+        return Stack(
+          children: [
+            Container(
+              width: _width * 0.5,
+              height: cons.maxHeight,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(_width * 0.04),
+              ),
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(_width * 0.04),
+                      topRight: Radius.circular(_width * 0.04),
+                    ),
+                    child: SizedBox(
                       height: cons.maxHeight * 0.65,
                       width: double.infinity,
-                      child: CircularLoadingWidget(
-                        _width * 0.5,
-                        center: true,
+                      child: CachedNetworkImage(
+                        imageUrl: data.image,
+                        height: cons.maxHeight * 0.65,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        progressIndicatorBuilder: (context, _, __) => SizedBox(
+                          height: cons.maxHeight * 0.65,
+                          width: double.infinity,
+                          child: CircularLoadingWidget(
+                            _width * 0.5,
+                            center: true,
+                          ),
+                        ),
+                        errorWidget: (context, _, __) => SizedBox(
+                          height: double.infinity,
+                          width: double.infinity,
+                          child: Image.asset(
+                            "assets/images/logo.webp",
+                          ),
+                        ),
                       ),
                     ),
-                    errorWidget: (context, _, __) => SizedBox(
-                      height: double.infinity,
-                      width: double.infinity,
-                      child: Image.asset(
-                        "assets/images/logo.webp",
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: _width * 0.015,
+                        vertical: cons.maxHeight * 0.02,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            data.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.rubik(
+                              fontWeight: FontWeight.w500,
+                              fontSize: cons.maxHeight * 0.065,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: cons.maxHeight * 0.01),
+                          Text(
+                            data.degree,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.rubik(
+                              fontWeight: FontWeight.w300,
+                              fontSize: cons.maxHeight * 0.05,
+                              color:
+                                  HexColor(CustomColors.grey1).withOpacity(0.8),
+                            ),
+                          ),
+                          SizedBox(height: cons.maxHeight * 0.01),
+                          RatingBar.builder(
+                            tapOnlyMode: true,
+                            ignoreGestures: true,
+                            initialRating: data.rating,
+                            minRating: 1,
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            itemCount: 5,
+                            itemSize: _height * 0.02,
+                            itemPadding: EdgeInsets.zero,
+                            itemBuilder: (context, _) => const Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            onRatingUpdate: (rating) {},
+                          ),
+                        ],
                       ),
                     ),
                   ),
+                ],
+              ),
+            ),
+            Positioned.fill(
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(_width * 0.04),
+                  onTap: () => _controller!.onDoctorPressed(data),
                 ),
               ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: _width * 0.015,
-                    vertical: cons.maxHeight * 0.02,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        data.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.rubik(
-                          fontWeight: FontWeight.w500,
-                          fontSize: cons.maxHeight * 0.065,
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(height: cons.maxHeight * 0.01),
-                      Text(
-                        data.degree,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.rubik(
-                          fontWeight: FontWeight.w300,
-                          fontSize: cons.maxHeight * 0.05,
-                          color: HexColor(CustomColors.grey1).withOpacity(0.8),
-                        ),
-                      ),
-                      SizedBox(height: cons.maxHeight * 0.01),
-                      RatingBar.builder(
-                        tapOnlyMode: true,
-                        ignoreGestures: true,
-                        initialRating: data.rating,
-                        minRating: 1,
-                        direction: Axis.horizontal,
-                        allowHalfRating: true,
-                        itemCount: 5,
-                        itemSize: _height * 0.02,
-                        itemPadding: EdgeInsets.zero,
-                        itemBuilder: (context, _) => const Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                        ),
-                        onRatingUpdate: (rating) {},
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         );
       });
 

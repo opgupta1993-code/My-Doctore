@@ -158,7 +158,7 @@ class NetworkCalls {
   }
 
   static Future<Map> getDoctors(Map<String, dynamic> data) async {
-    const String path = "/wb/doctors";
+    const String path = "/wb/doctor_search";
     return await _postRequest(path, data: FormData.fromMap(data));
   }
 
@@ -188,6 +188,21 @@ class NetworkCalls {
 
   static Future<Map> submitReviewRating(Map<String, dynamic> data) async {
     const String path = "/wb/doctor_rating";
+    return await _postRequest(path, data: FormData.fromMap(data));
+  }
+
+  static Future<Map> sendForgotPasswordOTP(Map<String, dynamic> data) async {
+    const String path = "/wb/forgot_password";
+    return await _postRequest(path, data: FormData.fromMap(data));
+  }
+
+  static Future<Map> verifyForgotPasswordOTP(Map<String, dynamic> data) async {
+    const String path = "/wb/otp_verification";
+    return await _postRequest(path, data: FormData.fromMap(data));
+  }
+
+  static Future<Map> resetPassword(Map<String, dynamic> data) async {
+    const String path = "/wb/reset_password";
     return await _postRequest(path, data: FormData.fromMap(data));
   }
 }

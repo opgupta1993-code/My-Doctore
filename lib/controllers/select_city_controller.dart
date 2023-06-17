@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_hello_my_doctor/models/city_model.dart';
 import 'package:flutter_hello_my_doctor/networking/network_calls.dart';
 import 'package:flutter_hello_my_doctor/utils/utils.dart';
@@ -7,15 +8,26 @@ import '../routes/routes.dart';
 
 class SelectCityController extends GetxController {
   late final RxBool loading;
-  late final List<CityModel> _dataList;
+  late final RxList dataList;
+  late final List<CityModel> _allDataList;
+
+  late final TextEditingController searchController;
+
   CityModel? _selectedCity;
+
+  bool? afterLogin;
 
   @override
   void onInit() {
     super.onInit();
 
     loading = true.obs;
-    _dataList = <CityModel>[];
+    dataList = <CityModel>[].obs;
+    _allDataList = <CityModel>[];
+
+    searchController = TextEditingController();
+
+    afterLogin = Get.arguments["data"] ?? false;
 
     _getData();
   }
@@ -28,12 +40,14 @@ class SelectCityController extends GetxController {
 
       if (dataList.isNotEmpty) {
         for (Map d in dataList) {
-          _dataList.add(CityModel.fromJson(d));
+          _allDataList.add(CityModel.fromJson(d));
         }
       }
     } else {
       Utils.showToast("${res["message"]}");
     }
+
+    dataList.assignAll(_allDataList);
 
     loading.value = false;
   }
@@ -46,6 +60,35 @@ class SelectCityController extends GetxController {
     Routes.drawerScreen();
   }
 
-  List<CityModel> get dataList => _dataList;
+  void onCanclePressed() {
+    searchController.clear();
+
+    dataList.clear();
+    dataList.assignAll(_allDataList);
+  }
+
+  void onSearch(String value) {
+    if (value.isEmpty) {
+      dataList.clear();
+      dataList.assignAll(_allDataList);
+    } else {
+      final List<CityModel> searchedData = _allDataList
+          .where(
+            (element) =>
+                element.name.toLowerCase().contains(value.toLowerCase()),
+          )
+          .toList();
+
+      dataList.clear();
+      dataList.assignAll(searchedData);
+    }
+  }
+
   CityModel? get selectedCity => _selectedCity;
+
+  @override
+  void onClose() {
+    searchController.dispose();
+    super.onClose();
+  }
 }

@@ -94,6 +94,57 @@ class SelectDoctorScreen extends StatelessWidget {
         onChanged: _controller!.onSearch,
       );
 
+  Widget get _buildSearchWidget => Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(_width * 0.025),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Get.isDarkMode
+                  ? Colors.white.withOpacity(0.09)
+                  : const Color(0x10002958),
+              offset: const Offset(0, 0),
+              blurRadius: _width * 0.02,
+            ),
+          ],
+        ),
+        margin: EdgeInsets.symmetric(
+          horizontal: _width * 0.05,
+        ),
+        padding: EdgeInsets.symmetric(
+          horizontal: _width * 0.03,
+          vertical: _height * 0.02,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              CupertinoIcons.search,
+              size: _height * 0.027,
+              color: HexColor(CustomColors.grey1),
+            ),
+            SizedBox(width: _width * 0.025),
+            Expanded(
+              child: _buildTextFieldWidget(
+                _controller!.searchController,
+                "Search...",
+              ),
+            ),
+            SizedBox(width: _width * 0.025),
+            CupertinoButton(
+              minSize: 0,
+              padding: EdgeInsets.zero,
+              onPressed: _controller!.onCanclePressed,
+              child: Icon(
+                Icons.close,
+                color: HexColor(CustomColors.grey1),
+                size: _height * 0.027,
+              ),
+            ),
+          ],
+        ),
+      );
+
   Widget _buildInfoWidget(BoxConstraints cons, String data) => Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -123,7 +174,8 @@ class SelectDoctorScreen extends StatelessWidget {
         ],
       );
 
-  Widget _buildBookNowButtonWidget(BoxConstraints cons, DoctorModel data) =>
+  Widget _buildBookNowButtonWidget(
+          BoxConstraints cons, DoctorDetailsModel data) =>
       TextButton(
         style: ButtonStyle(
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -161,7 +213,7 @@ class SelectDoctorScreen extends StatelessWidget {
         ),
       );
 
-  Widget _buildDoctorItemWidget(DoctorModel data) => GestureDetector(
+  Widget _buildDoctorItemWidget(DoctorDetailsModel data) => GestureDetector(
         onTap: () => _controller!.onDoctorPressed(data),
         child: Container(
           height: _height * 0.21,
@@ -314,38 +366,60 @@ class SelectDoctorScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(
-                                "Next Available",
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.rubik(
-                                  color: HexColor(CustomColors.green1),
-                                  fontSize: cons1.maxHeight * 0.24,
-                                  fontWeight: FontWeight.w500,
+                              if (data.isDoctorOnLeave)
+                                Text(
+                                  "On Leave",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.rubik(
+                                    color: Colors.red,
+                                    fontSize: cons1.maxHeight * 0.24,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                )
+                              else
+                                Text(
+                                  "Next Available",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.rubik(
+                                    color: HexColor(CustomColors.green1),
+                                    fontSize: cons1.maxHeight * 0.24,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
                               SizedBox(height: cons1.maxHeight * 0.05),
-                              RichText(
-                                text: TextSpan(
-                                  text: data.fromTime,
+                              if (data.isDoctorOnLeave)
+                                Text(
+                                  "${data.fromDate} - ${data.toDate}",
                                   style: GoogleFonts.rubik(
                                     color: HexColor(CustomColors.grey1),
                                     fontSize: cons1.maxHeight * 0.24,
                                     fontWeight: FontWeight.w500,
                                   ),
-                                  children: [
-                                    TextSpan(
-                                      text:
-                                          " ${data.getNextAvailability(Utils.getTomorrowDayName())}",
-                                      style: GoogleFonts.rubik(
-                                        color: HexColor(CustomColors.grey1),
-                                        fontSize: cons1.maxHeight * 0.24,
-                                        fontWeight: FontWeight.w400,
-                                      ),
+                                )
+                              else
+                                RichText(
+                                  text: TextSpan(
+                                    text: data.fromTime,
+                                    style: GoogleFonts.rubik(
+                                      color: HexColor(CustomColors.grey1),
+                                      fontSize: cons1.maxHeight * 0.24,
+                                      fontWeight: FontWeight.w500,
                                     ),
-                                  ],
+                                    children: [
+                                      TextSpan(
+                                        text:
+                                            " ${data.getNextAvailability(Utils.getTomorrowDayName())}",
+                                        style: GoogleFonts.rubik(
+                                          color: HexColor(CustomColors.grey1),
+                                          fontSize: cons1.maxHeight * 0.24,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
                             ],
                           ),
                         ),
@@ -460,60 +534,7 @@ class SelectDoctorScreen extends StatelessWidget {
                 children: [
                   _buildAppbarWidget,
                   SizedBox(height: _height * 0.02),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(_width * 0.025),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Get.isDarkMode
-                              ? Colors.white.withOpacity(0.09)
-                              : const Color(0x10002958),
-                          offset: const Offset(0, 0),
-                          blurRadius: _width * 0.02,
-                        ),
-                      ],
-                    ),
-                    margin: EdgeInsets.symmetric(
-                      horizontal: _width * 0.05,
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: _width * 0.03,
-                      vertical: _height * 0.02,
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(
-                          CupertinoIcons.search,
-                          size: _height * 0.027,
-                          color: HexColor(CustomColors.grey1),
-                        ),
-                        SizedBox(width: _width * 0.025),
-                        Expanded(
-                          child: _buildTextFieldWidget(
-                            _controller!.searchController,
-                            "Search...",
-                          ),
-                        ),
-                        SizedBox(width: _width * 0.025),
-                        // SizedBox(
-                        //   width: _width * 0.2,
-                        //   child: _buildLocationDropDownWidget,
-                        // ),
-                        CupertinoButton(
-                          minSize: 0,
-                          padding: EdgeInsets.zero,
-                          onPressed: _controller!.onCanclePressed,
-                          child: Icon(
-                            Icons.close,
-                            color: HexColor(CustomColors.grey1),
-                            size: _height * 0.027,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  _buildSearchWidget,
                   SizedBox(height: _height * 0.03),
                   Expanded(child: _buildListViewWidget),
                 ],

@@ -107,7 +107,7 @@ class LoginScreen extends StatelessWidget {
           textStyle: MaterialStateProperty.all(
             GoogleFonts.rubik(
               fontWeight: FontWeight.w400,
-              fontSize: _height * 0.016,
+              fontSize: _height * 0.019,
             ),
           ),
         ),
@@ -142,7 +142,7 @@ class LoginScreen extends StatelessWidget {
           textStyle: MaterialStateProperty.all(
             GoogleFonts.rubik(
               fontWeight: FontWeight.w400,
-              fontSize: _height * 0.016,
+              fontSize: _height * 0.019,
             ),
           ),
         ),
@@ -244,21 +244,40 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: _height * 0.03),
-            _buildTextFieldWidget(
-              _controller!.fPwdController,
-              "New Password",
-            ),
-            SizedBox(height: _height * 0.02),
-            _buildTextFieldWidget(
-              _controller!.fCPwdController,
-              "Re-enter Password",
+            Form(
+              key: _controller!.forgotThreeFormKey,
+              autovalidateMode: AutovalidateMode.disabled,
+              child: Column(
+                children: [
+                  _buildTextFieldWidget(
+                    _controller!.fPwdController,
+                    "New Password",
+                  ),
+                  SizedBox(height: _height * 0.02),
+                  _buildTextFieldWidget(
+                    _controller!.fCPwdController,
+                    "Re-enter Password",
+                    validator: (val) => Utils.validator2(
+                      val,
+                      "required",
+                      val2: _controller!.fPwdController.text,
+                      matchTwoValues: true,
+                      message2: "Password & Confirm password does not match",
+                    ),
+                  ),
+                ],
+              ),
             ),
             SizedBox(height: _height * 0.025),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: _width * 0.07),
-              child: ButtonWidget(
-                text: "Update Password",
-                onPressed: _controller!.onForgotUpdatePasswordPressed,
+              child: Obx(
+                () => _controller!.fThreeLoading.value
+                    ? CircularLoadingWidget(_width, center: true)
+                    : ButtonWidget(
+                        text: "Update Password",
+                        onPressed: _controller!.onForgotUpdatePasswordPressed,
+                      ),
               ),
             ),
           ],
@@ -307,14 +326,22 @@ class LoginScreen extends StatelessWidget {
             SizedBox(height: _height * 0.03),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: _width * 0.07),
-              child: _buildPinFieldWidget,
+              child: Form(
+                key: _controller!.forgotTwoFormKey,
+                autovalidateMode: AutovalidateMode.disabled,
+                child: _buildPinFieldWidget,
+              ),
             ),
             SizedBox(height: _height * 0.025),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: _width * 0.07),
-              child: ButtonWidget(
-                text: "Continue",
-                onPressed: _controller!.onForgotTwoContinuePressed,
+              child: Obx(
+                () => _controller!.fTwoLoading.value
+                    ? CircularLoadingWidget(_width, center: true)
+                    : ButtonWidget(
+                        text: "Continue",
+                        onPressed: _controller!.onForgotTwoContinuePressed,
+                      ),
               ),
             ),
           ],
@@ -361,16 +388,24 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: _height * 0.03),
-            _buildTextFieldWidget(
-              _controller!.fMobileController,
-              "Mobile Number",
+            Form(
+              key: _controller!.forgotOneFormKey,
+              autovalidateMode: AutovalidateMode.disabled,
+              child: _buildTextFieldWidget(
+                _controller!.fMobileController,
+                "Mobile Number",
+              ),
             ),
             SizedBox(height: _height * 0.025),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: _width * 0.07),
-              child: ButtonWidget(
-                text: "Continue",
-                onPressed: _controller!.onForgotOneContinuePressed,
+              child: Obx(
+                () => _controller!.fOneLoading.value
+                    ? CircularLoadingWidget(_width, center: true)
+                    : ButtonWidget(
+                        text: "Continue",
+                        onPressed: _controller!.onForgotOneContinuePressed,
+                      ),
               ),
             ),
           ],

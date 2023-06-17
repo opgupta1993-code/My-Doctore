@@ -6,6 +6,7 @@ class CustomColors {
   static const String black1 = "#333333";
 
   static const String green1 = "#0EBE7F";
+  static const String green2 = "#E7F8F2";
 
   static const String grey1 = "#677294";
   static const String grey2 = "#B5B0B0";

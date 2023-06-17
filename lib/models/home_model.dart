@@ -2,16 +2,16 @@ import 'package:flutter_hello_my_doctor/models/doctor_model.dart';
 
 class HomeModel {
   late final List<SliderModel> _sliders;
-  late final List<DoctorModel> _doctors;
+  late final List<DoctorDetailsModel> _doctors;
 
   HomeModel() {
     _sliders = <SliderModel>[];
-    _doctors = <DoctorModel>[];
+    _doctors = <DoctorDetailsModel>[];
   }
 
   HomeModel.fromJson(Map json) {
     _sliders = <SliderModel>[];
-    _doctors = <DoctorModel>[];
+    _doctors = <DoctorDetailsModel>[];
 
     if (json['sliders'] != null && json['sliders'] is List) {
       json['sliders'].forEach((v) {
@@ -21,7 +21,7 @@ class HomeModel {
 
     if (json['doctors'] != null && json['doctors'] is List) {
       json['doctors'].forEach((v) {
-        _doctors.add(DoctorModel.fromJson(v));
+        _doctors.add(DoctorDetailsModel.fromJson(v));
       });
     }
   }
@@ -34,7 +34,7 @@ class HomeModel {
   }
 
   List<SliderModel> get sliders => _sliders;
-  List<DoctorModel> get doctors => _doctors;
+  List<DoctorDetailsModel> get doctors => _doctors;
 }
 
 class SliderModel {

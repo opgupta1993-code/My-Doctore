@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hello_my_doctor/controllers/make_appointment_controller.dart';
@@ -126,6 +127,84 @@ class MakeAppointmentScreen extends StatelessWidget {
         ),
       );
 
+  Widget get _buildPaymentSuccessDialogWidget => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: _width * 0.9,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(_width * 0.035),
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: _width * 0.06,
+              vertical: _height * 0.03,
+            ),
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: HexColor(CustomColors.green2),
+                  ),
+                  padding: EdgeInsets.all(_width * 0.09),
+                  child: SizedBox(
+                    height: _height * 0.06,
+                    width: _height * 0.06,
+                    child: Image.asset("assets/images/thumb_up.webp"),
+                  ),
+                ),
+                SizedBox(height: _height * 0.015),
+                Text(
+                  "Thank You !",
+                  style: GoogleFonts.rubik(
+                    fontSize: _height * 0.032,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: _height * 0.01),
+                Text(
+                  "Your Appointment Successful",
+                  style: GoogleFonts.rubik(
+                    fontSize: _height * 0.021,
+                    color: HexColor(CustomColors.grey1),
+                  ),
+                ),
+                SizedBox(height: _height * 0.035),
+                Text(
+                  "You booked an appointment with ${_controller!.selectedDoctor?.name} on ${_controller!.dateController.text}",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.rubik(
+                    fontSize: _height * 0.018,
+                    color: HexColor(CustomColors.grey1),
+                  ),
+                ),
+                SizedBox(height: _height * 0.035),
+                ButtonWidget(
+                  text: "Done",
+                  onPressed: _controller!.onDonePressed,
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+
+  Future<void> _showPaymentSuccessDialog() async {
+    return await showCupertinoDialog(
+      context: Get.context!,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Center(
+          child: Material(
+            color: Colors.transparent,
+            child: _buildPaymentSuccessDialogWidget,
+          ),
+        );
+      },
+    );
+  }
+
   Widget get _buildContentWidget => Column(
         children: [
           _buildAppbarWidget,
@@ -239,7 +318,10 @@ class MakeAppointmentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _controller ??= Get.find<MakeAppointmentController>();
+    if (_controller == null) {
+      _controller = Get.find<MakeAppointmentController>();
+      _controller!.listenPaymentSuccessDialogState(_showPaymentSuccessDialog);
+    }
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: ThemeUtils.getStatusNavBarTheme(context),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hello_my_doctor/controllers/select_city_controller.dart';
 import 'package:flutter_hello_my_doctor/routes/routes.dart';
 import 'package:flutter_hello_my_doctor/utils/utils.dart';
 import 'package:get/get.dart';
@@ -6,11 +7,15 @@ import 'package:get/get.dart';
 class DrawerController extends GetxController {
   late final GlobalKey<ScaffoldState> _sfKey;
 
+  late final SelectCityController _selectCityController;
+
   @override
   void onInit() {
     super.onInit();
 
     _sfKey = GlobalKey<ScaffoldState>();
+
+    _selectCityController = Get.find<SelectCityController>();
   }
 
   Future<void> onDrawerMenuPressed() async {
@@ -39,7 +44,9 @@ class DrawerController extends GetxController {
 
     switch (type) {
       case -1:
-        Routes.selectCityScreen();
+        _selectCityController.afterLogin = false;
+
+        Routes.selectCityScreen(afterLogin: false);
         break;
 
       case 0:
@@ -50,7 +57,7 @@ class DrawerController extends GetxController {
       case 5:
       case 6:
       case 7:
-        Routes.comingSoonScreen();
+        // Routes.comingSoonScreen();
         break;
 
       case 8:

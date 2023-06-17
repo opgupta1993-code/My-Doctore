@@ -13,9 +13,9 @@ import '../utils/utils.dart';
 class SelectDoctorController extends GetxController {
   late final RxBool loading;
 
-  DoctorModel? selectedDoctor;
+  DoctorDetailsModel? selectedDoctor;
 
-  late final List<DoctorModel> _dataList;
+  late final List<DoctorDetailsModel> _dataList;
 
   late String _searchedText;
 
@@ -23,7 +23,7 @@ class SelectDoctorController extends GetxController {
 
   late final TextEditingController searchController;
 
-  late final SelectDoctorCategoryController _selectDoctorCategoryController;
+  SelectDoctorCategoryController? _selectDoctorCategoryController;
   late final SelectCityController _selectCityController;
 
   @override
@@ -31,15 +31,17 @@ class SelectDoctorController extends GetxController {
     super.onInit();
 
     loading = true.obs;
-    _dataList = <DoctorModel>[].obs;
+    _dataList = <DoctorDetailsModel>[].obs;
     selectedDoctor = null;
 
     _searchedText = "";
 
     searchController = TextEditingController();
 
-    _selectDoctorCategoryController =
-        Get.find<SelectDoctorCategoryController>();
+    if (Get.isRegistered<SelectDoctorCategoryController>()) {
+      _selectDoctorCategoryController =
+          Get.find<SelectDoctorCategoryController>();
+    }
 
     _selectCityController = Get.find<SelectCityController>();
 
@@ -52,7 +54,8 @@ class SelectDoctorController extends GetxController {
     }
 
     final Map res = await NetworkCalls.getDoctors({
-      "category_id": _selectDoctorCategoryController.selectedDoctorCategory?.id,
+      "category_id":
+          _selectDoctorCategoryController?.selectedDoctorCategory?.id,
       "location_id": _selectCityController.selectedCity?.id,
       "search_key": searchController.text,
     });
@@ -62,7 +65,7 @@ class SelectDoctorController extends GetxController {
 
       if (dataList.isNotEmpty) {
         for (Map d in dataList) {
-          _dataList.add(DoctorModel.fromJson(d));
+          _dataList.add(DoctorDetailsModel.fromJson(d));
         }
       }
     } else {
@@ -76,16 +79,16 @@ class SelectDoctorController extends GetxController {
     searchController.clear();
   }
 
-  Future<void> onBookNowPressed(DoctorModel data) async {
+  Future<void> onBookNowPressed(DoctorDetailsModel data) async {
     selectedDoctor = data;
 
     await Future.delayed(const Duration(milliseconds: 100));
-    Routes.makeAppointmentScreen();
+    Routes.makeAppointmentScreen(data);
   }
 
-  Future<void> onDoctorPressed(DoctorModel data) async {
+  Future<void> onDoctorPressed(DoctorDetailsModel data) async {
     selectedDoctor = data;
-    Routes.doctorDetailsScreen();
+    Routes.doctorDetailsScreen(data);
   }
 
   void onClearPressed() {
@@ -114,7 +117,7 @@ class SelectDoctorController extends GetxController {
     }
   }
 
-  List<DoctorModel> get dataList => _dataList;
+  List<DoctorDetailsModel> get dataList => _dataList;
 
   @override
   void onClose() {

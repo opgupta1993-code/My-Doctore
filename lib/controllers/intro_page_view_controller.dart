@@ -58,7 +58,7 @@ class IntroPageViewController extends GetxController {
       // final SharedPreferences preferences = Get.find();
       // await preferences.setBool("intro", true);
       if (_userController.isLogin.value) {
-        Routes.selectCityScreen();
+        Routes.selectCityScreen(afterLogin: true);
       } else {
         Routes.loginWithoutLoginScreen();
       }
@@ -74,7 +74,7 @@ class IntroPageViewController extends GetxController {
     await Future.delayed(const Duration(milliseconds: 100));
 
     if (_userController.isLogin.value) {
-      Routes.selectCityScreen();
+      Routes.selectCityScreen(afterLogin: true);
     } else {
       Routes.loginWithoutLoginScreen();
     }

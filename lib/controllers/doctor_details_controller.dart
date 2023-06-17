@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hello_my_doctor/controllers/select_doctor_controller.dart';
 import 'package:flutter_hello_my_doctor/controllers/user_controller.dart';
 import 'package:flutter_hello_my_doctor/models/doctor_model.dart';
 import 'package:flutter_hello_my_doctor/routes/routes.dart';
@@ -24,7 +23,8 @@ class DoctorDetailsController extends GetxController {
 
   late final TextEditingController descController;
 
-  late final SelectDoctorController _selectDoctorController;
+  DoctorDetailsModel? _selectedDoctor;
+  // late final SelectDoctorController _selectDoctorController;
   late final UserController _userController;
 
   @override
@@ -40,14 +40,16 @@ class DoctorDetailsController extends GetxController {
 
     descController = TextEditingController();
 
-    _selectDoctorController = Get.find<SelectDoctorController>();
+    _selectedDoctor = Get.arguments["data"];
+
+    // _selectDoctorController = Get.find<SelectDoctorController>();
     _userController = Get.find<UserController>();
     _getData();
   }
 
   Future<void> _getData() async {
     final Map res = await NetworkCalls.getDoctorDetails({
-      "doctor_id": _selectDoctorController.selectedDoctor?.id,
+      "doctor_id": _selectedDoctor?.id,
     });
 
     if (res.containsKey("status") && res["status"] == "200") {
@@ -55,6 +57,10 @@ class DoctorDetailsController extends GetxController {
 
       if (data.isNotEmpty) {
         _data = DoctorModel.fromJson(data);
+
+        if (_data!.myRatingInfo.description.isNotEmpty) {
+          descController.text = _data!.myRatingInfo.description;
+        }
       }
     } else {
       Utils.showToast("${res["message"]}");
@@ -66,7 +72,7 @@ class DoctorDetailsController extends GetxController {
   Future<void> _submitReviewRating() async {
     final Map res = await NetworkCalls.submitReviewRating({
       "user_id": _userController.user.value.userId,
-      "doctor_id": _selectDoctorController.selectedDoctor?.id,
+      "doctor_id": _selectedDoctor?.id,
       "rating": _rating,
       "description": descController.text,
     });
@@ -89,10 +95,25 @@ class DoctorDetailsController extends GetxController {
 
   Future<void> onBookNowPressed() async {
     await Future.delayed(const Duration(milliseconds: 100));
-    Routes.makeAppointmentScreen();
+
+    if ((data?.doctorDetails.isDoctorOnLeave == true)) {
+      return;
+    }
+
+    if (_data != null) {
+      Routes.makeAppointmentScreen(_data!.doctorDetails);
+    }
   }
 
   void onWriteReviewPressed() {
+    if (!_userController.isLogin.value) {
+      Routes.loginScreen(
+        isDirectLogin: false,
+        previousRoute: "/doctorDetailsScreen",
+      );
+      return;
+    }
+
     _reviewRatingSheet.value = !_reviewRatingSheet.value;
   }
 
@@ -102,7 +123,7 @@ class DoctorDetailsController extends GetxController {
 
   Future<void> onSubmitReviewPressed() async {
     Utils.removeFocus();
-    
+
     if (_rating == 0.0) {
       Utils.showToast("Please rate");
       return;
@@ -151,6 +172,15 @@ class DoctorDetailsController extends GetxController {
   }
 
   DoctorModel? get data => _data;
+
+  int get getTotalReviewa {
+    if (_data == null) return 0;
+    return _data!.rating.noOfRating1 +
+        _data!.rating.noOfRating2 +
+        _data!.rating.noOfRating3 +
+        _data!.rating.noOfRating4 +
+        _data!.rating.noOfRating5;
+  }
 
   @override
   void onClose() {

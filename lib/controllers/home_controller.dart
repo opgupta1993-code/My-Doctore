@@ -3,6 +3,8 @@ import 'package:carousel_slider/carousel_options.dart';
 import 'package:flutter_hello_my_doctor/constants/service_enum.dart';
 import 'package:flutter_hello_my_doctor/controllers/drawer_controller.dart';
 import 'package:flutter_hello_my_doctor/controllers/select_city_controller.dart';
+import 'package:flutter_hello_my_doctor/controllers/user_controller.dart';
+import 'package:flutter_hello_my_doctor/models/doctor_model.dart';
 import 'package:flutter_hello_my_doctor/models/home_model.dart';
 import 'package:flutter_hello_my_doctor/routes/routes.dart';
 import 'package:get/get.dart';
@@ -20,6 +22,7 @@ class HomeController extends GetxController {
   // late final SelectDoctorCategoryController _selectDoctorCategoryController;
   late final SelectCityController _selectCityController;
   late final DrawerController _drawerController;
+  late final UserController _userController;
 
   @override
   void onInit() {
@@ -34,6 +37,7 @@ class HomeController extends GetxController {
     //     Get.find<SelectDoctorCategoryController>();
     _selectCityController = Get.find<SelectCityController>();
     _drawerController = Get.find<DrawerController>();
+    _userController = Get.find<UserController>();
 
     _getData();
   }
@@ -59,7 +63,10 @@ class HomeController extends GetxController {
     _drawerController.onDrawerMenuPressed();
   }
 
-  void onSeeAllDoctorsPressed() {}
+  Future<void> onSeeAllDoctorsPressed() async {
+    await Future.delayed(const Duration(milliseconds: 100));
+    Routes.selectDoctorScreen();
+  }
 
   Future<void> onServiceSelected(ServiceEnum type) async {
     await Future.delayed(const Duration(milliseconds: 100));
@@ -79,6 +86,19 @@ class HomeController extends GetxController {
 
   void onSliderChanged(int index, CarouselPageChangedReason reason) {
     currentIndex.value = index;
+  }
+
+  Future<void> onDoctorPressed(DoctorDetailsModel data) async {
+    await Future.delayed(const Duration(milliseconds: 100));
+    Routes.doctorDetailsScreen(data);
+  }
+
+  Future<void> onProfilePressed() async {
+    if (_userController.isLogin.value) {
+      Routes.profileScreen();
+    } else {
+      Routes.loginScreen();
+    }
   }
 
   HomeModel? get data => _data;

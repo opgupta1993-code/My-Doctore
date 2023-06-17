@@ -76,6 +76,68 @@ class DrawerScreen extends StatelessWidget {
         ),
       );
 
+  Widget get _buildDrawerTopWidget => Column(
+        children: [
+          InkWell(
+            borderRadius: BorderRadius.circular(_width * 0.025),
+            onTap: _controller!.onProfilePressed,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ProfileButtonWidget(
+                  radius: _height * 0.031,
+                  onPressed: _controller!.onProfilePressed,
+                ),
+                SizedBox(width: _width * 0.025),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _userController!.user.value.userName,
+                        style: Theme.of(Get.context!)
+                            .textTheme
+                            .bodyLarge!
+                            .copyWith(
+                              fontWeight: FontWeight.w400,
+                              fontSize: _height * 0.0185,
+                            ),
+                      ),
+                      SizedBox(height: _height * 0.005),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.phone,
+                            size: _height * 0.018,
+                            color: Colors.white,
+                          ),
+                          SizedBox(width: _width * 0.01),
+                          Text(
+                            _userController!.user.value.mobileNo,
+                            style: Theme.of(Get.context!)
+                                .textTheme
+                                .bodyLarge!
+                                .copyWith(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: _height * 0.017,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: _height * 0.04,
+          ),
+        ],
+      );
+
   Widget get _buildDrawerWidget => Drawer(
         backgroundColor: HexColor(CustomColors.grey3),
         child: Padding(
@@ -88,73 +150,16 @@ class DrawerScreen extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(height: _height * 0.015),
-              if (_userController!.isLogin.value)
-                Column(
-                  children: [
-                    InkWell(
-                      borderRadius: BorderRadius.circular(_width * 0.025),
-                      onTap: _controller!.onProfilePressed,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ProfileButtonWidget(
-                            radius: _height * 0.031,
-                            onPressed: _controller!.onProfilePressed,
-                          ),
-                          SizedBox(width: _width * 0.025),
-                          Expanded(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  _userController!.user.value.userName,
-                                  style: Theme.of(Get.context!)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .copyWith(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: _height * 0.0185,
-                                      ),
-                                ),
-                                SizedBox(height: _height * 0.005),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.phone,
-                                      size: _height * 0.018,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(width: _width * 0.01),
-                                    Text(
-                                      _userController!.user.value.mobileNo,
-                                      style: Theme.of(Get.context!)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .copyWith(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: _height * 0.017,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: _height * 0.04,
-                    ),
-                  ],
-                ),
+              Obx(
+                () => _userController!.isLogin.value
+                    ? _buildDrawerTopWidget
+                    : const SizedBox.shrink(),
+              ),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                       _buildDrawerItemButtonWidget(
+                      _buildDrawerItemButtonWidget(
                         -1,
                         "Change Location",
                         "assets/images/location.webp",
@@ -199,18 +204,21 @@ class DrawerScreen extends StatelessWidget {
                         "Settings",
                         "assets/images/settings.webp",
                       ),
-                      if (_userController!.isLogin.value)
-                        Column(
-                          children: [
-                            SizedBox(height: _height * 0.04),
-                            _buildDrawerItemButtonWidget(
-                              8,
-                              "Logout",
-                              "assets/images/logout.webp",
-                              showTrailingIcon: false,
-                            ),
-                          ],
-                        ),
+                      Obx(
+                        () => _userController!.isLogin.value
+                            ? Column(
+                                children: [
+                                  SizedBox(height: _height * 0.04),
+                                  _buildDrawerItemButtonWidget(
+                                    8,
+                                    "Logout",
+                                    "assets/images/logout.webp",
+                                    showTrailingIcon: false,
+                                  ),
+                                ],
+                              )
+                            : const SizedBox.shrink(),
+                      ),
                     ],
                   ),
                 ),
