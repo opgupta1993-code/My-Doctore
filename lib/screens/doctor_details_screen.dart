@@ -732,8 +732,7 @@ class DoctorDetailsScreen extends StatelessWidget {
             RatingBar.builder(
               tapOnlyMode: false,
               ignoreGestures: false,
-              initialRating:
-                  _controller!.data?.myRatingInfo.howManyRated ?? 0.0,
+              initialRating: _controller!.data?.doctorDetails.rating ?? 0.0,
               minRating: 1,
               direction: Axis.horizontal,
               allowHalfRating: true,

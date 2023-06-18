@@ -83,6 +83,11 @@ class SelectDoctorController extends GetxController {
     selectedDoctor = data;
 
     await Future.delayed(const Duration(milliseconds: 100));
+
+    if (data.isDoctorOnLeave) {
+      return;
+    }
+
     Routes.makeAppointmentScreen(data);
   }
 

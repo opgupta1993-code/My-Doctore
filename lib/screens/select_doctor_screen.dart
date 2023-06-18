@@ -145,20 +145,20 @@ class SelectDoctorScreen extends StatelessWidget {
         ),
       );
 
-  Widget _buildInfoWidget(BoxConstraints cons, String data) => Row(
+  Widget _buildInfoWidget(String data) => Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            height: cons.maxHeight * 0.15,
-            width: cons.maxHeight * 0.15,
+            height: _height * 0.015,
+            width: _height * 0.015,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: HexColor(CustomColors.green1),
             ),
           ),
-          SizedBox(width: cons.maxWidth * 0.015),
+          SizedBox(width: _width * 0.013),
           Flexible(
             child: Text(
               data,
@@ -166,7 +166,7 @@ class SelectDoctorScreen extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.rubik(
                 color: HexColor(CustomColors.grey1),
-                fontSize: cons.maxHeight * 0.13,
+                fontSize: _height * 0.013,
                 fontWeight: FontWeight.w300,
               ),
             ),
@@ -174,9 +174,7 @@ class SelectDoctorScreen extends StatelessWidget {
         ],
       );
 
-  Widget _buildBookNowButtonWidget(
-          BoxConstraints cons, DoctorDetailsModel data) =>
-      TextButton(
+  Widget _buildBookNowButtonWidget(DoctorDetailsModel data) => TextButton(
         style: ButtonStyle(
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           shape: MaterialStatePropertyAll(
@@ -187,13 +185,13 @@ class SelectDoctorScreen extends StatelessWidget {
           minimumSize: const MaterialStatePropertyAll(Size.zero),
           padding: MaterialStatePropertyAll(
             EdgeInsets.symmetric(
-              horizontal: cons.maxWidth * 0.08,
-              vertical: cons.maxHeight * 0.07,
+              horizontal: _width * 0.075,
+              vertical: _height * 0.012,
             ),
           ),
           elevation: const MaterialStatePropertyAll(0),
           backgroundColor: MaterialStatePropertyAll(
-            HexColor(CustomColors.blue1),
+            data.isDoctorOnLeave ? Colors.grey : HexColor(CustomColors.blue1),
           ),
           overlayColor: MaterialStatePropertyAll(
             Colors.white.withOpacity(0.4),
@@ -201,7 +199,7 @@ class SelectDoctorScreen extends StatelessWidget {
           foregroundColor: const MaterialStatePropertyAll(Colors.white),
           textStyle: MaterialStatePropertyAll(
             GoogleFonts.rubik(
-              fontSize: cons.maxHeight * 0.095,
+              fontSize: _height * 0.018,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -216,7 +214,6 @@ class SelectDoctorScreen extends StatelessWidget {
   Widget _buildDoctorItemWidget(DoctorDetailsModel data) => GestureDetector(
         onTap: () => _controller!.onDoctorPressed(data),
         child: Container(
-          height: _height * 0.21,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(_width * 0.025),
             color: Colors.white,
@@ -234,204 +231,198 @@ class SelectDoctorScreen extends StatelessWidget {
             horizontal: _width * 0.03,
             vertical: _height * 0.02,
           ),
-          child: LayoutBuilder(builder: (context, cons) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  height: cons.maxHeight * 0.6,
-                  width: double.infinity,
-                  child: LayoutBuilder(builder: (context, cons1) {
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: cons1.maxHeight,
-                          width: cons1.maxHeight,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(
-                              cons1.maxWidth * 0.03,
-                            ),
-                            child: CachedNetworkImage(
-                              imageUrl: data.image,
-                              height: cons1.maxHeight,
-                              width: cons1.maxHeight,
-                              fit: BoxFit.cover,
-                              progressIndicatorBuilder: (context, _, __) =>
-                                  SizedBox(
-                                height: cons1.maxHeight,
-                                width: cons1.maxHeight,
-                                child: CircularLoadingWidget(
-                                  _width * 0.5,
-                                  center: true,
-                                ),
-                              ),
-                              errorWidget: (context, _, __) => SizedBox(
-                                height: double.infinity,
-                                width: double.infinity,
-                                child: Image.asset(
-                                  "assets/images/logo.webp",
-                                ),
-                              ),
-                            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: _height * 0.1,
+                    width: _height * 0.1,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        _width * 0.03,
+                      ),
+                      child: CachedNetworkImage(
+                        imageUrl: data.image,
+                        height: double.infinity,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        progressIndicatorBuilder: (context, _, __) => SizedBox(
+                          height: double.infinity,
+                          width: double.infinity,
+                          child: CircularLoadingWidget(
+                            _width * 0.5,
+                            center: true,
                           ),
                         ),
-                        SizedBox(width: cons1.maxWidth * 0.03),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: cons1.maxHeight * 0.04),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                        errorWidget: (context, _, __) => SizedBox(
+                          height: double.infinity,
+                          width: double.infinity,
+                          child: Image.asset(
+                            "assets/images/logo.webp",
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: _width * 0.025),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: _height * 0.008),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            data.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.rubik(
+                              color: Colors.black,
+                              fontSize: _height * 0.0185,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(height: _height * 0.006),
+                          Text(
+                            data.degree,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.ptSans(
+                              color: HexColor(CustomColors.green1),
+                              fontSize: _height * 0.016,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          SizedBox(height: _height * 0.006),
+                          Text(
+                            "${data.startExperience} Years experience",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.rubik(
+                              color: HexColor(CustomColors.grey1),
+                              fontSize: _height * 0.015,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                          SizedBox(height: _height * 0.01),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Flexible(
+                                child: _buildInfoWidget("87%"),
+                              ),
+                              SizedBox(width: _width * 0.05),
+                              Flexible(
+                                child: _buildInfoWidget("69 Patient Stories"),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  CupertinoButton(
+                    minSize: 0,
+                    padding: EdgeInsets.zero,
+                    onPressed: () {},
+                    child: Icon(
+                      Icons.favorite,
+                      color: Colors.red,
+                      size: _height * 0.028,
+                    ),
+                  ),
+                ],
+              ),
+              if (data.description.isNotEmpty)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: _height * 0.02),
+                    Text(
+                      data.description,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.rubik(
+                        color: HexColor(CustomColors.grey1),
+                        fontSize: _height * 0.015,
+                      ),
+                    ),
+                  ],
+                ),
+              SizedBox(height: _height * 0.02),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        if (data.isDoctorOnLeave)
+                          Text(
+                            "On Leave",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.rubik(
+                              color: Colors.red,
+                              fontSize: _height * 0.016,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        else
+                          Text(
+                            "Next Available",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.rubik(
+                              color: HexColor(CustomColors.green1),
+                              fontSize: _height * 0.016,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        SizedBox(height: _height * 0.005),
+                        if (data.isDoctorOnLeave)
+                          Text(
+                            "${data.fromDate} - ${data.toDate}",
+                            style: GoogleFonts.rubik(
+                              color: HexColor(CustomColors.grey1),
+                              fontSize: _height * 0.016,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        else
+                          RichText(
+                            text: TextSpan(
+                              text: data.fromTime,
+                              style: GoogleFonts.rubik(
+                                color: HexColor(CustomColors.grey1),
+                                fontSize: _height * 0.016,
+                                fontWeight: FontWeight.w500,
+                              ),
                               children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        data.name,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.rubik(
-                                          color: Colors.black,
-                                          fontSize: cons1.maxHeight * 0.17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      SizedBox(height: cons1.maxHeight * 0.03),
-                                      Text(
-                                        data.degree,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.ptSans(
-                                          color: HexColor(CustomColors.green1),
-                                          fontSize: cons1.maxHeight * 0.16,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                      SizedBox(height: cons1.maxHeight * 0.03),
-                                      Text(
-                                        "${data.startExperience} Years experience",
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.rubik(
-                                          color: HexColor(CustomColors.grey1),
-                                          fontSize: cons1.maxHeight * 0.15,
-                                          fontWeight: FontWeight.w300,
-                                        ),
-                                      ),
-                                    ],
+                                TextSpan(
+                                  text:
+                                      " ${data.getNextAvailability(Utils.getTomorrowDayName())}",
+                                  style: GoogleFonts.rubik(
+                                    color: HexColor(CustomColors.grey1),
+                                    fontSize: _height * 0.016,
+                                    fontWeight: FontWeight.w400,
                                   ),
-                                ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Flexible(
-                                      child: _buildInfoWidget(cons1, "87%"),
-                                    ),
-                                    SizedBox(width: cons1.maxWidth * 0.06),
-                                    Flexible(
-                                      child: _buildInfoWidget(
-                                          cons1, "69 Patient Stories"),
-                                    ),
-                                  ],
                                 ),
                               ],
                             ),
                           ),
-                        ),
-                        CupertinoButton(
-                          minSize: 0,
-                          padding: EdgeInsets.zero,
-                          onPressed: () {},
-                          child: Icon(
-                            Icons.favorite,
-                            color: Colors.red,
-                            size: cons1.maxHeight * 0.28,
-                          ),
-                        ),
-                      ],
-                    );
-                  }),
-                ),
-                SizedBox(height: cons.maxHeight * 0.02),
-                Expanded(
-                  child: LayoutBuilder(
-                    builder: (context, cons1) => Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              if (data.isDoctorOnLeave)
-                                Text(
-                                  "On Leave",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.rubik(
-                                    color: Colors.red,
-                                    fontSize: cons1.maxHeight * 0.24,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                )
-                              else
-                                Text(
-                                  "Next Available",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.rubik(
-                                    color: HexColor(CustomColors.green1),
-                                    fontSize: cons1.maxHeight * 0.24,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              SizedBox(height: cons1.maxHeight * 0.05),
-                              if (data.isDoctorOnLeave)
-                                Text(
-                                  "${data.fromDate} - ${data.toDate}",
-                                  style: GoogleFonts.rubik(
-                                    color: HexColor(CustomColors.grey1),
-                                    fontSize: cons1.maxHeight * 0.24,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                )
-                              else
-                                RichText(
-                                  text: TextSpan(
-                                    text: data.fromTime,
-                                    style: GoogleFonts.rubik(
-                                      color: HexColor(CustomColors.grey1),
-                                      fontSize: cons1.maxHeight * 0.24,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    children: [
-                                      TextSpan(
-                                        text:
-                                            " ${data.getNextAvailability(Utils.getTomorrowDayName())}",
-                                        style: GoogleFonts.rubik(
-                                          color: HexColor(CustomColors.grey1),
-                                          fontSize: cons1.maxHeight * 0.24,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(width: cons.maxWidth * 0.02),
-                        _buildBookNowButtonWidget(cons, data),
                       ],
                     ),
                   ),
-                ),
-              ],
-            );
-          }),
+                  SizedBox(width: _width * 0.02),
+                  _buildBookNowButtonWidget(data),
+                ],
+              ),
+            ],
+          ),
         ),
       );
 

@@ -2,16 +2,11 @@ import 'package:flutter_hello_my_doctor/utils/utils.dart';
 
 class DoctorModel {
   DoctorDetailsModel _doctorDetails = DoctorDetailsModel();
-  MyRatingInfoModel _myRatingInfo = MyRatingInfoModel();
   RatingModel _rating = RatingModel();
 
   DoctorModel.fromJson(Map json) {
     if (json.containsKey("doctor_details") && json["doctor_details"] is Map) {
       _doctorDetails = DoctorDetailsModel.fromJson(json["doctor_details"]);
-    }
-
-    if (json.containsKey("rating-info") && json["rating-info"] is Map) {
-      _myRatingInfo = MyRatingInfoModel.fromJson(json["rating-info"]);
     }
 
     if (json.containsKey("rating_count_and_percent") &&
@@ -23,13 +18,11 @@ class DoctorModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['doctor_details'] = _doctorDetails;
-    data['rating-info'] = _myRatingInfo;
     data['rating_count_and_percent'] = _rating;
     return data;
   }
 
   DoctorDetailsModel get doctorDetails => _doctorDetails;
-  MyRatingInfoModel get myRatingInfo => _myRatingInfo;
   RatingModel get rating => _rating;
 }
 
@@ -66,6 +59,8 @@ class DoctorDetailsModel {
   bool _isDoctorOnLeave = false;
   String _fromDate = "";
   String _toDate = "";
+  bool _isRated = false;
+  String _ratingDes = "";
 
   DoctorDetailsModel();
 
@@ -102,6 +97,8 @@ class DoctorDetailsModel {
     _isDoctorOnLeave = json['is_doctor_on_leave'] == 1;
     _fromDate = json['from_date'] ?? "";
     _toDate = json['to_date'] ?? "";
+    _isRated = json['is_rated'] == 1;
+    _ratingDes = json['rating_des'] ?? "";
   }
 
   String getNextAvailability(String inputDay) {
@@ -152,9 +149,11 @@ class DoctorDetailsModel {
     data['location_name'] = _locationName;
     data['category_name'] = _categoryName;
     data['description'] = _description;
-    data['is_doctor_on_leave'] = _isDoctorOnLeave;
+    data['is_doctor_on_leave'] = _isDoctorOnLeave ? 1 : 0;
     data['from_date'] = _fromDate;
     data['to_date'] = _toDate;
+    data['is_rated'] = _isRated;
+    data['rating_des'] = _ratingDes;
     return data;
   }
 
@@ -190,33 +189,35 @@ class DoctorDetailsModel {
   bool get isDoctorOnLeave => _isDoctorOnLeave;
   String get fromDate => _fromDate;
   String get toDate => _toDate;
+  bool get isRated => _isRated;
+  String get ratingDes => _ratingDes;
 }
 
-class MyRatingInfoModel {
-  bool _isDoctorRated = false;
-  double _howManyRated = 0.0;
-  String _description = "";
+// class MyRatingInfoModel {
+//   bool _isDoctorRated = false;
+//   double _howManyRated = 0.0;
+//   String _description = "";
 
-  MyRatingInfoModel();
+//   MyRatingInfoModel();
 
-  MyRatingInfoModel.fromJson(Map<String, dynamic> json) {
-    _isDoctorRated = json['is_doctor_rated'] == 1;
-    _howManyRated = Utils.getDoubleFromString("${json['how_many_rated']}");
-    _description = json['msg'] ?? "";
-  }
+//   MyRatingInfoModel.fromJson(Map<String, dynamic> json) {
+//     _isDoctorRated = json['is_doctor_rated'] == 1;
+//     _howManyRated = Utils.getDoubleFromString("${json['how_many_rated']}");
+//     _description = json['msg'] ?? "";
+//   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['is_doctor_rated'] = _isDoctorRated;
-    data['how_many_rated'] = _howManyRated;
-    data['msg'] = _description;
-    return data;
-  }
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = <String, dynamic>{};
+//     data['is_doctor_rated'] = _isDoctorRated;
+//     data['how_many_rated'] = _howManyRated;
+//     data['msg'] = _description;
+//     return data;
+//   }
 
-  bool get isDoctorRated => _isDoctorRated;
-  double get howManyRated => _howManyRated;
-  String get description => _description;
-}
+//   bool get isDoctorRated => _isDoctorRated;
+//   double get howManyRated => _howManyRated;
+//   String get description => _description;
+// }
 
 class RatingModel {
   int _noOfRating1 = 0;

@@ -50,6 +50,7 @@ class DoctorDetailsController extends GetxController {
   Future<void> _getData() async {
     final Map res = await NetworkCalls.getDoctorDetails({
       "doctor_id": _selectedDoctor?.id,
+      "user_id": _userController.user.value.userId,
     });
 
     if (res.containsKey("status") && res["status"] == "200") {
@@ -58,8 +59,9 @@ class DoctorDetailsController extends GetxController {
       if (data.isNotEmpty) {
         _data = DoctorModel.fromJson(data);
 
-        if (_data!.myRatingInfo.description.isNotEmpty) {
-          descController.text = _data!.myRatingInfo.description;
+        if (_data!.doctorDetails.isRated) {
+          descController.text = _data!.doctorDetails.description;
+          _rating = _data!.doctorDetails.rating;
         }
       }
     } else {

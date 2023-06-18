@@ -290,7 +290,7 @@ class MakeAppointmentScreen extends StatelessWidget {
                           SizedBox(height: _height * 0.015),
                           _buildDatePickerWidget(
                             _controller!.dateController,
-                            "Enter Date of Birth",
+                            "Enter Date",
                           ),
                           SizedBox(height: _height * 0.05),
                         ],
