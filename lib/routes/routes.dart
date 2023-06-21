@@ -1,6 +1,7 @@
 import 'package:flutter_hello_my_doctor/bindings/auth_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/doctor_details_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/drawer_binding.dart';
+import 'package:flutter_hello_my_doctor/bindings/edit_profile_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/login_without_login_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/make_appointment_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/profile_binding.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_hello_my_doctor/screens/auth/signup_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/doctor_details_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/drawer/drawer_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/drawer/profile_screen.dart';
+import 'package:flutter_hello_my_doctor/screens/edit_profile_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/login_without_login_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/make_appointment_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/select_city_screen.dart';
@@ -118,6 +120,13 @@ class Routes {
       popGesture: true,
       showCupertinoParallax: true,
     ),
+    GetPage(
+      name: "/editProfileScreen",
+      page: () => EditProfileScreen(),
+      popGesture: true,
+      binding: EditProfileBinding(),
+      showCupertinoParallax: true,
+    ),
   ];
 
   static Future<void> splashScreen() async {
@@ -195,5 +204,9 @@ class Routes {
 
   static Future<void> comingSoonScreen() async {
     return await Get.toNamed("/comingSoonScreen");
+  }
+
+  static Future<void> editProfileScreen() async {
+    return await Get.toNamed("/editProfileScreen");
   }
 }

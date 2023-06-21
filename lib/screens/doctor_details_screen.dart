@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hello_my_doctor/models/doctor_model.dart';
 import 'package:flutter_hello_my_doctor/widgets/circular_loading_widget.dart';
 import 'package:flutter_hello_my_doctor/widgets/no_data_found_widget.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -253,7 +254,8 @@ class DoctorDetailsScreen extends StatelessWidget {
                                   RatingBar.builder(
                                     tapOnlyMode: true,
                                     ignoreGestures: true,
-                                    initialRating: 4.5,
+                                    initialRating:
+                                        _controller!.data!.overallRating,
                                     minRating: 1,
                                     direction: Axis.horizontal,
                                     allowHalfRating: true,
@@ -620,7 +622,7 @@ class DoctorDetailsScreen extends StatelessWidget {
         ),
       );
 
-  Widget _buildReviewItemWidget() => Column(
+  Widget _buildReviewItemWidget(ReviewModel data) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -628,7 +630,7 @@ class DoctorDetailsScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  "Laxmi Sawant",
+                  data.userName,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.roboto(
@@ -642,8 +644,8 @@ class DoctorDetailsScreen extends StatelessWidget {
               RatingBar.builder(
                 tapOnlyMode: true,
                 ignoreGestures: true,
-                initialRating: _controller!.data?.doctorDetails.rating ?? 0,
-                minRating: 1,
+                initialRating: data.rating,
+                minRating: 0,
                 direction: Axis.horizontal,
                 allowHalfRating: true,
                 itemCount: 5,
@@ -657,29 +659,35 @@ class DoctorDetailsScreen extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: _height * 0.01),
-          Text(
-            "Really Satisfied with the service!",
-            style: GoogleFonts.roboto(
-              color: Colors.black.withOpacity(0.87),
-              fontWeight: FontWeight.w400,
-              fontSize: _height * 0.018,
+          // SizedBox(height: _height * 0.01),
+          // Text(
+          //   "Really Satisfied with the service!",
+          //   style: GoogleFonts.roboto(
+          //     color: Colors.black.withOpacity(0.87),
+          //     fontWeight: FontWeight.w400,
+          //     fontSize: _height * 0.018,
+          //   ),
+          // ),
+          if (data.description.isNotEmpty)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: _height * 0.01),
+                Text(
+                  data.description,
+                  style: GoogleFonts.roboto(
+                    color: Colors.black.withOpacity(0.6),
+                    fontWeight: FontWeight.w400,
+                    fontSize: _height * 0.017,
+                  ),
+                ),
+              ],
             ),
-          ),
-          SizedBox(height: _height * 0.01),
-          Text(
-            "The interface of the App is very good even a layman can use it very easily.It gives you information about the alternate medicine which you can prefer for your disease and save your money on medication.",
-            style: GoogleFonts.roboto(
-              color: Colors.black.withOpacity(0.6),
-              fontWeight: FontWeight.w400,
-              fontSize: _height * 0.017,
-            ),
-          ),
           SizedBox(height: _height * 0.01),
           Align(
             alignment: Alignment.bottomRight,
             child: Text(
-              "Nov 09, 2022",
+              data.date,
               style: GoogleFonts.roboto(
                 color: Colors.black.withOpacity(0.6),
                 fontWeight: FontWeight.w400,
@@ -876,33 +884,37 @@ class DoctorDetailsScreen extends StatelessWidget {
             _buildDoctorDetailsWidget,
             SizedBox(height: _height * 0.035),
             _buildRatingsReviewsWidget,
-            SizedBox(height: _height * 0.05),
-            Container(
-              color: Colors.white,
-              padding: EdgeInsets.symmetric(vertical: _height * 0.02),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _buildTitleWidget("Patient Reviews"),
-                  SizedBox(height: _height * 0.025),
-                  ListView.separated(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: 10,
-                    padding: EdgeInsets.symmetric(horizontal: _width * 0.03),
-                    separatorBuilder: (context, index) {
-                      return Divider(
-                        thickness: _height * 0.0015,
-                        height: _height * 0.03,
-                      );
-                    },
-                    itemBuilder: (context, index) {
-                      return _buildReviewItemWidget();
-                    },
-                  ),
-                ],
+
+            if (_controller!.data != null &&
+                _controller!.data!.reviewsList.isNotEmpty)
+              Container(
+                color: Colors.white,
+                padding: EdgeInsets.symmetric(vertical: _height * 0.02),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: _height * 0.05),
+                    _buildTitleWidget("Patient Reviews"),
+                    SizedBox(height: _height * 0.025),
+                    ListView.separated(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _controller!.data!.reviewsList.length,
+                      padding: EdgeInsets.symmetric(horizontal: _width * 0.03),
+                      separatorBuilder: (context, index) {
+                        return Divider(
+                          thickness: _height * 0.0015,
+                          height: _height * 0.03,
+                        );
+                      },
+                      itemBuilder: (context, index) {
+                        return _buildReviewItemWidget(
+                            _controller!.data!.reviewsList[index]);
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
             SizedBox(height: _height * 0.02),
           ],
         ),

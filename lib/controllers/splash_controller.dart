@@ -21,7 +21,7 @@ class SplashController extends GetxController {
 
     final DateTime dateTime = DateTime.now();
 
-    if (dateTime.isAfter(DateTime(2023, 6, 23))) {
+    if (dateTime.isAfter(DateTime(2023, 6, 25))) {
       if (Platform.isAndroid) {
         SystemNavigator.pop();
       } else if (Platform.isIOS) {

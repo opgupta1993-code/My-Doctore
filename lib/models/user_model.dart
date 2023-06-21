@@ -9,6 +9,8 @@ class UserModel {
   String _status = "";
   String _entryDate = "";
   String _updateDate = "";
+  String _address = "";
+  String _dob = "";
 
   UserModel();
 
@@ -23,6 +25,8 @@ class UserModel {
     _status = json['status'] ?? "";
     _entryDate = json['entry_date'] ?? "";
     _updateDate = json['update_date'] ?? "";
+    _address = json['address'] ?? "";
+    _dob = json['dob'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
@@ -37,6 +41,8 @@ class UserModel {
     data['status'] = _status;
     data['entry_date'] = _entryDate;
     data['update_date'] = _updateDate;
+    data['address'] = _address;
+    data['dob'] = _dob;
     return data;
   }
 
@@ -50,4 +56,6 @@ class UserModel {
   String get status => _status;
   String get entryDate => _entryDate;
   String get updateDate => _updateDate;
+  String get address => _address;
+  String get dob => _dob;
 }

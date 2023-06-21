@@ -205,4 +205,9 @@ class NetworkCalls {
     const String path = "/wb/reset_password";
     return await _postRequest(path, data: FormData.fromMap(data));
   }
+
+  static Future<Map> updateProfile(Map<String, dynamic> data) async {
+    const String path = "/wb/update_profile";
+    return await _postRequest(path, data: FormData.fromMap(data));
+  }
 }

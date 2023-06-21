@@ -29,36 +29,35 @@ class ProfileButtonWidget extends StatelessWidget {
           color: HexColor(CustomColors.blue1),
         ),
         padding: EdgeInsets.all(_height * 0.003),
-        // child: Obx(
-        //   () => CircleAvatar(
-        //     radius: radius ?? _height * 0.026,
-        //     foregroundColor: Colors.white,
-        //     backgroundColor: Colors.white,
-        //     foregroundImage: CachedNetworkImageProvider(
-        //       "${DioAPI.baseURL}/${_userController!.user.value.photo}",
-        //     ),
-        //     child: _userController!.user.value.photo.isEmpty
-        //         ? _userController!.user.value.fName.isNotEmpty &&
-        //                 _userController!.user.value.lName.isNotEmpty
-        //             ? Text(
-        //                 "${_userController!.user.value.fName[0]}${_userController!.user.value.lName[0]}",
-        //                 style: Theme.of(context).textTheme.bodyText1!.copyWith(
-        //                       fontWeight: FontWeight.w600,
-        //                       color: Colors.black,
-        //                       fontSize: _height * 0.018,
-        //                     ),
-        //               )
-        //             : null
-        //         : null,
-        //   ),
-        // ),
-        child: CircleAvatar(
-          radius: radius ?? _height * 0.026,
-          foregroundImage: const CachedNetworkImageProvider(
-              "https://cdn-icons-png.flaticon.com/512/1053/1053244.png"),
-          backgroundImage: const CachedNetworkImageProvider(
-              "https://cdn-icons-png.flaticon.com/512/1053/1053244.png"),
+        child: Obx(
+          () => CircleAvatar(
+            radius: radius ?? _height * 0.026,
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.white,
+            foregroundImage: CachedNetworkImageProvider(
+              _userController!.user.value.userImg,
+            ),
+            child: _userController!.user.value.userImg.isEmpty
+                ? _userController!.user.value.userName.isNotEmpty
+                    ? Text(
+                        _userController!.user.value.userName[0],
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                          fontSize: _height * 0.018,
+                        ),
+                      )
+                    : null
+                : null,
+          ),
         ),
+        // child: CircleAvatar(
+        //   radius: radius ?? _height * 0.026,
+        //   foregroundImage: const CachedNetworkImageProvider(
+        //       "https://cdn-icons-png.flaticon.com/512/1053/1053244.png"),
+        //   backgroundImage: const CachedNetworkImageProvider(
+        //       "https://cdn-icons-png.flaticon.com/512/1053/1053244.png"),
+        // ),
       ),
     );
   }

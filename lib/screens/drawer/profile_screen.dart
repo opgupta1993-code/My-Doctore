@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hello_my_doctor/controllers/profile_controller.dart';
 import 'package:flutter_hello_my_doctor/controllers/user_controller.dart';
+import 'package:flutter_hello_my_doctor/widgets/button_widget.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -91,8 +93,27 @@ class ProfileScreen extends StatelessWidget {
             Stack(
               clipBehavior: Clip.none,
               children: [
-                CircleAvatar(
-                  radius: _height * 0.07,
+                Obx(
+                  () => CircleAvatar(
+                    radius: _height * 0.007,
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.white,
+                    foregroundImage: CachedNetworkImageProvider(
+                      _userController!.user.value.userImg,
+                    ),
+                    child: _userController!.user.value.userImg.isEmpty
+                        ? _userController!.user.value.userName.isNotEmpty
+                            ? Text(
+                                _userController!.user.value.userName[0],
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black,
+                                  fontSize: _height * 0.018,
+                                ),
+                              )
+                            : null
+                        : null,
+                  ),
                 ),
                 Positioned(
                   right: -_width * 0.01,
@@ -181,19 +202,38 @@ class ProfileScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: _height * 0.025),
-                      _buildInfoWidget(
-                        "Name",
-                        _userController!.user.value.userName,
+                      Obx(
+                        () => _buildInfoWidget(
+                          "Name",
+                          _userController!.user.value.userName,
+                        ),
                       ),
                       SizedBox(height: _height * 0.02),
-                      _buildInfoWidget(
-                        "Contact Number",
-                        _userController!.user.value.mobileNo,
+                      Obx(
+                        () => _buildInfoWidget(
+                          "Contact Number",
+                          _userController!.user.value.mobileNo,
+                        ),
                       ),
                       SizedBox(height: _height * 0.02),
-                      _buildInfoWidget("Date of birth", "DD MM YYYY"),
+                      Obx(
+                        () => _buildInfoWidget(
+                          "Date of birth",
+                          _userController!.user.value.dob,
+                        ),
+                      ),
                       SizedBox(height: _height * 0.02),
-                      _buildInfoWidget("Location", "Add Details"),
+                      Obx(
+                        () => _buildInfoWidget(
+                          "Location",
+                          _userController!.user.value.address,
+                        ),
+                      ),
+                      SizedBox(height: _height * 0.05),
+                      ButtonWidget(
+                        text: "Update Profile",
+                        onPressed: _controller!.onUpdatePressed,
+                      ),
                     ],
                   ),
                 ),
