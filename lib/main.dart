@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'controllers/select_city_controller.dart';
 import 'controllers/user_controller.dart';
 import 'models/user_model.dart';
 import 'routes/routes.dart';
@@ -62,6 +63,10 @@ Future<void> _dependencyInjection() async {
 
   Get.put(preferences, permanent: true);
   Get.put(userController, permanent: true);
+
+  if (userController.isLogin.value) {
+    Get.put(SelectCityController(), permanent: true);
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -88,13 +93,16 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final UserController userController = Get.find();
+
     return GetMaterialApp(
       debugShowCheckedModeBanner: true,
       title: "Hello My Doctor",
       theme: ThemeUtils.lightTheme,
       darkTheme: ThemeUtils.darkTheme,
       themeMode: ThemeMode.light,
-      initialRoute: "/splashScreen",
+      initialRoute:
+          userController.isLogin.value ? "/drawerScreen" : "/splashScreen",
       popGesture: true,
       defaultTransition: Transition.cupertino,
       transitionDuration: const Duration(milliseconds: 450),

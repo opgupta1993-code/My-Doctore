@@ -27,7 +27,7 @@ class SelectCityController extends GetxController {
 
     searchController = TextEditingController();
 
-    afterLogin = Get.arguments["data"] ?? false;
+    afterLogin = Get.arguments == null ? false : Get.arguments["data"] ?? false;
 
     _getData();
   }

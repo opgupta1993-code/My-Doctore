@@ -12,6 +12,9 @@ import '../utils/utils.dart';
 
 class SelectDoctorController extends GetxController {
   late final RxBool loading;
+  late final RxBool _toggleLeaveDialog;
+
+  StreamSubscription? _leaveDialogStateSubscription;
 
   DoctorDetailsModel? selectedDoctor;
 
@@ -31,6 +34,7 @@ class SelectDoctorController extends GetxController {
     super.onInit();
 
     loading = true.obs;
+    _toggleLeaveDialog = false.obs;
     _dataList = <DoctorDetailsModel>[].obs;
     selectedDoctor = null;
 
@@ -85,6 +89,7 @@ class SelectDoctorController extends GetxController {
     await Future.delayed(const Duration(milliseconds: 100));
 
     if (data.isDoctorOnLeave) {
+      _toggleLeaveDialog.value = !_toggleLeaveDialog.value;
       return;
     }
 
@@ -93,7 +98,7 @@ class SelectDoctorController extends GetxController {
 
   Future<void> onDoctorPressed(DoctorDetailsModel data) async {
     selectedDoctor = data;
-    Routes.doctorDetailsScreen(data);
+    Routes.doctorDetailsScreen(data.id);
   }
 
   void onClearPressed() {
@@ -122,12 +127,24 @@ class SelectDoctorController extends GetxController {
     }
   }
 
+  Future<void> listenLeaveDialogState(Function showDialog) async {
+    _leaveDialogStateSubscription = _toggleLeaveDialog.listen((data) async {
+      showDialog();
+    });
+  }
+
+  void onClosePressed() {
+    Get.back();
+  }
+
   List<DoctorDetailsModel> get dataList => _dataList;
 
   @override
   void onClose() {
     searchController.dispose();
     _cancelTimer();
+
+    _leaveDialogStateSubscription?.cancel();
 
     super.onClose();
   }

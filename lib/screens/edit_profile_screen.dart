@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hello_my_doctor/controllers/user_controller.dart';
 import 'package:flutter_hello_my_doctor/widgets/button_widget.dart';
 import 'package:flutter_hello_my_doctor/widgets/circular_loading_widget.dart';
 import 'package:get/get.dart';
@@ -21,6 +23,7 @@ class EditProfileScreen extends StatelessWidget {
 
   final double _height = Get.height, _width = Get.width;
 
+  UserController? _userController;
   EditProfileController? _controller;
 
   PreferredSizeWidget get _buildAppbarWidget => PreferredSize(
@@ -167,9 +170,13 @@ class EditProfileScreen extends StatelessWidget {
                   Obx(
                     () => CircleAvatar(
                       radius: _height * 0.07,
-                      foregroundImage: FileImage(
-                        File(_controller!.imagePath.value),
-                      ),
+                      backgroundImage: CachedNetworkImageProvider(
+                          _userController!.user.value.userImg),
+                      foregroundImage: _controller!.imagePath.value.isNotEmpty
+                          ? FileImage(
+                              File(_controller!.imagePath.value),
+                            )
+                          : null,
                     ),
                   ),
                   Positioned(
@@ -271,6 +278,8 @@ class EditProfileScreen extends StatelessWidget {
       _controller = Get.find<EditProfileController>();
       _controller!.listenImageBottomSheetState(_showImageSourceBottomSheet);
     }
+
+    _userController ??= Get.find<UserController>();
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: ThemeUtils.getStatusNavBarOneTheme(context),

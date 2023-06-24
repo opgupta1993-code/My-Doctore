@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hello_my_doctor/controllers/select_city_controller.dart';
 import 'package:flutter_hello_my_doctor/routes/routes.dart';
-import 'package:flutter_hello_my_doctor/utils/utils.dart';
 import 'package:get/get.dart';
+
+import '../utils/utils.dart';
 
 class DrawerController extends GetxController {
   late final GlobalKey<ScaffoldState> _sfKey;
@@ -43,24 +44,28 @@ class DrawerController extends GetxController {
     await Future.delayed(const Duration(milliseconds: 130));
 
     switch (type) {
-      case -1:
+      case 0:
         _selectCityController.afterLogin = false;
 
         Routes.selectCityScreen(afterLogin: false);
         break;
-
-      case 0:
       case 1:
+        Routes.appointmentsScreen();
+        break;
       case 2:
       case 3:
       case 4:
+        break;
       case 5:
+        Routes.notificationsScreen();
+        break;
       case 6:
       case 7:
-        // Routes.comingSoonScreen();
-        break;
-
       case 8:
+      case 9:
+      case 10:
+        break;
+      case 11:
         Utils.logout();
         break;
     }

@@ -95,7 +95,7 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 Obx(
                   () => CircleAvatar(
-                    radius: _height * 0.007,
+                    radius: _height * 0.07,
                     foregroundColor: Colors.white,
                     backgroundColor: Colors.white,
                     foregroundImage: CachedNetworkImageProvider(

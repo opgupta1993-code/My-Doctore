@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hello_my_doctor/constants/custom_colors.dart';
 import 'package:flutter_hello_my_doctor/controllers/user_controller.dart';
 import 'package:flutter_hello_my_doctor/networking/network_calls.dart';
 import 'package:get/get.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:intl/intl.dart';
@@ -151,10 +153,20 @@ class EditProfileController extends GetxController {
       initialDate: current,
       firstDate: DateTime(current.year - 100),
       lastDate: current,
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData(
+            colorScheme: ColorScheme.light(
+              primary: HexColor(CustomColors.blue1),
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
 
     if (dateTime != null) {
-      dobController.text = DateFormat("dd-MM-yyyy").format(dateTime);
+      dobController.text = DateFormat("yyyy-MM-dd").format(dateTime);
     }
   }
 

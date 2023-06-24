@@ -210,4 +210,14 @@ class NetworkCalls {
     const String path = "/wb/update_profile";
     return await _postRequest(path, data: FormData.fromMap(data));
   }
+
+  static Future<Map> getNotifications(Map<String, dynamic> data) async {
+    const String path = "/wb/get_notification";
+    return await _postRequest(path, data: FormData.fromMap(data));
+  }
+
+  static Future<Map> getAppointments(Map<String, dynamic> data) async {
+    const String path = "/wb/get_appointments";
+    return await _postRequest(path, data: FormData.fromMap(data));
+  }
 }

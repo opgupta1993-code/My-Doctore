@@ -12,6 +12,9 @@ import '../utils/utils.dart';
 class DoctorDetailsController extends GetxController {
   late final RxBool loading, reviewRatingLoading;
   late final RxBool _reviewRatingSheet;
+  late final RxBool _toggleLeaveDialog;
+
+  StreamSubscription? _leaveDialogStateSubscription;
 
   late double _rating;
 
@@ -23,7 +26,7 @@ class DoctorDetailsController extends GetxController {
 
   late final TextEditingController descController;
 
-  DoctorDetailsModel? _selectedDoctor;
+  String? _selectedDoctorId;
   // late final SelectDoctorController _selectDoctorController;
   late final UserController _userController;
 
@@ -32,6 +35,7 @@ class DoctorDetailsController extends GetxController {
     super.onInit();
 
     loading = true.obs;
+    _toggleLeaveDialog = false.obs;
 
     reviewRatingLoading = false.obs;
     _reviewRatingSheet = false.obs;
@@ -40,7 +44,7 @@ class DoctorDetailsController extends GetxController {
 
     descController = TextEditingController();
 
-    _selectedDoctor = Get.arguments["data"];
+    _selectedDoctorId = Get.arguments["data"];
 
     // _selectDoctorController = Get.find<SelectDoctorController>();
     _userController = Get.find<UserController>();
@@ -49,7 +53,7 @@ class DoctorDetailsController extends GetxController {
 
   Future<void> _getData() async {
     final Map res = await NetworkCalls.getDoctorDetails({
-      "doctor_id": _selectedDoctor?.id,
+      "doctor_id": _selectedDoctorId,
       "user_id": _userController.user.value.userId,
     });
 
@@ -74,7 +78,7 @@ class DoctorDetailsController extends GetxController {
   Future<void> _submitReviewRating() async {
     final Map res = await NetworkCalls.submitReviewRating({
       "user_id": _userController.user.value.userId,
-      "doctor_id": _selectedDoctor?.id,
+      "doctor_id": _selectedDoctorId,
       "rating": _rating,
       "description": descController.text,
     });
@@ -98,7 +102,9 @@ class DoctorDetailsController extends GetxController {
   Future<void> onBookNowPressed() async {
     await Future.delayed(const Duration(milliseconds: 100));
 
-    if ((data?.doctorDetails.isDoctorOnLeave == true)) {
+    if (data?.doctorDetails.isDoctorOnLeave == true) {
+      _toggleLeaveDialog.value = !_toggleLeaveDialog.value;
+
       return;
     }
 
@@ -173,6 +179,16 @@ class DoctorDetailsController extends GetxController {
     });
   }
 
+  Future<void> listenLeaveDialogState(Function showDialog) async {
+    _leaveDialogStateSubscription = _toggleLeaveDialog.listen((data) async {
+      showDialog();
+    });
+  }
+
+  void onClosePressed() {
+    Get.back();
+  }
+
   DoctorModel? get data => _data;
 
   int get getTotalReviewa {
@@ -188,6 +204,7 @@ class DoctorDetailsController extends GetxController {
   void onClose() {
     descController.dispose();
     _reviewRatingBottomSheetStateSubscription?.cancel();
+    _leaveDialogStateSubscription?.cancel();
 
     super.onClose();
   }

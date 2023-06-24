@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../controllers/user_controller.dart';
 import '../models/user_model.dart';
@@ -150,5 +151,15 @@ class Utils {
 
     userController.setIsLogin = false;
     userController.setUser = UserModel();
+  }
+
+  static Future<void> openUrl(String url) async {
+    try {
+      if (await canLaunchUrl(Uri.parse(url))) {
+        await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+      }
+    } catch (err) {
+      //print("ERROR :: Utils :: openUrl :: $url");
+    }
   }
 }

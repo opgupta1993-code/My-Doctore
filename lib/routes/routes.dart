@@ -1,18 +1,23 @@
+import 'package:flutter_hello_my_doctor/bindings/appointments_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/auth_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/doctor_details_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/drawer_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/edit_profile_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/login_without_login_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/make_appointment_binding.dart';
+import 'package:flutter_hello_my_doctor/bindings/notifications_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/profile_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/select_city_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/select_doctor_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/select_doctor_category_binding.dart';
+import 'package:flutter_hello_my_doctor/bindings/video_review_binding.dart';
 import 'package:flutter_hello_my_doctor/models/doctor_model.dart';
 import 'package:flutter_hello_my_doctor/screens/auth/login_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/auth/signup_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/doctor_details_screen.dart';
+import 'package:flutter_hello_my_doctor/screens/drawer/appointments_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/drawer/drawer_screen.dart';
+import 'package:flutter_hello_my_doctor/screens/drawer/notifications_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/drawer/profile_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/edit_profile_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/login_without_login_screen.dart';
@@ -20,6 +25,7 @@ import 'package:flutter_hello_my_doctor/screens/make_appointment_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/select_city_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/select_doctor_category_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/select_doctor_screen.dart';
+import 'package:flutter_hello_my_doctor/screens/video_review_screen.dart';
 import 'package:get/get.dart';
 
 import '../bindings/intro_page_view_binding.dart';
@@ -127,6 +133,27 @@ class Routes {
       binding: EditProfileBinding(),
       showCupertinoParallax: true,
     ),
+    GetPage(
+      name: "/appointmentsScreen",
+      page: () => const AppointmentsScreen(),
+      popGesture: true,
+      binding: AppointmentsBinding(),
+      showCupertinoParallax: true,
+    ),
+    GetPage(
+      name: "/notificationsScreen",
+      page: () => NotificationsScreen(),
+      popGesture: true,
+      binding: NotificationsBinding(),
+      showCupertinoParallax: true,
+    ),
+    GetPage(
+      name: "/videoReviewScreen",
+      page: () => VideoReviewScreen(),
+      popGesture: true,
+      binding: VideoReviewBinding(),
+      showCupertinoParallax: true,
+    ),
   ];
 
   static Future<void> splashScreen() async {
@@ -191,10 +218,10 @@ class Routes {
     );
   }
 
-  static Future<void> doctorDetailsScreen(DoctorDetailsModel data) async {
+  static Future<void> doctorDetailsScreen(String id) async {
     return await Get.toNamed(
       "/doctorDetailsScreen",
-      arguments: {"data": data},
+      arguments: {"data": id},
     );
   }
 
@@ -208,5 +235,20 @@ class Routes {
 
   static Future<void> editProfileScreen() async {
     return await Get.toNamed("/editProfileScreen");
+  }
+
+  static Future<void> appointmentsScreen() async {
+    return await Get.toNamed("/appointmentsScreen");
+  }
+
+  static Future<void> notificationsScreen() async {
+    return await Get.toNamed("/notificationsScreen");
+  }
+
+  static Future<void> videoReviewScreen(String url) async {
+    return await Get.toNamed(
+      "/videoReviewScreen",
+      arguments: {"data": url},
+    );
   }
 }

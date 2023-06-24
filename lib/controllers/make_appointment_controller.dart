@@ -14,7 +14,7 @@ import 'package:intl/intl.dart';
 
 class MakeAppointmentController extends GetxController {
   late final RxBool loading;
-  late final RxBool togglePaymentSuccessDialog;
+  late final RxBool _togglePaymentSuccessDialog;
 
   StreamSubscription? _paymentSuccessDialogStateSubscription;
 
@@ -37,7 +37,7 @@ class MakeAppointmentController extends GetxController {
     super.onInit();
 
     loading = false.obs;
-    togglePaymentSuccessDialog = false.obs;
+    _togglePaymentSuccessDialog = false.obs;
 
     _selectCityController = Get.find<SelectCityController>();
     // _selectDoctorController = Get.find<SelectDoctorController>();
@@ -84,7 +84,7 @@ class MakeAppointmentController extends GetxController {
 
     if (res["status"] == "200") {
       // Utils.showToast("Appointment booked successfully", color: Colors.green);
-      togglePaymentSuccessDialog.value = !togglePaymentSuccessDialog.value;
+      _togglePaymentSuccessDialog.value = !_togglePaymentSuccessDialog.value;
     } else {
       Utils.showToast("${res["message"]}");
     }
@@ -116,7 +116,7 @@ class MakeAppointmentController extends GetxController {
 
   Future<void> listenPaymentSuccessDialogState(Function showDialog) async {
     _paymentSuccessDialogStateSubscription =
-        togglePaymentSuccessDialog.listen((data) async {
+        _togglePaymentSuccessDialog.listen((data) async {
       showDialog();
     });
   }

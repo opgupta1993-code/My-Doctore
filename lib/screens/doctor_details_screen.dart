@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hello_my_doctor/models/doctor_model.dart';
@@ -873,6 +874,82 @@ class DoctorDetailsScreen extends StatelessWidget {
         ),
       );
 
+  Widget get _buildLeaveDialogWidget => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: _width * 0.9,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(_width * 0.035),
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: _width * 0.06,
+              vertical: _height * 0.03,
+            ),
+            child: Column(
+              children: [
+                Text(
+                  "${_controller!.data?.doctorDetails.name} is on leave",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.rubik(
+                    fontSize: _height * 0.021,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: _height * 0.01),
+                Text(
+                  "${_controller!.data!.doctorDetails.fromDate} - ${_controller!.data!.doctorDetails.toDate}",
+                  style: GoogleFonts.rubik(
+                    color: HexColor(CustomColors.grey1),
+                    fontSize: _height * 0.016,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                if (_controller!.data?.doctorDetails != null &&
+                    _controller!.data!.doctorDetails.description.isNotEmpty)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: _height * 0.015),
+                      Text(
+                        _controller!.data!.doctorDetails.description,
+                        textAlign: TextAlign.center,
+                        maxLines: 20,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.rubik(
+                          fontSize: _height * 0.018,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                SizedBox(height: _height * 0.025),
+                ButtonWidget(
+                  text: "Close",
+                  onPressed: _controller!.onClosePressed,
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+
+  Future<void> _showLeaveDialog() async {
+    return await showCupertinoDialog(
+      context: Get.context!,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Center(
+          child: Material(
+            color: Colors.transparent,
+            child: _buildLeaveDialogWidget,
+          ),
+        );
+      },
+    );
+  }
+
   Widget get _buildContentWidget => SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: _width * 0.05),
         child: Column(
@@ -927,6 +1004,8 @@ class DoctorDetailsScreen extends StatelessWidget {
 
       _controller!
           .listenReviewRatingBottomSheetState(_showReviewRatingBottomSheet);
+
+      _controller!.listenLeaveDialogState(_showLeaveDialog);
     }
 
     return AnnotatedRegion<SystemUiOverlayStyle>(

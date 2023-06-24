@@ -7,6 +7,7 @@ import 'package:flutter_hello_my_doctor/constants/service_enum.dart';
 import 'package:flutter_hello_my_doctor/controllers/home_controller.dart';
 import 'package:flutter_hello_my_doctor/controllers/user_controller.dart';
 import 'package:flutter_hello_my_doctor/models/doctor_model.dart';
+import 'package:flutter_hello_my_doctor/models/home_model.dart';
 import 'package:flutter_hello_my_doctor/widgets/no_data_found_widget.dart';
 import 'package:flutter_hello_my_doctor/widgets/profile_button_widget.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -418,48 +419,51 @@ class HomeScreen extends StatelessWidget {
         );
       });
 
-  Widget _buildReviewItemWidget() => LayoutBuilder(builder: (context, cons) {
-        return Column(
-          children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                SizedBox(
-                  height: cons.maxHeight * 0.85,
-                  width: _width * 0.32,
-                  child: Image.asset(
-                    "assets/sample/sample2.png",
-                    fit: BoxFit.fill,
+  Widget _buildReviewItemWidget(VideoReviewModel data) => InkWell(
+        onTap: () => _controller!.onVideoReviewPressed(data),
+        child: LayoutBuilder(builder: (context, cons) {
+          return Column(
+            children: [
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  SizedBox(
+                    height: cons.maxHeight * 0.85,
+                    width: _width * 0.32,
+                    child: Image.asset(
+                      "assets/sample/sample2.png",
+                      fit: BoxFit.fill,
+                    ),
                   ),
-                ),
-                Icon(
-                  Icons.play_circle_outline_outlined,
-                  color: Colors.white,
-                  size: cons.maxHeight * 0.17,
-                ),
-              ],
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: cons.maxHeight * 0.03,
-                ),
-                child: Text(
-                  "Rahul Kumar",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.rubik(
-                    fontWeight: FontWeight.w400,
-                    fontSize: cons.maxHeight * 0.08,
-                    color: Colors.black,
+                  Icon(
+                    Icons.play_circle_outline_outlined,
+                    color: Colors.white,
+                    size: cons.maxHeight * 0.17,
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: cons.maxHeight * 0.03,
+                  ),
+                  child: Text(
+                    "Rahul Kumar",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.rubik(
+                      fontWeight: FontWeight.w400,
+                      fontSize: cons.maxHeight * 0.08,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        );
-      });
+            ],
+          );
+        }),
+      );
 
   Widget get _buildContentWidget => SingleChildScrollView(
         child: Column(
@@ -506,30 +510,70 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ],
               ),
-            SizedBox(height: _height * 0.04),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
-                child: _buildTitleWidget("Reviews From Happy Customers"),
+            if (_controller!.data!.customersReview.isNotEmpty)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: _height * 0.04),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+                      child: _buildTitleWidget("Reviews From Happy Customers"),
+                    ),
+                  ),
+                  SizedBox(height: _height * 0.01),
+                  SizedBox(
+                    height: _height * 0.23,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: _controller!.data!.customersReview.length,
+                      padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(width: _width * 0.06);
+                      },
+                      itemBuilder: (BuildContext context, int index) {
+                        return _buildReviewItemWidget(
+                          _controller!.data!.customersReview[index],
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ),
-            SizedBox(height: _height * 0.01),
-            SizedBox(
-              height: _height * 0.23,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                physics: const AlwaysScrollableScrollPhysics(),
-                itemCount: 5,
-                padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
-                separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(width: _width * 0.06);
-                },
-                itemBuilder: (BuildContext context, int index) {
-                  return _buildReviewItemWidget();
-                },
+            if (_controller!.data!.doctorsReview.isNotEmpty)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: _height * 0.04),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+                      child: _buildTitleWidget("Reviews From Doctors"),
+                    ),
+                  ),
+                  SizedBox(height: _height * 0.01),
+                  SizedBox(
+                    height: _height * 0.23,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: _controller!.data!.doctorsReview.length,
+                      padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(width: _width * 0.06);
+                      },
+                      itemBuilder: (BuildContext context, int index) {
+                        return _buildReviewItemWidget(
+                          _controller!.data!.doctorsReview[index],
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ),
             SizedBox(height: _height * 0.015),
           ],
         ),
