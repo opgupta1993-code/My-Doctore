@@ -35,7 +35,7 @@ class LoginWithoutLoginScreen extends StatelessWidget {
                   gradient: LinearGradient(
                     colors: [
                       HexColor(CustomColors.blue2),
-                      HexColor(CustomColors.blue3),
+                      HexColor(CustomColors.blue1),
                     ],
                   ),
                 ),

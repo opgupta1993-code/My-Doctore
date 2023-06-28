@@ -20,4 +20,16 @@ class Constants {
       "https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=";
   static const String paytmProductionCallbackUrl =
       "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=";
+
+  static const String rpUrl =
+      "https://foxplx.xyz/hellodoctor3-41/refund_policy.html";
+
+  static const String tcUrl =
+      "https://foxplx.xyz/hellodoctor3-41/terms_and_conditions.html";
+
+  static const String ppUrl =
+      "https://foxplx.xyz/hellodoctor3-41/privacy_policy.html";
+
+  static const String helpUrl =
+      "https://foxplx.xyz/hellodoctor3-41/contact_us.html";
 }

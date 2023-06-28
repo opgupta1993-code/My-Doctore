@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hello_my_doctor/constants/constants.dart';
 import 'package:flutter_hello_my_doctor/controllers/select_city_controller.dart';
 import 'package:flutter_hello_my_doctor/routes/routes.dart';
 import 'package:get/get.dart';
@@ -60,9 +61,17 @@ class DrawerController extends GetxController {
         Routes.notificationsScreen();
         break;
       case 6:
+        Routes.webviewScreen(Constants.tcUrl);
+        break;
       case 7:
+        Routes.webviewScreen(Constants.ppUrl);
+        break;
       case 8:
+        Routes.webviewScreen(Constants.rpUrl);
+        break;
       case 9:
+        Routes.webviewScreen(Constants.helpUrl);
+        break;
       case 10:
         break;
       case 11:

@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               HexColor(CustomColors.blue2),
-              HexColor(CustomColors.blue3),
+              HexColor(CustomColors.blue1),
             ],
           ),
         ),
@@ -465,6 +465,45 @@ class HomeScreen extends StatelessWidget {
         }),
       );
 
+  Widget _buildServiceServedItemWidget(String data, String title) =>
+      LayoutBuilder(builder: (context, cons) {
+        return Container(
+          decoration: BoxDecoration(
+            color: HexColor(CustomColors.blue3),
+            // color: Colors.black,
+            borderRadius: BorderRadius.circular(_width * 0.02),
+          ),
+          padding: EdgeInsets.symmetric(
+            vertical: cons.maxHeight * 0.03,
+            horizontal: cons.maxWidth * 0.02,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                data,
+                style: GoogleFonts.rubik(
+                  color: HexColor(CustomColors.blue2),
+                  fontSize: cons.maxHeight * 0.15,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(height: _height * 0.01),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.rubik(
+                  color: HexColor(CustomColors.blue1),
+                  fontSize: cons.maxHeight * 0.1,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        );
+      });
+
   Widget get _buildContentWidget => SingleChildScrollView(
         child: Column(
           children: [
@@ -574,6 +613,31 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ],
               ),
+            SizedBox(height: _height * 0.05),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+                child: _buildTitleWidget("Service Served"),
+              ),
+            ),
+            SizedBox(height: _height * 0.01),
+            GridView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: _width * 0.05,
+                mainAxisSpacing: _height * 0.03,
+              ),
+              children: [
+                _buildServiceServedItemWidget("99%", "Client Retention"),
+                _buildServiceServedItemWidget("7", "Years of Service"),
+                _buildServiceServedItemWidget("200+", "Team of Professtionals"),
+                _buildServiceServedItemWidget("100+", "Satisfied Clients"),
+              ],
+            ),
             SizedBox(height: _height * 0.015),
           ],
         ),

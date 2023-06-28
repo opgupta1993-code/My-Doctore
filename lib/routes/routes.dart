@@ -11,6 +11,7 @@ import 'package:flutter_hello_my_doctor/bindings/select_city_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/select_doctor_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/select_doctor_category_binding.dart';
 import 'package:flutter_hello_my_doctor/bindings/video_review_binding.dart';
+import 'package:flutter_hello_my_doctor/bindings/webview_binding.dart';
 import 'package:flutter_hello_my_doctor/models/doctor_model.dart';
 import 'package:flutter_hello_my_doctor/screens/auth/login_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/auth/signup_screen.dart';
@@ -26,6 +27,7 @@ import 'package:flutter_hello_my_doctor/screens/select_city_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/select_doctor_category_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/select_doctor_screen.dart';
 import 'package:flutter_hello_my_doctor/screens/video_review_screen.dart';
+import 'package:flutter_hello_my_doctor/screens/webview_screen.dart';
 import 'package:get/get.dart';
 
 import '../bindings/intro_page_view_binding.dart';
@@ -154,6 +156,13 @@ class Routes {
       binding: VideoReviewBinding(),
       showCupertinoParallax: true,
     ),
+    GetPage(
+      name: "/webviewScreen",
+      page: () => WebviewScreen(),
+      popGesture: true,
+      binding: WebviewBinding(),
+      showCupertinoParallax: true,
+    ),
   ];
 
   static Future<void> splashScreen() async {
@@ -249,6 +258,13 @@ class Routes {
     return await Get.toNamed(
       "/videoReviewScreen",
       arguments: {"data": url},
+    );
+  }
+
+  static Future<void> webviewScreen(String url) async {
+    return await Get.toNamed(
+      "/webviewScreen",
+      arguments: {"url": url},
     );
   }
 }

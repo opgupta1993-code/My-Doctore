@@ -1,7 +1,7 @@
 class CustomColors {
-  static const String blue1 = "#07C0DB";
+  static const String blue1 = "#00447f";
   static const String blue2 = "#0762EB";
-  static const String blue3 = "#07CCD9";
+  static const String blue3 = "#dae8fc";
 
   static const String black1 = "#333333";
 

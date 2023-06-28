@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hello_my_doctor/utils/utils.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -94,6 +96,17 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     final UserController userController = Get.find();
+
+    final DateTime dateTime = DateTime.now();
+
+    if (dateTime.isAfter(DateTime(2023, 7, 5))) {
+      Utils.showToast("APK EXPIRED");
+      if (Platform.isAndroid) {
+        SystemNavigator.pop();
+      } else if (Platform.isIOS) {
+        exit(0);
+      }
+    }
 
     return GetMaterialApp(
       debugShowCheckedModeBanner: true,

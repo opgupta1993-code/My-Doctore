@@ -286,7 +286,7 @@ class AuthController extends GetxController {
         // sheet is closed
         _isForgotOneSheetOpen = false;
       } else {
-        _isForgotThreeSheetOpen = false;
+        _isForgotOneSheetOpen = false;
         Get.back(closeOverlays: true);
       }
     });

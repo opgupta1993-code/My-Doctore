@@ -19,15 +19,15 @@ class SplashController extends GetxController {
   Future<void> onGetStartedPressed() async {
     await Future.delayed(const Duration(milliseconds: 100));
 
-    final DateTime dateTime = DateTime.now();
+    // final DateTime dateTime = DateTime.now();
 
-    if (dateTime.isAfter(DateTime(2023, 6, 25))) {
-      if (Platform.isAndroid) {
-        SystemNavigator.pop();
-      } else if (Platform.isIOS) {
-        exit(0);
-      }
-    }
+    // if (dateTime.isAfter(DateTime(2023, 7, 4))) {
+    //   if (Platform.isAndroid) {
+    //     SystemNavigator.pop();
+    //   } else if (Platform.isIOS) {
+    //     exit(0);
+    //   }
+    // }
 
     Routes.introPageViewScreen();
   }
