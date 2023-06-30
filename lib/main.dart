@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hello_my_doctor/models/city_model.dart';
 import 'package:flutter_hello_my_doctor/utils/utils.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -67,7 +68,23 @@ Future<void> _dependencyInjection() async {
   Get.put(userController, permanent: true);
 
   if (userController.isLogin.value) {
-    Get.put(SelectCityController(), permanent: true);
+    final SelectCityController selectCityController = SelectCityController();
+
+    final bool isCitySelected = preferences.containsKey("isCitySelected") &&
+        (preferences.getBool("isCitySelected") ?? false);
+
+    if (isCitySelected) {
+      final String selectCityString =
+          preferences.getString("selectedCity") ?? "{}";
+      final Map selectedCityData = jsonDecode(selectCityString);
+
+      selectCityController.onCitySelected(
+        CityModel.fromJson(selectedCityData),
+        navigateFurther: false,
+      );
+    }
+
+    Get.put(selectCityController, permanent: true);
   }
 }
 
@@ -96,6 +113,11 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     final UserController userController = Get.find();
+    SelectCityController? selectCityController;
+
+    if (Get.isRegistered<SelectCityController>()) {
+      selectCityController = Get.find<SelectCityController>();
+    }
 
     final DateTime dateTime = DateTime.now();
 
@@ -108,14 +130,19 @@ class _MyAppState extends State<MyApp> {
       }
     }
 
+    print("SELECTED CITY ----> ${selectCityController?.selectedCity}");
+
     return GetMaterialApp(
       debugShowCheckedModeBanner: true,
       title: "Hello My Doctor",
       theme: ThemeUtils.lightTheme,
       darkTheme: ThemeUtils.darkTheme,
       themeMode: ThemeMode.light,
-      initialRoute:
-          userController.isLogin.value ? "/drawerScreen" : "/splashScreen",
+      initialRoute: !userController.isLogin.value
+          ? "/splashScreen"
+          : selectCityController?.selectedCity != null
+              ? "/drawerScreen"
+              : "/selectCityScreen",
       popGesture: true,
       defaultTransition: Transition.cupertino,
       transitionDuration: const Duration(milliseconds: 450),

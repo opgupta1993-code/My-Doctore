@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hello_my_doctor/models/city_model.dart';
 import 'package:flutter_hello_my_doctor/networking/network_calls.dart';
 import 'package:flutter_hello_my_doctor/utils/utils.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../routes/routes.dart';
 
@@ -17,6 +20,8 @@ class SelectCityController extends GetxController {
 
   bool? afterLogin;
 
+  late final SharedPreferences _sharedPreferences;
+
   @override
   void onInit() {
     super.onInit();
@@ -24,6 +29,8 @@ class SelectCityController extends GetxController {
     loading = true.obs;
     dataList = <CityModel>[].obs;
     _allDataList = <CityModel>[];
+
+    _sharedPreferences = Get.find<SharedPreferences>();
 
     searchController = TextEditingController();
 
@@ -52,12 +59,23 @@ class SelectCityController extends GetxController {
     loading.value = false;
   }
 
-  Future<void> onCitySelected(CityModel data) async {
+  Future<void> onCitySelected(
+    CityModel data, {
+    bool navigateFurther = true,
+  }) async {
     _selectedCity = data;
 
-    await Future.delayed(const Duration(milliseconds: 100));
-    // Routes.selectDoctorScreen();
-    Routes.drawerScreen();
+    final Map? jsonData = _selectedCity?.toJson();
+
+    if (jsonData != null) {
+      await _sharedPreferences.setString("selectedCity", jsonEncode(jsonData));
+      await _sharedPreferences.setBool("isCitySelected", true);
+    }
+
+    if (navigateFurther) {
+      await Future.delayed(const Duration(milliseconds: 50));
+      Routes.drawerScreen();
+    }
   }
 
   void onCanclePressed() {

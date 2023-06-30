@@ -193,28 +193,33 @@ class DrawerScreen extends StatelessWidget {
                         "Notifications",
                         "assets/images/test_bookings.webp",
                       ),
-                      _buildDrawerItemButtonWidget(
+                       _buildDrawerItemButtonWidget(
                         6,
+                        "About Us",
+                        "assets/images/help_center.webp",
+                      ),
+                      _buildDrawerItemButtonWidget(
+                        7,
                         "Terms & Conditions",
                         "assets/images/privacy_policy.webp",
                       ),
                       _buildDrawerItemButtonWidget(
-                        7,
+                        8,
                         "Privacy & Policy",
                         "assets/images/privacy_policy.webp",
                       ),
                       _buildDrawerItemButtonWidget(
-                        8,
+                        9,
                         "Refund Policy",
                         "assets/images/privacy_policy.webp",
                       ),
                       _buildDrawerItemButtonWidget(
-                        9,
+                        10,
                         "Help Center",
                         "assets/images/help_center.webp",
                       ),
                       _buildDrawerItemButtonWidget(
-                        10,
+                        11,
                         "Settings",
                         "assets/images/settings.webp",
                       ),
@@ -224,7 +229,7 @@ class DrawerScreen extends StatelessWidget {
                                 children: [
                                   SizedBox(height: _height * 0.04),
                                   _buildDrawerItemButtonWidget(
-                                    11,
+                                    12,
                                     "Logout",
                                     "assets/images/logout.webp",
                                     showTrailingIcon: false,

@@ -220,4 +220,9 @@ class NetworkCalls {
     const String path = "/wb/get_appointments";
     return await _postRequest(path, data: FormData.fromMap(data));
   }
+
+  static Future<Map> getLocationWiseFees(Map<String, dynamic> data) async {
+    const String path = "/wb/location_fee";
+    return await _postRequest(path, data: FormData.fromMap(data));
+  }
 }

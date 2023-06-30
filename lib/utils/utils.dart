@@ -145,6 +145,8 @@ class Utils {
 
     await preferences.remove("login");
     await preferences.remove("userData");
+    await preferences.remove("isCitySelected");
+    await preferences.remove("selectedCity");
     Routes.loginWithoutLoginScreen();
 
     await Future.delayed(const Duration(milliseconds: 300));

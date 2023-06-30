@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hello_my_doctor/constants/patient_type_enum.dart';
 import 'package:flutter_hello_my_doctor/controllers/select_city_controller.dart';
 import 'package:flutter_hello_my_doctor/controllers/user_controller.dart';
 import 'package:flutter_hello_my_doctor/models/doctor_model.dart';
@@ -15,6 +16,7 @@ import 'package:intl/intl.dart';
 class MakeAppointmentController extends GetxController {
   late final RxBool loading;
   late final RxBool _togglePaymentSuccessDialog;
+  late final Rx<PatientType> selectedPatientType;
 
   StreamSubscription? _paymentSuccessDialogStateSubscription;
 
@@ -27,6 +29,8 @@ class MakeAppointmentController extends GetxController {
   late final TextEditingController addressController;
   late final TextEditingController dateController;
 
+  late double _locationWiseFee;
+
   late final SelectCityController _selectCityController;
   DoctorDetailsModel? _selectedDoctor;
   // late final SelectDoctorController _selectDoctorController;
@@ -38,6 +42,7 @@ class MakeAppointmentController extends GetxController {
 
     loading = false.obs;
     _togglePaymentSuccessDialog = false.obs;
+    selectedPatientType = PatientType.newPatient.obs;
 
     _selectCityController = Get.find<SelectCityController>();
     // _selectDoctorController = Get.find<SelectDoctorController>();
@@ -53,12 +58,16 @@ class MakeAppointmentController extends GetxController {
     mobileController = TextEditingController();
     addressController = TextEditingController();
     dateController = TextEditingController();
+
+    _locationWiseFee = 0.0;
+
+    _getLocationWiseFees();
   }
 
-  Future<Map?> _initiatePayment() async {
+  Future<Map?> _initiatePayment(double amount) async {
     final Map res = await NetworkCalls.initiatePayment({
       "user_id": _userController.user.value.userId,
-      "amount": _selectedDoctor?.fees,
+      "amount": amount,
     });
 
     if (res.containsKey("body")) {
@@ -90,6 +99,22 @@ class MakeAppointmentController extends GetxController {
     }
 
     loading.value = false;
+  }
+
+  Future<void> _getLocationWiseFees() async {
+    print(
+        "_selectCityController.selectedCity?.id --> ${_selectCityController.selectedCity?.id}");
+    final Map res = await NetworkCalls.getLocationWiseFees(
+      {"location_id": _selectCityController.selectedCity?.id},
+    );
+
+    if (res["status"] == "201") {
+      final Map data = res["data"] ?? {};
+
+      if (data.containsKey("fee")) {
+        _locationWiseFee = Utils.getDoubleFromString("${data["fee"]}");
+      }
+    }
   }
 
   Future<void> openDatePicker() async {
@@ -137,12 +162,27 @@ class MakeAppointmentController extends GetxController {
     await Future.delayed(const Duration(milliseconds: 100));
     loading.value = true;
 
-    final Map? data = await _initiatePayment();
+    double amount = 0.0;
+
+    if (selectedPatientType.value == PatientType.existingPatient) {
+      // existing patient
+      amount = _locationWiseFee;
+    } else {
+      // new patient
+      if (_selectedDoctor?.isBookingChargesApplied ?? false) {
+        amount = _locationWiseFee +
+            Utils.getDoubleFromString("${_selectedDoctor?.fees}");
+      } else {
+        amount = _locationWiseFee;
+      }
+    }
+
+    final Map? data = await _initiatePayment(amount);
 
     if (data != null) {
       final Map? res = await PaymentGateway.pay(
         trnxToken: data["txnToken"],
-        amount: _selectedDoctor?.fees ?? "0",
+        amount: "$amount",
         orderId: "${data["orderId"]}",
       );
 
@@ -171,7 +211,7 @@ class MakeAppointmentController extends GetxController {
           "mobile_number": mobileController.text,
           "address": addressController.text,
           "date": dateController.text,
-          "fees": _selectedDoctor?.fees,
+          "fees": amount,
           "TXNAMOUNT": gatewayResponse["TXNAMOUNT"],
           "TXNDATE": gatewayResponse["TXNDATE"],
           "BANKNAME": gatewayResponse["BANKNAME"],
@@ -197,6 +237,12 @@ class MakeAppointmentController extends GetxController {
 
   Future<void> onDonePressed() async {
     Get.back();
+  }
+
+  void onPatientTypeChanged(PatientType? value) {
+    if (value == null) return;
+
+    selectedPatientType.value = value;
   }
 
   GlobalKey<FormState> get formKey => _formKey;

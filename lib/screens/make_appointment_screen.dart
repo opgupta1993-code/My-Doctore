@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hello_my_doctor/constants/patient_type_enum.dart';
 import 'package:flutter_hello_my_doctor/controllers/make_appointment_controller.dart';
 import 'package:flutter_hello_my_doctor/widgets/button_widget.dart';
 import 'package:flutter_hello_my_doctor/widgets/circular_loading_widget.dart';
@@ -69,6 +70,7 @@ class MakeAppointmentScreen extends StatelessWidget {
     bool enabled = true,
     TextInputType inputType = TextInputType.emailAddress,
     String? Function(String?)? validator,
+    bool isRequired = true,
   }) =>
       TextFormField(
         enabled: enabled,
@@ -80,8 +82,9 @@ class MakeAppointmentScreen extends StatelessWidget {
           color: Colors.black,
           fontSize: _height * 0.017,
         ),
-        validator:
-            validator ?? (val) => Utils.notEmptyValidator(val, "Required"),
+        validator: isRequired
+            ? validator ?? (val) => Utils.notEmptyValidator(val, "Required")
+            : null,
         decoration: InputDecoration(
           isDense: true,
           hintText: hint,
@@ -205,6 +208,42 @@ class MakeAppointmentScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildPatientTyperadioWidget(String title, PatientType type) =>
+      Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(_width * 0.015),
+          onTap: () => _controller!.onPatientTypeChanged(type),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: _height * 0.005),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Obx(
+                  () => Radio<PatientType>(
+                    value: type,
+                    groupValue: _controller!.selectedPatientType.value,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    onChanged: _controller!.onPatientTypeChanged,
+                  ),
+                ),
+                Flexible(
+                  child: Text(
+                    title,
+                    style: GoogleFonts.rubik(
+                      color: Colors.black,
+                      fontSize: _height * 0.018,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
   Widget get _buildContentWidget => Column(
         children: [
           _buildAppbarWidget,
@@ -243,7 +282,26 @@ class MakeAppointmentScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: _height * 0.05),
+                          SizedBox(height: _height * 0.03),
+                          _buildTitleWidget("Patient Type : "),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: _buildPatientTyperadioWidget(
+                                  "New",
+                                  PatientType.newPatient,
+                                ),
+                              ),
+                              Expanded(
+                                child: _buildPatientTyperadioWidget(
+                                  "Existing",
+                                  PatientType.existingPatient,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: _height * 0.03),
                           _buildTitleWidget("Patient Name : "),
                           SizedBox(height: _height * 0.015),
                           _buildTextFieldWidget(
@@ -259,14 +317,14 @@ class MakeAppointmentScreen extends StatelessWidget {
                             inputType: TextInputType.number,
                           ),
                           SizedBox(height: _height * 0.025),
-                          _buildTitleWidget("Father/Husband's name :"),
+                          _buildTitleWidget("Father/Husband's name : "),
                           SizedBox(height: _height * 0.015),
                           _buildTextFieldWidget(
                             _controller!.fhNameController,
                             "Enter Father/Husband's name",
                           ),
                           SizedBox(height: _height * 0.025),
-                          _buildTitleWidget("Mobile Number :"),
+                          _buildTitleWidget("Mobile Number : "),
                           SizedBox(height: _height * 0.015),
                           _buildTextFieldWidget(
                             _controller!.mobileController,
@@ -279,18 +337,19 @@ class MakeAppointmentScreen extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: _height * 0.025),
-                          _buildTitleWidget("Address :"),
+                          _buildTitleWidget("Address (Optional) : "),
                           SizedBox(height: _height * 0.015),
                           _buildTextFieldWidget(
                             _controller!.addressController,
-                            "Add Address",
+                            "Add Address (Optional)",
+                            isRequired: false,
                           ),
                           SizedBox(height: _height * 0.025),
-                          _buildTitleWidget("Date :"),
+                          _buildTitleWidget("Date of Appointment : "),
                           SizedBox(height: _height * 0.015),
                           _buildDatePickerWidget(
                             _controller!.dateController,
-                            "Enter Date",
+                            "Enter date of appointment",
                           ),
                           SizedBox(height: _height * 0.05),
                         ],

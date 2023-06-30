@@ -24,12 +24,11 @@ class Constants {
   static const String rpUrl =
       "https://foxplx.xyz/hellodoctor3-41/refund_policy.html";
 
-  static const String tcUrl =
-      "https://foxplx.xyz/hellodoctor3-41/terms_and_conditions.html";
+  static const String tcUrl = "https://hellomydoctor.in/terms-and-conditions";
 
-  static const String ppUrl =
-      "https://foxplx.xyz/hellodoctor3-41/privacy_policy.html";
+  static const String ppUrl = "https://hellomydoctor.in/privacy-policy";
 
-  static const String helpUrl =
-      "https://foxplx.xyz/hellodoctor3-41/contact_us.html";
+  static const String helpUrl = "https://hellomydoctor.in/contact";
+
+  static const String aboutUsUrl = "https://hellomydoctor.in/about";
 }

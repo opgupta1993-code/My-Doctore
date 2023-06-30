@@ -262,12 +262,12 @@ class HomeScreen extends StatelessWidget {
         ],
       );
 
-  Widget _buildTitleWidget(String title) => Text(
+  Widget _buildTitleWidget(String title, {Color? color}) => Text(
         title,
         style: GoogleFonts.rubik(
           fontWeight: FontWeight.w500,
           fontSize: _height * 0.021,
-          color: Colors.black,
+          color: color ?? Colors.black,
         ),
       );
 
@@ -300,8 +300,8 @@ class HomeScreen extends StatelessWidget {
           "See All",
           overflow: TextOverflow.ellipsis,
           style: GoogleFonts.rubik(
-            fontWeight: FontWeight.w400,
-            fontSize: _height * 0.0165,
+            fontWeight: FontWeight.w500,
+            fontSize: _height * 0.0175,
           ),
         ),
       );
@@ -465,6 +465,62 @@ class HomeScreen extends StatelessWidget {
         }),
       );
 
+  Widget _buildDoctorReviewItemWidget(VideoReviewModel data) => InkWell(
+        onTap: () => _controller!.onVideoReviewPressed(data),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(_width * 0.05),
+          ),
+          padding: EdgeInsets.all(_height * 0.005),
+          child: LayoutBuilder(builder: (context, cons) {
+            return Column(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(_width * 0.05),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(
+                        height: cons.maxHeight * 0.8,
+                        width: _width * 0.27,
+                        child: Image.asset(
+                          "assets/sample/sample2.png",
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                      Icon(
+                        Icons.play_circle_outline_outlined,
+                        color: Colors.white,
+                        size: cons.maxHeight * 0.17,
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: cons.maxHeight * 0.03,
+                    ),
+                    child: Text(
+                      "Rahul Kumar",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.rubik(
+                        fontWeight: FontWeight.w500,
+                        fontSize: cons.maxHeight * 0.09,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }),
+        ),
+      );
+
   Widget _buildServiceServedItemWidget(String data, String title) =>
       LayoutBuilder(builder: (context, cons) {
         return Container(
@@ -503,6 +559,112 @@ class HomeScreen extends StatelessWidget {
           ),
         );
       });
+
+  Widget get _buildDoctorReviewsWidget => Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/doctor_review_bg.webp"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: _height * 0.02),
+            Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+                child: _buildTitleWidget(
+                  "Doctors Review",
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            SizedBox(height: _height * 0.015),
+            SizedBox(
+              height: _height * 0.19,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: _controller!.data!.doctorsReview.length,
+                padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+                separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(width: _width * 0.06);
+                },
+                itemBuilder: (BuildContext context, int index) {
+                  return _buildDoctorReviewItemWidget(
+                    _controller!.data!.doctorsReview[index],
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: _height * 0.03),
+          ],
+        ),
+      );
+
+  Widget get _buildServicesServedGridViewWidget => GridView(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: _width * 0.05,
+          mainAxisSpacing: _height * 0.03,
+        ),
+        children: [
+          _buildServiceServedItemWidget(
+            "${_controller!.data?.serviceServed.clientRetention}%",
+            "Client Retention",
+          ),
+          _buildServiceServedItemWidget(
+            "${_controller!.data?.serviceServed.yearsOfService}",
+            "Years of Service",
+          ),
+          _buildServiceServedItemWidget(
+            "${_controller!.data?.serviceServed.teamOfProfessionals}+",
+            "Team of Professtionals",
+          ),
+          _buildServiceServedItemWidget(
+            "${_controller!.data?.serviceServed.satisfiedClient}+",
+            "Satisfied Clients",
+          ),
+        ],
+      );
+
+  Widget get _buildCustomerReviewsWidget => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: _height * 0.04),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+              child: _buildTitleWidget("Reviews From Happy Customers"),
+            ),
+          ),
+          SizedBox(height: _height * 0.01),
+          SizedBox(
+            height: _height * 0.23,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: _controller!.data!.customersReview.length,
+              padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+              separatorBuilder: (BuildContext context, int index) {
+                return SizedBox(width: _width * 0.06);
+              },
+              itemBuilder: (BuildContext context, int index) {
+                return _buildReviewItemWidget(
+                  _controller!.data!.customersReview[index],
+                );
+              },
+            ),
+          ),
+        ],
+      );
 
   Widget get _buildContentWidget => SingleChildScrollView(
         child: Column(
@@ -550,67 +712,12 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             if (_controller!.data!.customersReview.isNotEmpty)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: _height * 0.04),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
-                      child: _buildTitleWidget("Reviews From Happy Customers"),
-                    ),
-                  ),
-                  SizedBox(height: _height * 0.01),
-                  SizedBox(
-                    height: _height * 0.23,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      itemCount: _controller!.data!.customersReview.length,
-                      padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
-                      separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(width: _width * 0.06);
-                      },
-                      itemBuilder: (BuildContext context, int index) {
-                        return _buildReviewItemWidget(
-                          _controller!.data!.customersReview[index],
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
+              _buildCustomerReviewsWidget,
             if (_controller!.data!.doctorsReview.isNotEmpty)
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: _height * 0.04),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
-                      child: _buildTitleWidget("Reviews From Doctors"),
-                    ),
-                  ),
-                  SizedBox(height: _height * 0.01),
-                  SizedBox(
-                    height: _height * 0.23,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      itemCount: _controller!.data!.doctorsReview.length,
-                      padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
-                      separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(width: _width * 0.06);
-                      },
-                      itemBuilder: (BuildContext context, int index) {
-                        return _buildReviewItemWidget(
-                          _controller!.data!.doctorsReview[index],
-                        );
-                      },
-                    ),
-                  ),
+                  SizedBox(height: _height * 0.02),
+                  _buildDoctorReviewsWidget,
                 ],
               ),
             SizedBox(height: _height * 0.05),
@@ -622,22 +729,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: _height * 0.01),
-            GridView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: _width * 0.05,
-                mainAxisSpacing: _height * 0.03,
-              ),
-              children: [
-                _buildServiceServedItemWidget("99%", "Client Retention"),
-                _buildServiceServedItemWidget("7", "Years of Service"),
-                _buildServiceServedItemWidget("200+", "Team of Professtionals"),
-                _buildServiceServedItemWidget("100+", "Satisfied Clients"),
-              ],
-            ),
+            _buildServicesServedGridViewWidget,
             SizedBox(height: _height * 0.015),
           ],
         ),

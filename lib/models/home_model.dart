@@ -5,12 +5,14 @@ class HomeModel {
   late final List<DoctorDetailsModel> _doctors;
   late final List<VideoReviewModel> _doctorsReview;
   late final List<VideoReviewModel> _customersReview;
+  late final ServiceServedModel _serviceServed;
 
   HomeModel() {
     _sliders = <SliderModel>[];
     _doctors = <DoctorDetailsModel>[];
     _doctorsReview = <VideoReviewModel>[];
     _customersReview = <VideoReviewModel>[];
+    _serviceServed = ServiceServedModel();
   }
 
   HomeModel.fromJson(Map json) {
@@ -18,6 +20,12 @@ class HomeModel {
     _doctors = <DoctorDetailsModel>[];
     _doctorsReview = <VideoReviewModel>[];
     _customersReview = <VideoReviewModel>[];
+
+    if (json['service_served'] != null && json['service_served'] is Map) {
+      _serviceServed = ServiceServedModel.fromJson(json['service_served']);
+    } else {
+      _serviceServed = ServiceServedModel();
+    }
 
     if (json['sliders'] != null && json['sliders'] is List) {
       json['sliders'].forEach((v) {
@@ -55,6 +63,7 @@ class HomeModel {
   List<DoctorDetailsModel> get doctors => _doctors;
   List<VideoReviewModel> get doctorsReview => _doctorsReview;
   List<VideoReviewModel> get customersReview => _customersReview;
+  ServiceServedModel get serviceServed => _serviceServed;
 }
 
 class SliderModel {
@@ -118,5 +127,43 @@ class VideoReviewModel {
   String get videoType => _videoType;
   String get video => _video;
   String get desc => _desc;
+  String get status => _status;
+}
+
+class ServiceServedModel {
+  String _id = "";
+  String _clientRetention = "0";
+  String _yearsOfService = "0";
+  String _teamOfProfessionals = "0";
+  String _satisfiedClient = "0";
+  String _status = "";
+
+  ServiceServedModel();
+
+  ServiceServedModel.fromJson(Map json) {
+    _id = json['id'] ?? "";
+    _clientRetention = json['client_retention'] ?? "";
+    _yearsOfService = json['years_of_service'] ?? "";
+    _teamOfProfessionals = json['team_of_professionals'] ?? "";
+    _satisfiedClient = json['satisfied_client'] ?? "";
+    _status = json['status'] ?? "";
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = _id;
+    data['client_retention'] = _clientRetention;
+    data['years_of_service'] = _yearsOfService;
+    data['team_of_professionals'] = _teamOfProfessionals;
+    data['satisfied_client'] = _satisfiedClient;
+    data['status'] = _status;
+    return data;
+  }
+
+  String get id => _id;
+  String get clientRetention => _clientRetention;
+  String get yearsOfService => _yearsOfService;
+  String get teamOfProfessionals => _teamOfProfessionals;
+  String get satisfiedClient => _satisfiedClient;
   String get status => _status;
 }

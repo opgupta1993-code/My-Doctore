@@ -7,7 +7,9 @@ import 'package:flutter_hello_my_doctor/widgets/circular_loading_widget.dart';
 import 'package:flutter_hello_my_doctor/widgets/no_data_found_widget.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
 
+import '../constants/custom_colors.dart';
 import '../utils/theme_utils.dart';
 import '../widgets/back_button_widget.dart';
 
@@ -113,6 +115,79 @@ class SelectDoctorCategoryScreen extends StatelessWidget {
         ],
       );
 
+  Widget _buildItemWidget(DoctorCategoryModel data) => Stack(
+        children: [
+          LayoutBuilder(builder: (context, cons) {
+            return Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(_width * 0.04),
+                color: HexColor(CustomColors.blue1),
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: cons.maxWidth * 0.03,
+                vertical: cons.maxHeight * 0.03,
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: cons.maxHeight * 0.6,
+                    width: double.infinity,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(_width * 0.04),
+                      child: CachedNetworkImage(
+                        imageUrl: data.image,
+                        height: cons.maxHeight * 0.72,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        progressIndicatorBuilder: (context, _, __) => SizedBox(
+                          height: cons.maxHeight * 0.78,
+                          width: double.infinity,
+                          child: CircularLoadingWidget(
+                            _width * 0.5,
+                            center: true,
+                          ),
+                        ),
+                        errorWidget: (context, _, __) => SizedBox(
+                          height: double.infinity,
+                          width: double.infinity,
+                          child: Image.asset(
+                            "assets/images/logo.webp",
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: cons.maxHeight * 0.025),
+                  Expanded(
+                    child: Text(
+                      data.categoryName,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.rubik(
+                        fontWeight: FontWeight.w600,
+                        fontSize: cons.maxHeight * 0.08,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+          Positioned.fill(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                splashColor: Colors.white.withOpacity(0.6),
+                borderRadius: BorderRadius.circular(_width * 0.04),
+                onTap: () => _controller!.onCategorySelected(data),
+              ),
+            ),
+          ),
+        ],
+      );
+
   Widget get _buildGridViewWidget => GridView.builder(
         itemCount: _controller!.dataList.length,
         physics: const AlwaysScrollableScrollPhysics(),
@@ -127,7 +202,7 @@ class SelectDoctorCategoryScreen extends StatelessWidget {
           childAspectRatio: 0.65,
         ),
         itemBuilder: (BuildContext context, int index) {
-          return _buildCategoryItemWidget(_controller!.dataList[index]);
+          return _buildItemWidget(_controller!.dataList[index]);
         },
       );
 

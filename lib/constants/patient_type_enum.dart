@@ -1,0 +1,1 @@
+enum PatientType { existingPatient, newPatient }

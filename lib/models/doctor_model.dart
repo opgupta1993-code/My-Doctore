@@ -74,6 +74,7 @@ class DoctorDetailsModel {
   String _toDate = "";
   bool _isRated = false;
   String _ratingDes = "";
+  bool _isBookingChargesApplied = false;
 
   DoctorDetailsModel();
 
@@ -112,6 +113,7 @@ class DoctorDetailsModel {
     _toDate = json['to_date'] ?? "";
     _isRated = json['is_rated'] == 1;
     _ratingDes = json['rating_des'] ?? "";
+    _isBookingChargesApplied = json["fees_booking_charges"] == "1";
   }
 
   String getNextAvailability(String inputDay) {
@@ -167,6 +169,7 @@ class DoctorDetailsModel {
     data['to_date'] = _toDate;
     data['is_rated'] = _isRated;
     data['rating_des'] = _ratingDes;
+    data["fees_booking_charges"] = _isBookingChargesApplied ? "1" : "0";
     return data;
   }
 
@@ -204,6 +207,7 @@ class DoctorDetailsModel {
   String get toDate => _toDate;
   bool get isRated => _isRated;
   String get ratingDes => _ratingDes;
+  bool get isBookingChargesApplied => _isBookingChargesApplied;
 }
 
 // class MyRatingInfoModel {

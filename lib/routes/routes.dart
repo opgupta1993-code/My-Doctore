@@ -137,7 +137,7 @@ class Routes {
     ),
     GetPage(
       name: "/appointmentsScreen",
-      page: () => const AppointmentsScreen(),
+      page: () => AppointmentsScreen(),
       popGesture: true,
       binding: AppointmentsBinding(),
       showCupertinoParallax: true,
