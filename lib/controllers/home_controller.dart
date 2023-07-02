@@ -7,7 +7,6 @@ import 'package:flutter_hello_my_doctor/controllers/user_controller.dart';
 import 'package:flutter_hello_my_doctor/models/doctor_model.dart';
 import 'package:flutter_hello_my_doctor/models/home_model.dart';
 import 'package:flutter_hello_my_doctor/routes/routes.dart';
-import 'package:flutter_hello_my_doctor/utils/utils.dart';
 import 'package:get/get.dart';
 
 import '../networking/network_calls.dart';
@@ -105,11 +104,12 @@ class HomeController extends GetxController {
   Future<void> onVideoReviewPressed(VideoReviewModel data) async {
     await Future.delayed(const Duration(milliseconds: 100));
 
-    if (data.videoType.toUpperCase() == "VIDEO") {
-      Routes.videoReviewScreen(data.video);
-    } else {
-      Utils.openUrl(data.video);
-    }
+    // if (data.videoType.toUpperCase() == "VIDEO") {
+    //   Routes.videoReviewScreen(data.video);
+    // } else {
+    //   Utils.openUrl(data.video);
+    // }
+    Routes.videoReviewScreen(data.video);
   }
 
   HomeModel? get data => _data;

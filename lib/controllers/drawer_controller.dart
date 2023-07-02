@@ -76,8 +76,6 @@ class DrawerController extends GetxController {
         Routes.webviewScreen(Constants.helpUrl);
         break;
       case 11:
-        break;
-      case 12:
         Utils.logout();
         break;
     }

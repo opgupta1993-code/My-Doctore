@@ -1,8 +1,9 @@
-import 'package:better_player/better_player.dart';
+// import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../utils/theme_utils.dart';
 import '../../widgets/back_button_widget.dart';
@@ -52,54 +53,55 @@ class VideoReviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     _controller ??= Get.find<VideoReviewController>();
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: ThemeUtils.getStatusNavBarTheme(context),
-      child: Scaffold(
-        body: Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).padding.bottom,
-          ),
-          child: Stack(
-            children: [
-              Align(
-                alignment: Alignment.bottomRight,
-                child: SizedBox(
-                  height: _height * 0.25,
-                  width: _height * 0.25,
-                  child: Image.asset(
-                    "assets/images/common_green_artwork.webp",
+    return YoutubePlayerBuilder(
+      player: YoutubePlayer(
+        controller: _controller!.youtubePlayerController,
+      ),
+      onExitFullScreen: () {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+      },
+      builder: (context, player) => AnnotatedRegion<SystemUiOverlayStyle>(
+        value: ThemeUtils.getStatusNavBarTheme(context),
+        child: Scaffold(
+          body: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).padding.bottom,
+            ),
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: SizedBox(
                     height: _height * 0.25,
                     width: _height * 0.25,
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: SizedBox(
-                  height: _height * 0.25,
-                  width: _height * 0.25,
-                  child: Image.asset(
-                    "assets/images/common_blue_artwork.webp",
-                    height: _height * 0.25,
-                    width: _height * 0.25,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              Column(
-                children: [
-                  _buildAppbarWidget,
-                  Expanded(
-                    child: AspectRatio(
-                      aspectRatio: 9 / 16,
-                      child: BetterPlayer(
-                        controller: _controller!.betterPlayerController,
-                      ),
+                    child: Image.asset(
+                      "assets/images/common_green_artwork.webp",
+                      height: _height * 0.25,
+                      width: _height * 0.25,
                     ),
                   ),
-                ],
-              ),
-            ],
+                ),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: SizedBox(
+                    height: _height * 0.25,
+                    width: _height * 0.25,
+                    child: Image.asset(
+                      "assets/images/common_blue_artwork.webp",
+                      height: _height * 0.25,
+                      width: _height * 0.25,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Column(
+                  children: [
+                    _buildAppbarWidget,
+                    Expanded(child: player),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

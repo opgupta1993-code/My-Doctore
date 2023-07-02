@@ -236,7 +236,8 @@ class MakeAppointmentController extends GetxController {
   }
 
   Future<void> onDonePressed() async {
-    Get.back();
+    Get.until((route) => route.settings.name == "/drawerScreen");
+    Routes.appointmentsScreen();
   }
 
   void onPatientTypeChanged(PatientType? value) {

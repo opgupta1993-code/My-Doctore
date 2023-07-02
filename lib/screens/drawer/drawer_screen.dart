@@ -168,40 +168,40 @@ class DrawerScreen extends StatelessWidget {
                         () => _userController!.isLogin.value
                             ? _buildDrawerItemButtonWidget(
                                 1,
-                                "Appointments",
-                                "assets/images/test_bookings.webp",
+                                "Appointment History",
+                                "assets/images/appointment_history.webp",
                               )
                             : const SizedBox.shrink(),
                       ),
                       _buildDrawerItemButtonWidget(
                         2,
-                        "Medicine",
-                        "assets/images/test_bookings.webp",
+                        "Medicine History",
+                        "assets/images/medicine_history.webp",
                       ),
                       _buildDrawerItemButtonWidget(
                         3,
-                        "Pathology",
-                        "assets/images/test_bookings.webp",
+                        "Pathology History",
+                        "assets/images/pathology_history.webp",
                       ),
                       _buildDrawerItemButtonWidget(
                         4,
-                        "Covid-19 RT-PCR",
-                        "assets/images/test_bookings.webp",
+                        "Covid-19 RT-PCR History",
+                        "assets/images/covid19_rtpcr_history.webp",
                       ),
                       _buildDrawerItemButtonWidget(
                         5,
                         "Notifications",
-                        "assets/images/test_bookings.webp",
+                        "assets/images/notifications.webp",
                       ),
                        _buildDrawerItemButtonWidget(
                         6,
                         "About Us",
-                        "assets/images/help_center.webp",
+                        "assets/images/about_us.webp",
                       ),
                       _buildDrawerItemButtonWidget(
                         7,
                         "Terms & Conditions",
-                        "assets/images/privacy_policy.webp",
+                        "assets/images/tc.webp",
                       ),
                       _buildDrawerItemButtonWidget(
                         8,
@@ -211,25 +211,21 @@ class DrawerScreen extends StatelessWidget {
                       _buildDrawerItemButtonWidget(
                         9,
                         "Refund Policy",
-                        "assets/images/privacy_policy.webp",
+                        "assets/images/refund_policy.webp",
                       ),
                       _buildDrawerItemButtonWidget(
                         10,
                         "Help Center",
                         "assets/images/help_center.webp",
                       ),
-                      _buildDrawerItemButtonWidget(
-                        11,
-                        "Settings",
-                        "assets/images/settings.webp",
-                      ),
+                    
                       Obx(
                         () => _userController!.isLogin.value
                             ? Column(
                                 children: [
                                   SizedBox(height: _height * 0.04),
                                   _buildDrawerItemButtonWidget(
-                                    12,
+                                    11,
                                     "Logout",
                                     "assets/images/logout.webp",
                                     showTrailingIcon: false,
