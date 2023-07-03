@@ -86,14 +86,18 @@ class IntroScreen extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.only(top: _height * 0.1),
                 child: SizedBox(
-                  height: _height * 0.38,
-                  width: _height * 0.38,
-                  child: Image.asset(
-                    _artworkPath,
                     height: _height * 0.38,
                     width: _height * 0.38,
-                  ),
-                ),
+                    child: CircleAvatar(
+                      radius: _height * 0.19,
+                      foregroundImage: AssetImage(_artworkPath),
+                    )
+                    // child: Image.asset(
+                    //   _artworkPath,
+                    //   height: _height * 0.38,
+                    //   width: _height * 0.38,
+                    // ),
+                    ),
               ),
             ),
             Align(

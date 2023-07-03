@@ -21,14 +21,15 @@ class Constants {
   static const String paytmProductionCallbackUrl =
       "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=";
 
-  static const String rpUrl =
-      "https://foxplx.xyz/hellodoctor3-41/refund_policy1.html";
+  static const String rpUrl = "https://hellomydoctor.in/refund-policy?mobile=1";
 
-  static const String tcUrl = "https://hellomydoctor.in/terms-and-conditions1";
+  static const String tcUrl =
+      "https://hellomydoctor.in/terms-and-conditions?mobile=1";
 
-  static const String ppUrl = "https://hellomydoctor.in/privacy-policy1";
+  static const String ppUrl =
+      "https://hellomydoctor.in/privacy-policy?mobile=1";
 
-  static const String helpUrl = "https://hellomydoctor.in/contact1";
+  static const String helpUrl = "https://hellomydoctor.in/help-center?mobile=1";
 
-  static const String aboutUsUrl = "https://hellomydoctor.in/about1";
+  static const String aboutUsUrl = "https://hellomydoctor.in/about?mobile=1";
 }

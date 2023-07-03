@@ -284,24 +284,15 @@ class MakeAppointmentScreen extends StatelessWidget {
                         children: [
                           SizedBox(height: _height * 0.03),
                           _buildTitleWidget("Patient Type : "),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: _buildPatientTyperadioWidget(
-                                  "New",
-                                  PatientType.newPatient,
-                                ),
-                              ),
-                              Expanded(
-                                child: _buildPatientTyperadioWidget(
-                                  "Existing",
-                                  PatientType.existingPatient,
-                                ),
-                              ),
-                            ],
+                          _buildPatientTyperadioWidget(
+                            "New (नया नँबर लगाने के लिए)",
+                            PatientType.newPatient,
                           ),
-                          SizedBox(height: _height * 0.03),
+                          _buildPatientTyperadioWidget(
+                            "Existing (दुबारा नँबर लगाने के लिए अगर परामर्श शुल्क की अवधि खत्म नही हुई है)",
+                            PatientType.existingPatient,
+                          ),
+                          SizedBox(height: _height * 0.035),
                           _buildTitleWidget("Patient Name : "),
                           SizedBox(height: _height * 0.015),
                           _buildTextFieldWidget(
@@ -351,7 +342,7 @@ class MakeAppointmentScreen extends StatelessWidget {
                             _controller!.dateController,
                             "Enter date of appointment",
                           ),
-                          SizedBox(height: _height * 0.05),
+                          // SizedBox(height: _height * 0.02),
                         ],
                       ),
                     ),

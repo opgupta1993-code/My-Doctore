@@ -228,10 +228,7 @@ class HomeScreen extends StatelessWidget {
   Widget get _buildServicesGridViewWidget => GridView(
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        padding: EdgeInsets.symmetric(
-          vertical: _height * 0.06,
-          horizontal: _width * 0.1,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: _width * 0.1),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: _width * 0.1,
@@ -676,8 +673,17 @@ class HomeScreen extends StatelessWidget {
                   _buildCarouselWidget,
                 ],
               ),
+            SizedBox(height: _height * 0.06),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+                child: _buildTitleWidget("Fid Your Service"),
+              ),
+            ),
+            SizedBox(height: _height * 0.02),
             _buildServicesGridViewWidget,
-            SizedBox(height: _height * 0.01),
+            SizedBox(height: _height * 0.07),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
               child: Row(

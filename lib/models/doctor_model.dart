@@ -75,6 +75,7 @@ class DoctorDetailsModel {
   bool _isRated = false;
   String _ratingDes = "";
   bool _isBookingChargesApplied = false;
+  String _revisitDays = "";
 
   DoctorDetailsModel();
 
@@ -114,6 +115,7 @@ class DoctorDetailsModel {
     _isRated = json['is_rated'] == 1;
     _ratingDes = json['rating_des'] ?? "";
     _isBookingChargesApplied = json["fees_booking_charges"] == "1";
+    _revisitDays = json["revisit_days"] ?? "";
   }
 
   String getNextAvailability(String inputDay) {
@@ -170,6 +172,7 @@ class DoctorDetailsModel {
     data['is_rated'] = _isRated;
     data['rating_des'] = _ratingDes;
     data["fees_booking_charges"] = _isBookingChargesApplied ? "1" : "0";
+    data["revisit_days"] = _revisitDays;
     return data;
   }
 
@@ -208,6 +211,7 @@ class DoctorDetailsModel {
   bool get isRated => _isRated;
   String get ratingDes => _ratingDes;
   bool get isBookingChargesApplied => _isBookingChargesApplied;
+  String get revisitDays => _revisitDays;
 }
 
 // class MyRatingInfoModel {

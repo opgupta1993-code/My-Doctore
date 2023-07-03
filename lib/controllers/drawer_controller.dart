@@ -56,6 +56,7 @@ class DrawerController extends GetxController {
       case 2:
       case 3:
       case 4:
+        Routes.comingSoonScreen();
         break;
       case 5:
         Routes.notificationsScreen();

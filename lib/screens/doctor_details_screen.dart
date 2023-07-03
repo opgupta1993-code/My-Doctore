@@ -802,8 +802,8 @@ class DoctorDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildDoctorDetailTextWidget(String title, String value) => RichText(
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
+        // maxLines: 1,
+        // overflow: TextOverflow.ellipsis,
         text: TextSpan(
           text: title,
           style: GoogleFonts.rubik(
@@ -869,6 +869,11 @@ class DoctorDetailsScreen extends StatelessWidget {
             _buildDoctorDetailTextWidget(
               "Address : ",
               "${_controller!.data?.doctorDetails.address}",
+            ),
+              SizedBox(height: _height * 0.01),
+            _buildDoctorDetailTextWidget(
+              "Revisit Days : ",
+              "${_controller!.data?.doctorDetails.revisitDays}",
             ),
           ],
         ),
