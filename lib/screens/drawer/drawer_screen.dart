@@ -193,39 +193,43 @@ class DrawerScreen extends StatelessWidget {
                         "Notifications",
                         "assets/images/notifications.webp",
                       ),
-                       _buildDrawerItemButtonWidget(
+                      _buildDrawerItemButtonWidget(
                         6,
                         "About Us",
                         "assets/images/about_us.webp",
                       ),
                       _buildDrawerItemButtonWidget(
                         7,
+                        "Gallery",
+                        "assets/images/gallery.webp",
+                      ),
+                      _buildDrawerItemButtonWidget(
+                        8,
                         "Terms & Conditions",
                         "assets/images/tc.webp",
                       ),
                       _buildDrawerItemButtonWidget(
-                        8,
+                        9,
                         "Privacy & Policy",
                         "assets/images/privacy_policy.webp",
                       ),
                       _buildDrawerItemButtonWidget(
-                        9,
+                        10,
                         "Refund Policy",
                         "assets/images/refund_policy.webp",
                       ),
                       _buildDrawerItemButtonWidget(
-                        10,
+                        11,
                         "Help Center",
                         "assets/images/help_center.webp",
                       ),
-                    
                       Obx(
                         () => _userController!.isLogin.value
                             ? Column(
                                 children: [
                                   SizedBox(height: _height * 0.04),
                                   _buildDrawerItemButtonWidget(
-                                    11,
+                                    12,
                                     "Logout",
                                     "assets/images/logout.webp",
                                     showTrailingIcon: false,

@@ -85,7 +85,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     SizedBox(height: cons.maxHeight * 0.04),
                     Text(
-                      "Find Your Doctor",
+                      "Find Your Services",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
@@ -427,9 +427,26 @@ class HomeScreen extends StatelessWidget {
                   SizedBox(
                     height: cons.maxHeight * 0.85,
                     width: _width * 0.32,
-                    child: Image.asset(
-                      "assets/sample/sample2.png",
-                      fit: BoxFit.fill,
+                    child: CachedNetworkImage(
+                      imageUrl: "",
+                      height: cons.maxHeight * 0.85,
+                      width: _width * 0.32,
+                      fit: BoxFit.cover,
+                      progressIndicatorBuilder: (context, _, __) => SizedBox(
+                        height: cons.maxHeight * 0.85,
+                        width: _width * 0.32,
+                        child: CircularLoadingWidget(
+                          _width * 0.5,
+                          center: true,
+                        ),
+                      ),
+                      errorWidget: (context, _, __) => SizedBox(
+                        height: double.infinity,
+                        width: double.infinity,
+                        child: Image.asset(
+                          "assets/images/logo.webp",
+                        ),
+                      ),
                     ),
                   ),
                   Icon(
@@ -445,7 +462,7 @@ class HomeScreen extends StatelessWidget {
                     vertical: cons.maxHeight * 0.03,
                   ),
                   child: Text(
-                    "Rahul Kumar",
+                    data.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
@@ -481,9 +498,27 @@ class HomeScreen extends StatelessWidget {
                       SizedBox(
                         height: cons.maxHeight * 0.8,
                         width: _width * 0.27,
-                        child: Image.asset(
-                          "assets/sample/sample2.png",
-                          fit: BoxFit.fill,
+                        child: CachedNetworkImage(
+                          imageUrl: "",
+                          height: cons.maxHeight * 0.8,
+                          width: _width * 0.27,
+                          fit: BoxFit.cover,
+                          progressIndicatorBuilder: (context, _, __) =>
+                              SizedBox(
+                            height: cons.maxHeight * 0.8,
+                            width: _width * 0.27,
+                            child: CircularLoadingWidget(
+                              _width * 0.5,
+                              center: true,
+                            ),
+                          ),
+                          errorWidget: (context, _, __) => SizedBox(
+                            height: double.infinity,
+                            width: double.infinity,
+                            child: Image.asset(
+                              "assets/images/logo.webp",
+                            ),
+                          ),
                         ),
                       ),
                       Icon(
@@ -500,7 +535,7 @@ class HomeScreen extends StatelessWidget {
                       vertical: cons.maxHeight * 0.03,
                     ),
                     child: Text(
-                      "Rahul Kumar",
+                      data.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
@@ -678,7 +713,7 @@ class HomeScreen extends StatelessWidget {
               alignment: Alignment.topLeft,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
-                child: _buildTitleWidget("Fid Your Service"),
+                child: _buildTitleWidget("Find Your Service"),
               ),
             ),
             SizedBox(height: _height * 0.02),

@@ -65,18 +65,21 @@ class DrawerController extends GetxController {
         Routes.webviewScreen(Constants.aboutUsUrl);
         break;
       case 7:
-        Routes.webviewScreen(Constants.tcUrl);
+        Routes.webviewScreen(Constants.galleryUrl);
         break;
       case 8:
-        Routes.webviewScreen(Constants.ppUrl);
+        Routes.webviewScreen(Constants.tcUrl);
         break;
       case 9:
-        Routes.webviewScreen(Constants.rpUrl);
+        Routes.webviewScreen(Constants.ppUrl);
         break;
       case 10:
-        Routes.webviewScreen(Constants.helpUrl);
+        Routes.webviewScreen(Constants.rpUrl);
         break;
       case 11:
+        Routes.webviewScreen(Constants.helpUrl);
+        break;
+      case 12:
         Utils.logout();
         break;
     }

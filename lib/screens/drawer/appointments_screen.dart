@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hello_my_doctor/controllers/appointments_controller.dart';
+import 'package:flutter_hello_my_doctor/models/appointment_model.dart';
 import 'package:flutter_hello_my_doctor/widgets/circular_loading_widget.dart';
 import 'package:flutter_hello_my_doctor/widgets/no_data_found_widget.dart';
 import 'package:get/get.dart';
@@ -78,7 +79,7 @@ class AppointmentsScreen extends StatelessWidget {
         ),
       );
 
-  Widget _buildAppointmentItemWidget() => GestureDetector(
+  Widget _buildAppointmentItemWidget(AppointmentModel data) => GestureDetector(
         onTap: () {},
         child: Container(
           decoration: BoxDecoration(
@@ -115,7 +116,7 @@ class AppointmentsScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "27",
+                      data.date,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.rubik(
@@ -126,7 +127,7 @@ class AppointmentsScreen extends StatelessWidget {
                     ),
                     SizedBox(height: _height * 0.004),
                     Text(
-                      "FEB",
+                      data.month,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.rubik(
@@ -146,7 +147,7 @@ class AppointmentsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Dr. Hitesh Garg",
+                        data.docName,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.rubik(
@@ -157,7 +158,7 @@ class AppointmentsScreen extends StatelessWidget {
                       ),
                       SizedBox(height: _height * 0.006),
                       Text(
-                        "Physiotherapist",
+                        data.category,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.ptSans(
@@ -167,17 +168,17 @@ class AppointmentsScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: _height * 0.006),
-                      _buildInfoWidget("Patient : ", "Mukesh Kumar"),
+                      _buildInfoWidget("Patient : ", data.patientName),
                       SizedBox(height: _height * 0.004),
-                      _buildInfoWidget("Time : ", "10:00 AM Tommorow"),
+                      _buildInfoWidget("Time : ", data.time),
                       SizedBox(height: _height * 0.004),
-                      _buildInfoWidget("Token No. : ", "2716"),
+                      _buildInfoWidget("Token No. : ", data.serialNo),
                       SizedBox(height: _height * 0.004),
-                      _buildInfoWidget("Fees : ", "Rs.500"),
+                      _buildInfoWidget("Fees : ", "Rs.${data.fees}"),
                       SizedBox(height: _height * 0.004),
                       _buildInfoWidget(
                         "Current Status : ",
-                        "Confrmed",
+                        data.status,
                         color: HexColor(CustomColors.green3),
                         fontWeight: FontWeight.w500,
                       ),
@@ -226,10 +227,10 @@ class AppointmentsScreen extends StatelessWidget {
   Widget get _buildListViewWidget => Obx(
         () => _controller!.loading.value
             ? CircularLoadingWidget(_width, center: true)
-            : !_controller!.dataList.isNotEmpty
+            : _controller!.dataList.isNotEmpty
                 ? ListView.separated(
-                    // itemCount: _controller!.dataList.length,
-                    itemCount: 10,
+                    itemCount: _controller!.dataList.length,
+                    // itemCount: 10,
                     physics: const AlwaysScrollableScrollPhysics(),
                     padding: EdgeInsets.only(
                       left: _width * 0.05,
@@ -240,7 +241,8 @@ class AppointmentsScreen extends StatelessWidget {
                       return SizedBox(height: _height * 0.02);
                     },
                     itemBuilder: (context, index) {
-                      return _buildAppointmentItemWidget();
+                      return _buildAppointmentItemWidget(
+                          _controller!.dataList[index]);
                     },
                   )
                 : NoDataFoundWidget("No appointment found"),

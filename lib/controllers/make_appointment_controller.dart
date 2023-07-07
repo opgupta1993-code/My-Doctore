@@ -15,6 +15,7 @@ import 'package:intl/intl.dart';
 
 class MakeAppointmentController extends GetxController {
   late final RxBool loading;
+  late final RxString ageType;
   late final RxBool _togglePaymentSuccessDialog;
   late final Rx<PatientType> selectedPatientType;
 
@@ -49,6 +50,8 @@ class MakeAppointmentController extends GetxController {
     _userController = Get.find<UserController>();
 
     _selectedDoctor = Get.arguments["data"];
+
+    ageType = "Year".obs;
 
     _formKey = GlobalKey<FormState>(debugLabel: "Make Appointment Form Key");
 
@@ -206,6 +209,7 @@ class MakeAppointmentController extends GetxController {
           "doctor_id": _selectedDoctor?.id,
           "patient_name": nameController.text,
           "age": ageController.text,
+          "age_type": ageType.value.toLowerCase(),
           "father_name": fhNameController.text,
           "husband_name": fhNameController.text,
           "mobile_number": mobileController.text,
@@ -244,6 +248,12 @@ class MakeAppointmentController extends GetxController {
     if (value == null) return;
 
     selectedPatientType.value = value;
+  }
+
+  void onAgeTypeChanged(String? value) {
+    if (value == null) return;
+
+    ageType.value = value;
   }
 
   GlobalKey<FormState> get formKey => _formKey;

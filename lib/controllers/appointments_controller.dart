@@ -16,7 +16,7 @@ class AppointmentsController extends GetxController {
   void onInit() {
     super.onInit();
 
-    loading = false.obs;
+    loading = true.obs;
 
     _userController = Get.find<UserController>();
 
@@ -28,6 +28,7 @@ class AppointmentsController extends GetxController {
   Future<void> _getData() async {
     final Map res = await NetworkCalls.getAppointments({
       "user_id": _userController.user.value.userId,
+      // "user_id": "2",
     });
 
     if (res.containsKey("status") && res["status"] == "200") {
@@ -46,6 +47,8 @@ class AppointmentsController extends GetxController {
     } else {
       Utils.showToast("${res["message"]}");
     }
+
+    print(_dataList.length);
 
     loading.value = false;
   }

@@ -218,15 +218,17 @@ class SelectCityScreen extends StatelessWidget {
                   ),
                   SizedBox(height: cons.maxHeight * 0.025),
                   Expanded(
-                    child: Text(
-                      data.name,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.rubik(
-                        fontWeight: FontWeight.w600,
-                        fontSize: cons.maxHeight * 0.1,
-                        color: Colors.white,
+                    child: Center(
+                      child: Text(
+                        data.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.rubik(
+                          fontWeight: FontWeight.w600,
+                          fontSize: cons.maxHeight * 0.1,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),

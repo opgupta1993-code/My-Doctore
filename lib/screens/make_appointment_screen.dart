@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -244,6 +245,57 @@ class MakeAppointmentScreen extends StatelessWidget {
         ),
       );
 
+  Widget get _buildAgeTypeDropDownWidget => Container(
+        width: _width * 0.3,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(_width * 0.025),
+          border: Border.all(
+            color: HexColor(CustomColors.grey1).withOpacity(0.16),
+            width: _height * 0.001,
+          ),
+        ),
+        padding: EdgeInsets.symmetric(
+          vertical: _height * 0.0105,
+          horizontal: _width * 0.03,
+        ),
+        child: Obx(
+          () => DropdownSearch<String>(
+            dropdownButtonProps: const DropdownButtonProps(
+              padding: EdgeInsets.zero,
+              constraints: BoxConstraints(),
+            ),
+            dropdownDecoratorProps: DropDownDecoratorProps(
+              baseStyle: GoogleFonts.rubik(
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+                fontSize: _height * 0.017,
+              ),
+              dropdownSearchDecoration: InputDecoration(
+                hintText: "Type",
+                suffixIconConstraints: const BoxConstraints(),
+                hintStyle: GoogleFonts.rubik(
+                  fontWeight: FontWeight.w300,
+                  color: HexColor(CustomColors.grey1),
+                  fontSize: _height * 0.017,
+                ),
+                isDense: true,
+                border: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                focusedErrorBorder: InputBorder.none,
+                contentPadding: EdgeInsets.zero,
+              ),
+              textAlignVertical: TextAlignVertical.center,
+            ),
+            selectedItem: _controller!.ageType.value,
+            onChanged: _controller!.onAgeTypeChanged,
+            items: const ["Years", "Months", "Days"],
+          ),
+        ),
+      );
+
   Widget get _buildContentWidget => Column(
         children: [
           _buildAppbarWidget,
@@ -302,10 +354,18 @@ class MakeAppointmentScreen extends StatelessWidget {
                           SizedBox(height: _height * 0.025),
                           _buildTitleWidget("Patient Age : "),
                           SizedBox(height: _height * 0.015),
-                          _buildTextFieldWidget(
-                            _controller!.ageController,
-                            "Add Patient Age",
-                            inputType: TextInputType.number,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _buildTextFieldWidget(
+                                  _controller!.ageController,
+                                  "Add Patient Age",
+                                  inputType: TextInputType.number,
+                                ),
+                              ),
+                              SizedBox(width: _width * 0.02),
+                              _buildAgeTypeDropDownWidget,
+                            ],
                           ),
                           SizedBox(height: _height * 0.025),
                           _buildTitleWidget("Father/Husband's name : "),

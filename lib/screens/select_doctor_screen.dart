@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hello_my_doctor/models/doctor_model.dart';
 import 'package:flutter_hello_my_doctor/widgets/circular_loading_widget.dart';
 import 'package:flutter_hello_my_doctor/widgets/no_data_found_widget.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -307,18 +308,34 @@ class SelectDoctorScreen extends StatelessWidget {
                               fontWeight: FontWeight.w300,
                             ),
                           ),
-                          SizedBox(height: _height * 0.01),
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Flexible(
-                                child: _buildInfoWidget("87%"),
-                              ),
-                              SizedBox(width: _width * 0.05),
-                              Flexible(
-                                child: _buildInfoWidget("69 Patient Stories"),
-                              ),
-                            ],
+                          SizedBox(height: _height * 0.005),
+                          // Row(
+                          //   mainAxisSize: MainAxisSize.max,
+                          //   children: [
+                          //     Flexible(
+                          //       child: _buildInfoWidget("87%"),
+                          //     ),
+                          //     SizedBox(width: _width * 0.05),
+                          //     Flexible(
+                          //       child: _buildInfoWidget("69 Patient Stories"),
+                          //     ),
+                          //   ],
+                          // ),
+                          RatingBar.builder(
+                            tapOnlyMode: true,
+                            ignoreGestures: true,
+                            initialRating: data.rating,
+                            minRating: 0,
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            itemCount: 5,
+                            itemSize: _height * 0.02,
+                            itemPadding: EdgeInsets.zero,
+                            itemBuilder: (context, _) => const Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            onRatingUpdate: (rating) {},
                           ),
                         ],
                       ),

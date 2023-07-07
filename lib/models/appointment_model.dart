@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class AppointmentModel {
   String _id = "";
   String _locationId = "";
@@ -12,6 +14,8 @@ class AppointmentModel {
   String _mobileNumber = "";
   String _bookingDate = "";
   String _entryDate = "";
+  String _date = "";
+  String _month = "";
   String _fees = "";
   String _status = "";
   String _assignToDUser = "";
@@ -65,6 +69,11 @@ class AppointmentModel {
     _paymentMode = json['payment_mode'];
     _respmsg = json['respmsg'];
     _statusText = json['status_text'];
+
+    final DateTime dateTime = DateTime.tryParse(_entryDate) ?? DateTime.now();
+
+    _date = "${dateTime.day}";
+    _month = DateFormat("MMM").format(dateTime);
   }
 
   Map<String, dynamic> toJson() {
@@ -117,6 +126,8 @@ class AppointmentModel {
   String get mobileNumber => _mobileNumber;
   String get bookingDate => _bookingDate;
   String get entryDate => _entryDate;
+  String get date => _date;
+  String get month => _month;
   String get fees => _fees;
   String get status => _status;
   String get assignToDUser => _assignToDUser;

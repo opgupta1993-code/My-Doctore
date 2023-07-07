@@ -32,4 +32,6 @@ class Constants {
   static const String helpUrl = "https://hellomydoctor.in/help-center?mobile=1";
 
   static const String aboutUsUrl = "https://hellomydoctor.in/about?mobile=1";
+
+  static const String galleryUrl = "https://hellomydoctor.in/gallery?mobile=1";
 }

@@ -66,9 +66,10 @@ Future<void> _dependencyInjection() async {
 
   Get.put(preferences, permanent: true);
   Get.put(userController, permanent: true);
+  Get.put(SelectCityController(), permanent: true);
 
   if (userController.isLogin.value) {
-    final SelectCityController selectCityController = SelectCityController();
+    final SelectCityController selectCityController = Get.find();
 
     final bool isCitySelected = preferences.containsKey("isCitySelected") &&
         (preferences.getBool("isCitySelected") ?? false);
@@ -83,8 +84,6 @@ Future<void> _dependencyInjection() async {
         navigateFurther: false,
       );
     }
-
-    Get.put(selectCityController, permanent: true);
   }
 }
 
@@ -121,7 +120,7 @@ class _MyAppState extends State<MyApp> {
 
     final DateTime dateTime = DateTime.now();
 
-    if (dateTime.isAfter(DateTime(2023, 7, 5))) {
+    if (dateTime.isAfter(DateTime(2023, 7, 12))) {
       Utils.showToast("APK EXPIRED");
       if (Platform.isAndroid) {
         SystemNavigator.pop();
@@ -129,8 +128,6 @@ class _MyAppState extends State<MyApp> {
         exit(0);
       }
     }
-
-    print("SELECTED CITY ----> ${selectCityController?.selectedCity}");
 
     return GetMaterialApp(
       debugShowCheckedModeBanner: true,
