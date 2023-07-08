@@ -1,4 +1,3 @@
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -174,12 +173,48 @@ class MakeAppointmentScreen extends StatelessWidget {
                     color: HexColor(CustomColors.grey1),
                   ),
                 ),
-                SizedBox(height: _height * 0.035),
+                SizedBox(height: _height * 0.01),
                 Text(
                   "You booked an appointment with ${_controller!.selectedDoctor?.name} on ${_controller!.dateController.text}",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.rubik(
                     fontSize: _height * 0.018,
+                    color: HexColor(CustomColors.grey1),
+                  ),
+                ),
+                SizedBox(height: _height * 0.01),
+                Text(
+                  "Hello My Doctor को आपका पेमेंन्ट प्राप्त हो गया है",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.rubik(
+                    fontSize: _height * 0.021,
+                    color: HexColor(CustomColors.grey1),
+                  ),
+                ),
+                SizedBox(height: _height * 0.01),
+                Text(
+                  "इसमें डॉक्टर का fee शामिल ${_controller!.selectedPatientType.value == PatientType.existingPatient ? "है" : "नही है"}",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.rubik(
+                    fontSize: _height * 0.021,
+                    color: HexColor(CustomColors.grey1),
+                  ),
+                ),
+                SizedBox(height: _height * 0.01),
+                Text(
+                  "सुबह 8.30 बजे तक सीरियल नम्बर और कॉउंटर पर जाने का समय बता दिया जायेग",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.rubik(
+                    fontSize: _height * 0.021,
+                    color: HexColor(CustomColors.grey1),
+                  ),
+                ),
+                SizedBox(height: _height * 0.01),
+                Text(
+                  "कृप्या ध्यान दें - आपका पैसा Hello My Doctor संस्था के पास जमा हुआ है",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.rubik(
+                    fontSize: _height * 0.021,
                     color: HexColor(CustomColors.grey1),
                   ),
                 ),
@@ -259,39 +294,15 @@ class MakeAppointmentScreen extends StatelessWidget {
           horizontal: _width * 0.03,
         ),
         child: Obx(
-          () => DropdownSearch<String>(
-            dropdownButtonProps: const DropdownButtonProps(
+          () => DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
               padding: EdgeInsets.zero,
-              constraints: BoxConstraints(),
+              items: _controller!.ageTypeList,
+              isExpanded: true,
+              isDense: true,
+              value: _controller!.ageType.value,
+              onChanged: _controller!.onAgeTypeChanged,
             ),
-            dropdownDecoratorProps: DropDownDecoratorProps(
-              baseStyle: GoogleFonts.rubik(
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-                fontSize: _height * 0.017,
-              ),
-              dropdownSearchDecoration: InputDecoration(
-                hintText: "Type",
-                suffixIconConstraints: const BoxConstraints(),
-                hintStyle: GoogleFonts.rubik(
-                  fontWeight: FontWeight.w300,
-                  color: HexColor(CustomColors.grey1),
-                  fontSize: _height * 0.017,
-                ),
-                isDense: true,
-                border: InputBorder.none,
-                disabledBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                focusedErrorBorder: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
-              ),
-              textAlignVertical: TextAlignVertical.center,
-            ),
-            selectedItem: _controller!.ageType.value,
-            onChanged: _controller!.onAgeTypeChanged,
-            items: const ["Years", "Months", "Days"],
           ),
         ),
       );

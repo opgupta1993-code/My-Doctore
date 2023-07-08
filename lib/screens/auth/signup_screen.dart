@@ -128,11 +128,11 @@ class SignupScreen extends StatelessWidget {
           ),
           SizedBox(height: _height * 0.005),
           Text(
-            "You can search course, apply course and find scholarship for abroad studies",
+            "हमारी सेवा का लाभ उठाने के लिए साइनअप करें",
             textAlign: TextAlign.center,
             style: GoogleFonts.rubik(
               color: HexColor(CustomColors.grey1),
-              fontSize: _height * 0.016,
+              fontSize: _height * 0.018,
               fontWeight: FontWeight.w400,
             ),
           ),

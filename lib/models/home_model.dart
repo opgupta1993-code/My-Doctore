@@ -1,4 +1,5 @@
 import 'package:flutter_hello_my_doctor/models/doctor_model.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class HomeModel {
   late final List<SliderModel> _sliders;
@@ -101,6 +102,7 @@ class VideoReviewModel {
   String _video = "";
   String _desc = "";
   String _status = "";
+  String _videoId = "";
 
   VideoReviewModel.fromJson(Map json) {
     _id = json['id'] ?? "";
@@ -109,6 +111,8 @@ class VideoReviewModel {
     _video = json['video'] ?? "";
     _desc = json['desc'] ?? "";
     _status = json['status'] ?? "";
+
+    _videoId = YoutubePlayer.convertUrlToId(_video) ?? "";
   }
 
   Map<String, dynamic> toJson() {
@@ -128,6 +132,7 @@ class VideoReviewModel {
   String get video => _video;
   String get desc => _desc;
   String get status => _status;
+  String get videoId => _videoId;
 }
 
 class ServiceServedModel {

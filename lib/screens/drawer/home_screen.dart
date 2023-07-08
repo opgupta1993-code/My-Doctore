@@ -15,6 +15,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:youtube/youtube_thumbnail.dart';
 
 import '../../constants/custom_colors.dart';
 import '../../utils/theme_utils.dart';
@@ -61,7 +62,7 @@ class HomeScreen extends StatelessWidget {
                 onPressed: _controller!.onDrawerMenuPressed,
                 child: Icon(
                   Icons.menu_rounded,
-                  size: cons.maxHeight * 0.35,
+                  size: cons.maxHeight * 0.39,
                 ),
               ),
               SizedBox(width: _width * 0.02),
@@ -417,6 +418,7 @@ class HomeScreen extends StatelessWidget {
       });
 
   Widget _buildReviewItemWidget(VideoReviewModel data) => InkWell(
+        borderRadius: BorderRadius.circular(_width * 0.025),
         onTap: () => _controller!.onVideoReviewPressed(data),
         child: LayoutBuilder(builder: (context, cons) {
           return Column(
@@ -424,35 +426,39 @@ class HomeScreen extends StatelessWidget {
               Stack(
                 alignment: Alignment.center,
                 children: [
-                  SizedBox(
-                    height: cons.maxHeight * 0.85,
-                    width: _width * 0.32,
-                    child: CachedNetworkImage(
-                      imageUrl: "",
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(_width * 0.025),
+                    child: SizedBox(
                       height: cons.maxHeight * 0.85,
                       width: _width * 0.32,
-                      fit: BoxFit.cover,
-                      progressIndicatorBuilder: (context, _, __) => SizedBox(
+                      child: CachedNetworkImage(
+                        imageUrl: YoutubeThumbnail(youtubeId: data.videoId)
+                            .standard(),
                         height: cons.maxHeight * 0.85,
                         width: _width * 0.32,
-                        child: CircularLoadingWidget(
-                          _width * 0.5,
-                          center: true,
+                        fit: BoxFit.cover,
+                        progressIndicatorBuilder: (context, _, __) => SizedBox(
+                          height: cons.maxHeight * 0.85,
+                          width: _width * 0.32,
+                          child: CircularLoadingWidget(
+                            _width * 0.5,
+                            center: true,
+                          ),
                         ),
-                      ),
-                      errorWidget: (context, _, __) => SizedBox(
-                        height: double.infinity,
-                        width: double.infinity,
-                        child: Image.asset(
-                          "assets/images/logo.webp",
+                        errorWidget: (context, _, __) => SizedBox(
+                          height: double.infinity,
+                          width: double.infinity,
+                          child: Image.asset(
+                            "assets/images/logo.webp",
+                          ),
                         ),
                       ),
                     ),
                   ),
-                  Icon(
-                    Icons.play_circle_outline_outlined,
-                    color: Colors.white,
-                    size: cons.maxHeight * 0.17,
+                  SizedBox(
+                    height: cons.maxHeight * 0.2,
+                    width: cons.maxHeight * 0.2,
+                    child: Image.asset("assets/images/youtube.webp"),
                   ),
                 ],
               ),
@@ -499,7 +505,8 @@ class HomeScreen extends StatelessWidget {
                         height: cons.maxHeight * 0.8,
                         width: _width * 0.27,
                         child: CachedNetworkImage(
-                          imageUrl: "",
+                          imageUrl: YoutubeThumbnail(youtubeId: data.videoId)
+                              .standard(),
                           height: cons.maxHeight * 0.8,
                           width: _width * 0.27,
                           fit: BoxFit.cover,
@@ -521,10 +528,10 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Icon(
-                        Icons.play_circle_outline_outlined,
-                        color: Colors.white,
-                        size: cons.maxHeight * 0.17,
+                      SizedBox(
+                        height: cons.maxHeight * 0.2,
+                        width: cons.maxHeight * 0.2,
+                        child: Image.asset("assets/images/youtube.webp"),
                       ),
                     ],
                   ),
@@ -609,12 +616,25 @@ class HomeScreen extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
                 child: _buildTitleWidget(
-                  "Doctors Review",
+                  "What Doctors say about us ?",
                   color: Colors.white,
                 ),
               ),
             ),
-            SizedBox(height: _height * 0.015),
+            SizedBox(height: _height * 0.02),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: _width * 0.03),
+              child: Text(
+                "टेक्नोलॉजी के युग मे Hello My Doctor से जुड़ के अपनी प्रैक्टिस को लोगो तक पहुच बनाने वाले प्रसिद्ध डॉक्टर्स के फीडबैक",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.rubik(
+                  fontWeight: FontWeight.w500,
+                  fontSize: _height * 0.019,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            SizedBox(height: _height * 0.02),
             SizedBox(
               height: _height * 0.19,
               child: ListView.separated(
@@ -670,11 +690,23 @@ class HomeScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: _height * 0.04),
-          Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
-              child: _buildTitleWidget("Reviews From Happy Customers"),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _buildTitleWidget("What patient says about us ?"),
+                SizedBox(height: _height * 0.01),
+                Text(
+                  "टेक्नोलॉजी के युग मे Hello My Doctor से जुड़ के अपनी प्रैक्टिस को लोगो तक पहुच बनाने वाले प्रसिद्ध डॉक्टर्स के फीडबैक",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.rubik(
+                    fontWeight: FontWeight.w500,
+                    fontSize: _height * 0.019,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
             ),
           ),
           SizedBox(height: _height * 0.01),

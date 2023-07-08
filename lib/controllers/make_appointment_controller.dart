@@ -19,6 +19,8 @@ class MakeAppointmentController extends GetxController {
   late final RxBool _togglePaymentSuccessDialog;
   late final Rx<PatientType> selectedPatientType;
 
+  late final List<DropdownMenuItem<String>> _ageTypeList;
+
   StreamSubscription? _paymentSuccessDialogStateSubscription;
 
   late final GlobalKey<FormState> _formKey;
@@ -51,7 +53,22 @@ class MakeAppointmentController extends GetxController {
 
     _selectedDoctor = Get.arguments["data"];
 
-    ageType = "Year".obs;
+    ageType = "years".obs;
+
+    _ageTypeList = <DropdownMenuItem<String>>[
+      const DropdownMenuItem(
+        value: "years",
+        child: Text("Years"),
+      ),
+      const DropdownMenuItem(
+        value: "months",
+        child: Text("Months"),
+      ),
+      const DropdownMenuItem(
+        value: "days",
+        child: Text("Days"),
+      ),
+    ];
 
     _formKey = GlobalKey<FormState>(debugLabel: "Make Appointment Form Key");
 
@@ -105,8 +122,6 @@ class MakeAppointmentController extends GetxController {
   }
 
   Future<void> _getLocationWiseFees() async {
-    print(
-        "_selectCityController.selectedCity?.id --> ${_selectCityController.selectedCity?.id}");
     final Map res = await NetworkCalls.getLocationWiseFees(
       {"location_id": _selectCityController.selectedCity?.id},
     );
@@ -258,6 +273,7 @@ class MakeAppointmentController extends GetxController {
 
   GlobalKey<FormState> get formKey => _formKey;
   DoctorDetailsModel? get selectedDoctor => _selectedDoctor;
+  List<DropdownMenuItem<String>> get ageTypeList => _ageTypeList;
 
   @override
   void onClose() {
