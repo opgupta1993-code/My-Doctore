@@ -193,7 +193,7 @@ class MakeAppointmentScreen extends StatelessWidget {
                 ),
                 SizedBox(height: _height * 0.01),
                 Text(
-                  "इसमें डॉक्टर का fee शामिल ${_controller!.selectedPatientType.value == PatientType.existingPatient ? "है" : "नही है"}",
+                  "इसमें डॉक्टर का fee शामिल ${_controller!.selectedPatientType.value == PatientType.existingPatient || !_controller!.selectedDoctor!.isBookingChargesApplied ? "नही है" : "है"}",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.rubik(
                     fontSize: _height * 0.021,
@@ -379,11 +379,12 @@ class MakeAppointmentScreen extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: _height * 0.025),
-                          _buildTitleWidget("Father/Husband's name : "),
+                          _buildTitleWidget(
+                              "${_controller!.husbandFatherText} : "),
                           SizedBox(height: _height * 0.015),
                           _buildTextFieldWidget(
                             _controller!.fhNameController,
-                            "Enter Father/Husband's name",
+                            "Enter ${_controller!.husbandFatherText}",
                           ),
                           SizedBox(height: _height * 0.025),
                           _buildTitleWidget("Mobile Number : "),

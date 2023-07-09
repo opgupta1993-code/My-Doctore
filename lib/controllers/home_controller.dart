@@ -77,9 +77,19 @@ class HomeController extends GetxController {
         break;
 
       case ServiceEnum.medicineDelivery:
+        Routes.comingSoonScreen(
+          "घर बैठे डॉक्टर द्वारा लिखी गई दवा प्राप्त करने की सुविधा",
+        );
+        break;
       case ServiceEnum.pathologyService:
-      case ServiceEnum.covid19RTPCRTest:
-        Routes.comingSoonScreen();
+        Routes.comingSoonScreen(
+          "घर बैठे देश के प्रतिष्ठित लैब द्वारा जांच के लिए सैंपल कलेक्शन की सुविधा",
+        );
+        break;
+      case ServiceEnum.other:
+        Routes.comingSoonScreen(
+          "CT - Scan, X-ray, MRI Ultrasonography (Ultrasound) के लिए  जानकारी और बुकिंग",
+        );
         break;
     }
   }

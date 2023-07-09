@@ -175,7 +175,7 @@ class HomeScreen extends StatelessWidget {
   Widget _buildServiceWidget(String title, String iconPath, ServiceEnum type) =>
       Stack(
         children: [
-          Container(
+          Container(width: double.infinity,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(_width * 0.04),
               color: HexColor(CustomColors.blue1),
@@ -253,9 +253,9 @@ class HomeScreen extends StatelessWidget {
             ServiceEnum.pathologyService,
           ),
           _buildServiceWidget(
-            "Covid-19 RT-PCR Test",
+            "Other Services",
             "assets/images/covid.webp",
-            ServiceEnum.covid19RTPCRTest,
+            ServiceEnum.other,
           ),
         ],
       );
@@ -698,7 +698,7 @@ class HomeScreen extends StatelessWidget {
                 _buildTitleWidget("What patient says about us ?"),
                 SizedBox(height: _height * 0.01),
                 Text(
-                  "टेक्नोलॉजी के युग मे Hello My Doctor से जुड़ के अपनी प्रैक्टिस को लोगो तक पहुच बनाने वाले प्रसिद्ध डॉक्टर्स के फीडबैक",
+                  "हमारी संस्था के बारे में मरीज़ों और उनके परिजनों का फीडबैक",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.rubik(
                     fontWeight: FontWeight.w500,

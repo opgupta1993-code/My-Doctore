@@ -136,7 +136,7 @@ class IntroScreen extends StatelessWidget {
                     _desc,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.rubik(
-                      fontSize: _height * 0.03,
+                      fontSize: _height * 0.022,
                       fontWeight: FontWeight.w400,
                       color: HexColor(CustomColors.grey1).withOpacity(0.9),
                     ),

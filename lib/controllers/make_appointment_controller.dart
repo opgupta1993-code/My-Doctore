@@ -33,6 +33,7 @@ class MakeAppointmentController extends GetxController {
   late final TextEditingController dateController;
 
   late double _locationWiseFee;
+  late String _husbandFatherText;
 
   late final SelectCityController _selectCityController;
   DoctorDetailsModel? _selectedDoctor;
@@ -52,6 +53,13 @@ class MakeAppointmentController extends GetxController {
     _userController = Get.find<UserController>();
 
     _selectedDoctor = Get.arguments["data"];
+    _husbandFatherText = "Father/Husband's name";
+
+    if (_selectedDoctor!.categoryId == "19") {
+      _husbandFatherText = "Husband's name";
+    } else if (_selectedDoctor!.categoryId == "20") {
+      _husbandFatherText = "Father's name";
+    }
 
     ageType = "years".obs;
 
@@ -274,6 +282,7 @@ class MakeAppointmentController extends GetxController {
   GlobalKey<FormState> get formKey => _formKey;
   DoctorDetailsModel? get selectedDoctor => _selectedDoctor;
   List<DropdownMenuItem<String>> get ageTypeList => _ageTypeList;
+  String get husbandFatherText => _husbandFatherText;
 
   @override
   void onClose() {

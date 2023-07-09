@@ -82,6 +82,18 @@ class ComingSoonScreen extends StatelessWidget {
                           child: Image.asset("assets/images/logo.webp"),
                         ),
                         SizedBox(height: _height * 0.05),
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: _width * 0.06),
+                          child: Text(
+                            Get.arguments["data"],
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: _height * 0.02,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: _height * 0.03),
                         Text(
                           "Coming Soon",
                           style: GoogleFonts.poppins(

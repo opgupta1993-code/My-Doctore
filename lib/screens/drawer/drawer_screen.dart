@@ -185,7 +185,7 @@ class DrawerScreen extends StatelessWidget {
                       ),
                       _buildDrawerItemButtonWidget(
                         4,
-                        "Covid-19 RT-PCR History",
+                        "Other Services History",
                         "assets/images/covid19_rtpcr_history.webp",
                       ),
                       _buildDrawerItemButtonWidget(

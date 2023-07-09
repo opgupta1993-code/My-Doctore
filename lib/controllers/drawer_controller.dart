@@ -54,9 +54,19 @@ class DrawerController extends GetxController {
         Routes.appointmentsScreen();
         break;
       case 2:
+        Routes.comingSoonScreen(
+          "घर बैठे डॉक्टर द्वारा लिखी गई दवा प्राप्त करने की सुविधा",
+        );
+        break;
       case 3:
+        Routes.comingSoonScreen(
+          "घर बैठे देश के प्रतिष्ठित लैब द्वारा जांच के लिए सैंपल कलेक्शन की सुविधा",
+        );
+        break;
       case 4:
-        Routes.comingSoonScreen();
+        Routes.comingSoonScreen(
+          "CT - Scan, X-ray, MRI Ultrasonography (Ultrasound) के लिए  जानकारी और बुकिंग",
+        );
         break;
       case 5:
         Routes.notificationsScreen();

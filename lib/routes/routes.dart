@@ -238,8 +238,8 @@ class Routes {
     return await Get.toNamed("/profileScreen");
   }
 
-  static Future<void> comingSoonScreen() async {
-    return await Get.toNamed("/comingSoonScreen");
+  static Future<void> comingSoonScreen(String data) async {
+    return await Get.toNamed("/comingSoonScreen", arguments: {"data": data});
   }
 
   static Future<void> editProfileScreen() async {
