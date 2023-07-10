@@ -32,12 +32,22 @@ class AppointmentsController extends GetxController {
     });
 
     if (res.containsKey("status") && res["status"] == "200") {
-      if (res.containsKey("data") && res["data"] is Map) {
-        final Map data = res["data"] ?? {};
+      if (res.containsKey("data")) {
+        if (res["data"] is Map) {
+          final Map data = res["data"] ?? {};
 
-        if (data.containsKey("appointment_data") &&
-            data["appointment_data"] is List) {
-          final List dataList = data["appointment_data"];
+          if (data.containsKey("appointment_data") &&
+              data["appointment_data"] is List) {
+            final List dataList = data["appointment_data"];
+
+            if (dataList.isNotEmpty) {
+              for (Map d in dataList) {
+                _dataList.add(AppointmentModel.fromJson(d));
+              }
+            }
+          }
+        } else if (res["data"] is List) {
+          final List dataList = res["data"];
 
           if (dataList.isNotEmpty) {
             for (Map d in dataList) {
@@ -49,8 +59,6 @@ class AppointmentsController extends GetxController {
     } else {
       Utils.showToast("${res["message"]}");
     }
-
-    print(_dataList.length);
 
     loading.value = false;
   }

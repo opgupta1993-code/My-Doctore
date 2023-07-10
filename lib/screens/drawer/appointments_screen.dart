@@ -178,7 +178,7 @@ class AppointmentsScreen extends StatelessWidget {
                       SizedBox(height: _height * 0.004),
                       _buildInfoWidget(
                         "Current Status : ",
-                        data.status,
+                        data.statusText,
                         color: HexColor(CustomColors.green3),
                         fontWeight: FontWeight.w500,
                       ),

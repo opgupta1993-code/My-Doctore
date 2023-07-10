@@ -81,7 +81,14 @@ class ComingSoonScreen extends StatelessWidget {
                           width: _height * 0.18,
                           child: Image.asset("assets/images/logo.webp"),
                         ),
-                        SizedBox(height: _height * 0.05),
+                        SizedBox(height: _height * 0.03),
+                        Text(
+                          "Coming Soon",
+                          style: GoogleFonts.poppins(
+                            fontSize: _height * 0.028,
+                          ),
+                        ),
+                        SizedBox(height: _height * 0.02),
                         Padding(
                           padding:
                               EdgeInsets.symmetric(horizontal: _width * 0.06),
@@ -91,13 +98,6 @@ class ComingSoonScreen extends StatelessWidget {
                             style: GoogleFonts.poppins(
                               fontSize: _height * 0.02,
                             ),
-                          ),
-                        ),
-                        SizedBox(height: _height * 0.03),
-                        Text(
-                          "Coming Soon",
-                          style: GoogleFonts.poppins(
-                            fontSize: _height * 0.028,
                           ),
                         ),
                       ],
