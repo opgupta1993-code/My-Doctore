@@ -59,7 +59,7 @@ Future<void> _dependencyInjection() async {
     final String userDataString = preferences.getString("userData") ?? "{}";
     final Map userData = jsonDecode(userDataString);
 
-    print("userDataString --> $userDataString");
+    // print("userDataString --> $userDataString");
 
     userController.setUser = UserModel.fromJson(userData);
   }
@@ -130,7 +130,7 @@ class _MyAppState extends State<MyApp> {
     // }
 
     return GetMaterialApp(
-      debugShowCheckedModeBanner: true,
+      // debugShowCheckedModeBanner: true,
       title: "Hello My Doctor",
       theme: ThemeUtils.lightTheme,
       darkTheme: ThemeUtils.darkTheme,

@@ -114,7 +114,7 @@ class HomeScreen extends StatelessWidget {
             height: _height * 0.23,
             width: _width * 0.95,
             child: CarouselSlider.builder(
-              carouselController: _controller!.carouselController,
+              carouselController: _controller!.sliderCarouselController,
               options: CarouselOptions(
                 height: _height * 0.23,
                 viewportFraction: 1.0,
@@ -158,7 +158,7 @@ class HomeScreen extends StatelessWidget {
           SizedBox(height: _height * 0.01),
           Obx(
             () => AnimatedSmoothIndicator(
-              activeIndex: _controller!.currentIndex.value,
+              activeIndex: _controller!.sliderCurrentIndex.value,
               count: _controller!.data!.sliders.length,
               effect: ScrollingDotsEffect(
                 dotColor: HexColor(CustomColors.grey7),
@@ -175,7 +175,8 @@ class HomeScreen extends StatelessWidget {
   Widget _buildServiceWidget(String title, String iconPath, ServiceEnum type) =>
       Stack(
         children: [
-          Container(width: double.infinity,
+          Container(
+            width: double.infinity,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(_width * 0.04),
               color: HexColor(CustomColors.blue1),
@@ -430,7 +431,7 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(_width * 0.025),
                     child: SizedBox(
                       height: cons.maxHeight * 0.85,
-                      width: _width * 0.32,
+                      width: _width * 0.43,
                       child: CachedNetworkImage(
                         imageUrl: YoutubeThumbnail(youtubeId: data.videoId)
                             .standard(),
@@ -488,6 +489,7 @@ class HomeScreen extends StatelessWidget {
   Widget _buildDoctorReviewItemWidget(VideoReviewModel data) => InkWell(
         onTap: () => _controller!.onVideoReviewPressed(data),
         child: Container(
+          width: _width * 0.27,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(_width * 0.05),
@@ -635,21 +637,53 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: _height * 0.02),
-            SizedBox(
+            Container(
               height: _height * 0.19,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                physics: const AlwaysScrollableScrollPhysics(),
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+              child: CarouselSlider.builder(
+                carouselController: _controller!.dReviewCarouselController,
+                options: CarouselOptions(
+                  height: _height * 0.19,
+                  viewportFraction: 1.0,
+                  initialPage: 0,
+                  enableInfiniteScroll: true,
+                  reverse: false,
+                  autoPlay: true,
+                  autoPlayInterval: const Duration(seconds: 5),
+                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                  autoPlayCurve: Curves.fastOutSlowIn,
+                  enlargeCenterPage: false,
+                  scrollDirection: Axis.horizontal,
+                  onPageChanged: _controller!.onDReviewSliderChanged,
+                ),
                 itemCount: _controller!.data!.doctorsReview.length,
-                padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
-                separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(width: _width * 0.06);
-                },
-                itemBuilder: (BuildContext context, int index) {
-                  return _buildDoctorReviewItemWidget(
-                    _controller!.data!.doctorsReview[index],
+                itemBuilder: (context, index, _) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      for (VideoReviewModel data
+                          in _controller!.data!.doctorsReview[index])
+                        _buildDoctorReviewItemWidget(data)
+                    ],
                   );
                 },
+              ),
+            ),
+            SizedBox(height: _height * 0.01),
+            Center(
+              child: Obx(
+                () => AnimatedSmoothIndicator(
+                  activeIndex: _controller!.dReviewSliderCurrentIndex.value,
+                  count: _controller!.data!.doctorsReview.length,
+                  effect: ScrollingDotsEffect(
+                    dotColor: HexColor(CustomColors.grey7),
+                    activeDotColor: Colors.white,
+                    dotHeight: _height * 0.008,
+                    dotWidth: _height * 0.008,
+                    spacing: _width * 0.018,
+                  ),
+                ),
               ),
             ),
             SizedBox(height: _height * 0.03),
@@ -669,7 +703,7 @@ class HomeScreen extends StatelessWidget {
         children: [
           _buildServiceServedItemWidget(
             "${_controller!.data?.serviceServed.clientRetention}%",
-            "Client Retention",
+            "Patient Retention",
           ),
           _buildServiceServedItemWidget(
             "${_controller!.data?.serviceServed.yearsOfService}",
@@ -681,7 +715,7 @@ class HomeScreen extends StatelessWidget {
           ),
           _buildServiceServedItemWidget(
             "${_controller!.data?.serviceServed.satisfiedClient}+",
-            "Satisfied Clients",
+            "Satisfied Patients",
           ),
         ],
       );
@@ -710,21 +744,71 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: _height * 0.01),
-          SizedBox(
+          // SizedBox(
+          //   height: _height * 0.23,
+          //   child: ListView.separated(
+          //     scrollDirection: Axis.horizontal,
+          //     physics: const AlwaysScrollableScrollPhysics(),
+          //     itemCount: _controller!.data!.customersReview.length,
+          //     padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+          //     separatorBuilder: (BuildContext context, int index) {
+          //       return SizedBox(width: _width * 0.06);
+          //     },
+          //     itemBuilder: (BuildContext context, int index) {
+          //       return _buildReviewItemWidget(
+          //         _controller!.data!.customersReview[index],
+          //       );
+          //     },
+          //   ),
+          // ),
+
+          Container(
             height: _height * 0.23,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              physics: const AlwaysScrollableScrollPhysics(),
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
+            child: CarouselSlider.builder(
+              carouselController: _controller!.cReviewCarouselController,
+              options: CarouselOptions(
+                height: _height * 0.23,
+                viewportFraction: 1.0,
+                initialPage: 0,
+                enableInfiniteScroll: true,
+                reverse: false,
+                autoPlay: true,
+                autoPlayInterval: const Duration(seconds: 5),
+                autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                autoPlayCurve: Curves.fastOutSlowIn,
+                enlargeCenterPage: false,
+                scrollDirection: Axis.horizontal,
+                onPageChanged: _controller!.onCReviewSliderChanged,
+              ),
               itemCount: _controller!.data!.customersReview.length,
-              padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
-              separatorBuilder: (BuildContext context, int index) {
-                return SizedBox(width: _width * 0.06);
-              },
-              itemBuilder: (BuildContext context, int index) {
-                return _buildReviewItemWidget(
-                  _controller!.data!.customersReview[index],
+              itemBuilder: (context, index, _) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    for (VideoReviewModel data
+                        in _controller!.data!.customersReview[index])
+                      _buildReviewItemWidget(data)
+                  ],
                 );
               },
+            ),
+          ),
+          SizedBox(height: _height * 0.01),
+          Center(
+            child: Obx(
+              () => AnimatedSmoothIndicator(
+                activeIndex: _controller!.cReviewSliderCurrentIndex.value,
+                count: _controller!.data!.customersReview.length,
+                effect: ScrollingDotsEffect(
+                  dotColor: HexColor(CustomColors.grey7),
+                  activeDotColor: HexColor(CustomColors.blue1),
+                  dotHeight: _height * 0.008,
+                  dotWidth: _height * 0.008,
+                  spacing: _width * 0.018,
+                ),
+              ),
             ),
           ),
         ],

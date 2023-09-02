@@ -307,6 +307,33 @@ class MakeAppointmentScreen extends StatelessWidget {
         ),
       );
 
+  Widget get _buildNameTypeDropDownWidget => Container(
+        width: _width * 0.3,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(_width * 0.025),
+          border: Border.all(
+            color: HexColor(CustomColors.grey1).withOpacity(0.16),
+            width: _height * 0.001,
+          ),
+        ),
+        padding: EdgeInsets.symmetric(
+          vertical: _height * 0.0105,
+          horizontal: _width * 0.03,
+        ),
+        child: Obx(
+          () => DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              padding: EdgeInsets.zero,
+              items: _controller!.nameTypeList,
+              isExpanded: true,
+              isDense: true,
+              value: _controller!.nameType.value,
+              onChanged: _controller!.onNameTypeChanged,
+            ),
+          ),
+        ),
+      );
+
   Widget get _buildContentWidget => Column(
         children: [
           _buildAppbarWidget,
@@ -382,10 +409,26 @@ class MakeAppointmentScreen extends StatelessWidget {
                           _buildTitleWidget(
                               "${_controller!.husbandFatherText} : "),
                           SizedBox(height: _height * 0.015),
-                          _buildTextFieldWidget(
-                            _controller!.fhNameController,
-                            "Enter ${_controller!.husbandFatherText}",
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _buildTextFieldWidget(
+                                  _controller!.fhNameController,
+                                  "Enter ${_controller!.husbandFatherText}",
+                                ),
+                              ),
+                              if (_controller!.selectedDoctor!.categoryId ==
+                                  "19")
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SizedBox(width: _width * 0.02),
+                                    _buildNameTypeDropDownWidget,
+                                  ],
+                                ),
+                            ],
                           ),
+
                           SizedBox(height: _height * 0.025),
                           _buildTitleWidget("Mobile Number : "),
                           SizedBox(height: _height * 0.015),
@@ -414,6 +457,7 @@ class MakeAppointmentScreen extends StatelessWidget {
                             _controller!.dateController,
                             "Enter date of appointment",
                           ),
+                          SizedBox(height: _height * 0.015),
                           // SizedBox(height: _height * 0.02),
                         ],
                       ),
@@ -426,6 +470,9 @@ class MakeAppointmentScreen extends StatelessWidget {
                           ? CircularLoadingWidget(_width, center: true)
                           : ButtonWidget(
                               text: "Continue",
+                              bgColor: !_controller!.enableContinue.value
+                                  ? Colors.grey
+                                  : null,
                               onPressed: _controller!.onContinuePressed,
                             ),
                     ),

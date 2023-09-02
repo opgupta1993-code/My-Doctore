@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -35,7 +34,7 @@ class NetworkCalls {
         cancelToken: cancelToken,
       );
 
-      log("Response :: $path ::${response.data}");
+      // log("Response :: $path ::${response.data}");
 
       res = response.data;
     } catch (err) {
@@ -78,7 +77,7 @@ class NetworkCalls {
         cancelToken: cancelToken,
       );
 
-      log("Res :: $path :: ${response.data}");
+      // log("Res :: $path :: ${response.data}");
 
       if (jsondecode) {
         res = jsonDecode(response.data);
@@ -124,7 +123,7 @@ class NetworkCalls {
         cancelToken: cancelToken,
       );
 
-      log("Res :: $path :: ${response.data}");
+      // log("Res :: $path :: ${response.data}");
 
       res = response.data;
     } catch (err) {
@@ -144,6 +143,16 @@ class NetworkCalls {
 
   static Future<Map> signup(Map<String, dynamic> data) async {
     const String path = "/wb/signup";
+    return await _postRequest(path, data: FormData.fromMap(data));
+  }
+
+  static Future<Map> verifyOTP(Map<String, dynamic> data) async {
+    const String path = "/wb/signup_otp_verify";
+    return await _postRequest(path, data: FormData.fromMap(data));
+  }
+
+  static Future<Map> resendOTP(Map<String, dynamic> data) async {
+    const String path = "/wb/signup_resend_otp";
     return await _postRequest(path, data: FormData.fromMap(data));
   }
 
@@ -223,6 +232,11 @@ class NetworkCalls {
 
   static Future<Map> getLocationWiseFees(Map<String, dynamic> data) async {
     const String path = "/wb/location_fee";
+    return await _postRequest(path, data: FormData.fromMap(data));
+  }
+
+  static Future<Map> checkDoctorAvailability(Map<String, dynamic> data) async {
+    const String path = "/wb/check_availability";
     return await _postRequest(path, data: FormData.fromMap(data));
   }
 }

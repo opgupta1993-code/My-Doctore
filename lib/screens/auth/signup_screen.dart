@@ -4,6 +4,8 @@ import 'package:flutter_hello_my_doctor/widgets/button_widget.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
 import '../../constants/custom_colors.dart';
 import '../../controllers/auth_controller.dart';
@@ -207,9 +209,223 @@ class SignupScreen extends StatelessWidget {
         ],
       );
 
+  Widget get _buildPinFieldWidget => SizedBox(
+        width: double.infinity,
+        child: LayoutBuilder(builder: (context, cons) {
+          return PinCodeTextField(
+            controller: _controller!.otpController,
+            appContext: Get.context!,
+            length: 4,
+            obscureText: true,
+            animationType: AnimationType.fade,
+            autoDismissKeyboard: false,
+            keyboardType: const TextInputType.numberWithOptions(decimal: false),
+            validator: (val) => Utils.validator2(
+              val,
+              "Required",
+              isOTP: true,
+              otpLength: 4,
+            ),
+            autoDisposeControllers: false,
+            pinTheme: PinTheme(
+              borderRadius: BorderRadius.circular(_width * 0.025),
+              shape: PinCodeFieldShape.box,
+              fieldHeight: cons.maxWidth * 0.21,
+              fieldWidth: cons.maxWidth * 0.2,
+              activeFillColor: Colors.transparent,
+              activeColor: HexColor(CustomColors.grey1).withOpacity(0.16),
+              inactiveColor: HexColor(CustomColors.grey1).withOpacity(0.16),
+              disabledColor: HexColor(CustomColors.grey1).withOpacity(0.16),
+              selectedColor: HexColor(CustomColors.blue1),
+              errorBorderColor: Colors.red,
+              borderWidth: _height * 0.001,
+              inactiveFillColor: Colors.transparent,
+              selectedFillColor: Colors.transparent,
+            ),
+            cursorHeight: cons.maxWidth * 0.1,
+            textStyle: GoogleFonts.rubik(
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+              fontSize: _height * 0.018,
+            ),
+            hintStyle: GoogleFonts.rubik(
+              fontWeight: FontWeight.w400,
+              color: HexColor(CustomColors.black1),
+              fontSize: _height * 0.018,
+            ),
+            backgroundColor: Colors.transparent,
+            enableActiveFill: true,
+            onCompleted: (v) {},
+            onChanged: (value) {},
+          );
+        }),
+      );
+
+  Widget get _buildResendOTPButtonWidget => Obx(
+        () => TextButton(
+          style: ButtonStyle(
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            shape: MaterialStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(_width * 0.02),
+              ),
+            ),
+            minimumSize: const MaterialStatePropertyAll(Size.zero),
+            padding: MaterialStatePropertyAll(
+              EdgeInsets.symmetric(
+                horizontal: _width * 0.02,
+                vertical: _height * 0.008,
+              ),
+            ),
+            elevation: const MaterialStatePropertyAll(0),
+            backgroundColor: const MaterialStatePropertyAll(Colors.transparent),
+            overlayColor: MaterialStatePropertyAll(
+              HexColor(CustomColors.green3).withOpacity(0.4),
+            ),
+            foregroundColor: MaterialStatePropertyAll(
+              HexColor(
+                _controller!.enableResendOTP.value
+                    ? CustomColors.green3
+                    : CustomColors.grey2,
+              ),
+            ),
+            textStyle: MaterialStatePropertyAll(
+              GoogleFonts.rubik(
+                fontWeight: FontWeight.w500,
+                fontSize: _height * 0.0175,
+              ),
+            ),
+          ),
+          onPressed: _controller!.onResendOTPPressed,
+          child: const Text(
+            "Resend OTP",
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      );
+
+  Widget get _buildOTPVerificationContentWidget => Container(
+        padding: EdgeInsets.only(
+          bottom: _height * 0.025,
+          top: _height * 0.022,
+          left: _width * 0.05,
+          right: _width * 0.05,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                height: _height * 0.007,
+                width: _width * 0.33,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(_width),
+                  color: HexColor(CustomColors.grey6),
+                ),
+              ),
+            ),
+            SizedBox(height: _height * 0.06),
+            Text(
+              "Enter 4 Digits Code",
+              style: GoogleFonts.rubik(
+                fontWeight: FontWeight.w500,
+                fontSize: _height * 0.023,
+              ),
+            ),
+            SizedBox(height: _height * 0.012),
+            Text(
+              "Enter the 4 digits code that you received on your mobile.",
+              style: GoogleFonts.rubik(
+                fontWeight: FontWeight.w400,
+                fontSize: _height * 0.018,
+                color: HexColor(CustomColors.grey1),
+              ),
+            ),
+            SizedBox(height: _height * 0.03),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: _width * 0.07),
+              child: Form(
+                key: _controller!.otpVerificationFormKey,
+                autovalidateMode: AutovalidateMode.disabled,
+                child: _buildPinFieldWidget,
+              ),
+            ),
+            SizedBox(height: _height * 0.025),
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _buildResendOTPButtonWidget,
+                  Obx(
+                    () => _controller!.enableResendOTP.value
+                        ? const SizedBox.shrink()
+                        : Text(
+                            _controller!.resendOTPRemainingTime.value,
+                            style: GoogleFonts.rubik(
+                              fontWeight: FontWeight.w400,
+                              fontSize: _height * 0.0175,
+                              color: HexColor(CustomColors.green3),
+                            ),
+                          ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: _height * 0.035),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: _width * 0.07),
+              child: Obx(
+                () => _controller!.otpVerificationLoading.value
+                    ? CircularLoadingWidget(_width, center: true)
+                    : ButtonWidget(
+                        text: "Verify",
+                        onPressed: _controller!.onVerifyPressed,
+                      ),
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Future<void> _showOTPVerificationBottomSheet() async {
+    return showMaterialModalBottomSheet(
+      context: Get.context!,
+      isDismissible: false,
+      enableDrag: true,
+      backgroundColor: Get.theme.scaffoldBackgroundColor,
+      barrierColor: Colors.black.withOpacity(0.5),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(_height * 0.015),
+          topRight: Radius.circular(_height * 0.015),
+        ),
+      ),
+      builder: (context) {
+        return SingleChildScrollView(
+          padding: EdgeInsets.only(
+            bottom: Get.mediaQuery.viewInsets.bottom +
+                Get.mediaQuery.padding.bottom,
+            top: Get.mediaQuery.viewInsets.top,
+          ),
+          child: _buildOTPVerificationContentWidget,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    _controller ??= Get.find<AuthController>(tag: "signupScreen");
+    if (_controller == null) {
+      _controller = Get.find<AuthController>(tag: "signupScreen");
+
+      _controller!.listenOTPVerificationBottomSheetState(
+        _showOTPVerificationBottomSheet,
+      );
+    }
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: ThemeUtils.getStatusNavBarTheme(context),

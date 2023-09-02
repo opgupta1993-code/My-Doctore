@@ -15,11 +15,14 @@ import 'package:intl/intl.dart';
 
 class MakeAppointmentController extends GetxController {
   late final RxBool loading;
+  late final RxBool enableContinue;
   late final RxString ageType;
+  late final RxString nameType;
   late final RxBool _togglePaymentSuccessDialog;
   late final Rx<PatientType> selectedPatientType;
 
   late final List<DropdownMenuItem<String>> _ageTypeList;
+  late final List<DropdownMenuItem<String>> _nameTypeList;
 
   StreamSubscription? _paymentSuccessDialogStateSubscription;
 
@@ -45,6 +48,7 @@ class MakeAppointmentController extends GetxController {
     super.onInit();
 
     loading = false.obs;
+    enableContinue = false.obs;
     _togglePaymentSuccessDialog = false.obs;
     selectedPatientType = PatientType.newPatient.obs;
 
@@ -56,7 +60,20 @@ class MakeAppointmentController extends GetxController {
     _husbandFatherText = "Father/Husband's name";
 
     if (_selectedDoctor!.categoryId == "19") {
-      _husbandFatherText = "Husband's name";
+      _husbandFatherText = "Name";
+
+      _nameTypeList = <DropdownMenuItem<String>>[
+        const DropdownMenuItem(
+          value: "husband",
+          child: Text("Husband"),
+        ),
+        const DropdownMenuItem(
+          value: "father",
+          child: Text("Father"),
+        ),
+      ];
+
+      nameType = "husband".obs;
     } else if (_selectedDoctor!.categoryId == "20") {
       _husbandFatherText = "Father's name";
     }
@@ -90,6 +107,19 @@ class MakeAppointmentController extends GetxController {
     _locationWiseFee = 0.0;
 
     _getLocationWiseFees();
+  }
+
+  Future<void> _checkDoctorAvailability(String bookingDate) async {
+    final Map res = await NetworkCalls.checkDoctorAvailability({
+      "booking_date": bookingDate,
+      "doctor_id": _selectedDoctor?.id,
+    });
+
+    enableContinue.value = res["status"] == "200";
+
+    if (res["status"] != "200") {
+      Utils.showToast("${res["message"]}");
+    }
   }
 
   Future<Map?> _initiatePayment(double amount) async {
@@ -154,14 +184,17 @@ class MakeAppointmentController extends GetxController {
 
     final DateTime? dateTime = await showDatePicker(
       context: Get.context!,
-      currentDate: current,
+      currentDate: DateTime.now(),
       initialDate: current,
       firstDate: current,
-      lastDate: current,
+      lastDate: DateTime(current.year + 5),
     );
 
     if (dateTime != null) {
+      enableContinue.value = false;
       dateController.text = DateFormat("dd-MM-yyyy").format(dateTime);
+
+      _checkDoctorAvailability(DateFormat("yyyy-MM-dd").format(dateTime));
     }
   }
 
@@ -184,6 +217,8 @@ class MakeAppointmentController extends GetxController {
       );
       return;
     }
+
+    if (!enableContinue.value) return;
 
     await Future.delayed(const Duration(milliseconds: 100));
     loading.value = true;
@@ -235,6 +270,7 @@ class MakeAppointmentController extends GetxController {
           "age_type": ageType.value.toLowerCase(),
           "father_name": fhNameController.text,
           "husband_name": fhNameController.text,
+          "hf_type":nameType.value,
           "mobile_number": mobileController.text,
           "address": addressController.text,
           "date": dateController.text,
@@ -279,9 +315,16 @@ class MakeAppointmentController extends GetxController {
     ageType.value = value;
   }
 
+  void onNameTypeChanged(String? value) {
+    if (value == null) return;
+
+    nameType.value = value;
+  }
+
   GlobalKey<FormState> get formKey => _formKey;
   DoctorDetailsModel? get selectedDoctor => _selectedDoctor;
   List<DropdownMenuItem<String>> get ageTypeList => _ageTypeList;
+  List<DropdownMenuItem<String>> get nameTypeList => _nameTypeList;
   String get husbandFatherText => _husbandFatherText;
 
   @override

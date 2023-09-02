@@ -8,7 +8,8 @@ class PaymentGateway {
     required String trnxToken,
   }) async {
     try {
-      final Map<dynamic, dynamic>? response = await AllInOneSdk.startTransaction(
+      final Map<dynamic, dynamic>? response =
+          await AllInOneSdk.startTransaction(
         Constants.paytmMID,
         orderId,
         amount,
@@ -19,7 +20,7 @@ class PaymentGateway {
       );
       return response;
     } catch (err) {
-      print("ERORR :: PaymentGateway :: pay :: $err");
+      // print("ERORR :: PaymentGateway :: pay :: $err");
       return null;
     }
   }

@@ -127,9 +127,7 @@ class DoctorDetailsScreen extends StatelessWidget {
           ),
           elevation: const MaterialStatePropertyAll(0),
           backgroundColor: MaterialStatePropertyAll(
-            _controller!.data?.doctorDetails.isDoctorOnLeave == true
-                ? Colors.grey
-                : HexColor(CustomColors.blue1),
+            HexColor(CustomColors.blue1),
           ),
           overlayColor: MaterialStatePropertyAll(
             Colors.white.withOpacity(0.4),
@@ -847,18 +845,33 @@ class DoctorDetailsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildDoctorDetailTextWidget(
-              "Hostital : ",
+              "Name : ",
+              "${_controller!.data?.doctorDetails.name}",
+            ),
+            SizedBox(height: _height * 0.01),
+            _buildDoctorDetailTextWidget(
+              "Hospital : ",
               "${_controller!.data?.doctorDetails.hospitalName}",
             ),
             SizedBox(height: _height * 0.01),
             _buildDoctorDetailTextWidget(
-              "Experience : ",
-              "${_controller!.data?.doctorDetails.startExperience}",
+              "Address : ",
+              "${_controller!.data?.doctorDetails.address}",
             ),
             SizedBox(height: _height * 0.01),
             _buildDoctorDetailTextWidget(
-              "Time : ",
-              "${_controller!.data?.doctorDetails.fromTime} - ${_controller!.data?.doctorDetails.toTime}",
+              "Degree : ",
+              "${_controller!.data?.doctorDetails.degree}",
+            ),
+            SizedBox(height: _height * 0.01),
+            _buildDoctorDetailTextWidget(
+              "Experience : ",
+              "${_controller!.data?.doctorDetails.startExperience} Years",
+            ),
+            SizedBox(height: _height * 0.01),
+            _buildDoctorDetailTextWidget(
+              "Fee : ",
+              "Rs.${_controller!.data?.doctorDetails.fees}",
             ),
             SizedBox(height: _height * 0.01),
             _buildDoctorDetailTextWidget(
@@ -867,10 +880,10 @@ class DoctorDetailsScreen extends StatelessWidget {
             ),
             SizedBox(height: _height * 0.01),
             _buildDoctorDetailTextWidget(
-              "Address : ",
-              "${_controller!.data?.doctorDetails.address}",
+              "Time : ",
+              "${_controller!.data?.doctorDetails.fromTime} - ${_controller!.data?.doctorDetails.toTime}",
             ),
-              SizedBox(height: _height * 0.01),
+            SizedBox(height: _height * 0.01),
             _buildDoctorDetailTextWidget(
               "Revisit Days : ",
               "${_controller!.data?.doctorDetails.revisitDays}",

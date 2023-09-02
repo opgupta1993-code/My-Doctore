@@ -13,11 +13,15 @@ import '../networking/network_calls.dart';
 
 class HomeController extends GetxController {
   late final RxBool loading;
-  late final RxInt currentIndex;
+  late final RxInt sliderCurrentIndex,
+      dReviewSliderCurrentIndex,
+      cReviewSliderCurrentIndex;
 
   HomeModel? _data;
 
-  late final CarouselController _carouselController;
+  late final CarouselController _sliderCarouselController,
+      _dReviewCarouselController,
+      _cReviewCarouselController;
 
   // late final SelectDoctorCategoryController _selectDoctorCategoryController;
   late final SelectCityController _selectCityController;
@@ -29,9 +33,13 @@ class HomeController extends GetxController {
     super.onInit();
 
     loading = true.obs;
-    currentIndex = 0.obs;
+    sliderCurrentIndex = 0.obs;
+    dReviewSliderCurrentIndex = 0.obs;
+    cReviewSliderCurrentIndex = 0.obs;
 
-    _carouselController = CarouselController();
+    _sliderCarouselController = CarouselController();
+    _dReviewCarouselController = CarouselController();
+    _cReviewCarouselController = CarouselController();
 
     // _selectDoctorCategoryController =
     //     Get.find<SelectDoctorCategoryController>();
@@ -95,7 +103,15 @@ class HomeController extends GetxController {
   }
 
   void onSliderChanged(int index, CarouselPageChangedReason reason) {
-    currentIndex.value = index;
+    sliderCurrentIndex.value = index;
+  }
+
+  void onDReviewSliderChanged(int index, CarouselPageChangedReason reason) {
+    dReviewSliderCurrentIndex.value = index;
+  }
+
+  void onCReviewSliderChanged(int index, CarouselPageChangedReason reason) {
+    cReviewSliderCurrentIndex.value = index;
   }
 
   Future<void> onDoctorPressed(DoctorDetailsModel data) async {
@@ -123,5 +139,9 @@ class HomeController extends GetxController {
   }
 
   HomeModel? get data => _data;
-  CarouselController get carouselController => _carouselController;
+  CarouselController get sliderCarouselController => _sliderCarouselController;
+  CarouselController get dReviewCarouselController =>
+      _dReviewCarouselController;
+  CarouselController get cReviewCarouselController =>
+      _cReviewCarouselController;
 }

@@ -88,10 +88,10 @@ class SelectDoctorController extends GetxController {
 
     await Future.delayed(const Duration(milliseconds: 100));
 
-    if (data.isDoctorOnLeave) {
-      _toggleLeaveDialog.value = !_toggleLeaveDialog.value;
-      return;
-    }
+    // if (data.isDoctorOnLeave) {
+    //   _toggleLeaveDialog.value = !_toggleLeaveDialog.value;
+    //   return;
+    // }
 
     Routes.makeAppointmentScreen(data);
   }

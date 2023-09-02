@@ -13,16 +13,25 @@ import '../utils/utils.dart';
 import 'user_controller.dart';
 
 class AuthController extends GetxController {
-  late final RxBool loading, fOneLoading, fTwoLoading, fThreeLoading;
-  late final RxBool agree;
-  late final RxBool _forgotOneSheet;
-  late final RxBool _forgotTwoSheet;
-  late final RxBool _forgotThreeSheet;
+  late final RxBool loading,
+      fOneLoading,
+      fTwoLoading,
+      fThreeLoading,
+      otpVerificationLoading,
+      agree,
+      _forgotOneSheet,
+      _forgotTwoSheet,
+      _forgotThreeSheet,
+      _otpVerificationSheet,
+      enableResendOTP;
+
+  late final RxString resendOTPRemainingTime;
 
   late final GlobalKey<FormState> _formKey;
   late final GlobalKey<FormState> _forgotOneFormKey;
   late final GlobalKey<FormState> _forgotTwoFormKey;
   late final GlobalKey<FormState> _forgotThreeFormKey;
+  late final GlobalKey<FormState> _otpVerificationFormKey;
 
   late final TextEditingController nameController;
   late final TextEditingController mobileController;
@@ -32,12 +41,19 @@ class AuthController extends GetxController {
   late final TextEditingController fOTPController;
   late final TextEditingController fPwdController;
   late final TextEditingController fCPwdController;
+  late final TextEditingController otpController;
 
   StreamSubscription? _forgotOneBottomSheetStateSubscription,
       _forgotTwoBottomSheetStateSubscription,
-      _forgotThreeBottomSheetStateSubscription;
+      _forgotThreeBottomSheetStateSubscription,
+      _otpVerificationBottomSheetStateSubscription;
 
-  bool? _isForgotOneSheetOpen, _isForgotTwoSheetOpen, _isForgotThreeSheetOpen;
+  bool? _isForgotOneSheetOpen,
+      _isForgotTwoSheetOpen,
+      _isForgotThreeSheetOpen,
+      _isOTPVerificationSheetOpen;
+
+  Timer? _timer;
 
   late final UserController _userController;
 
@@ -54,12 +70,21 @@ class AuthController extends GetxController {
 
     switch (_tag) {
       case "signupScreen":
+        otpVerificationLoading = false.obs;
+        _otpVerificationSheet = false.obs;
+        resendOTPRemainingTime = "01:00".obs;
+        enableResendOTP = false.obs;
+
+        _isOTPVerificationSheetOpen = false;
+
         _formKey = GlobalKey<FormState>();
+        _otpVerificationFormKey = GlobalKey<FormState>();
 
         nameController = TextEditingController();
         emailController = TextEditingController();
         mobileController = TextEditingController();
         pwdController = TextEditingController();
+        otpController = TextEditingController();
 
         agree = false.obs;
 
@@ -152,13 +177,39 @@ class AuthController extends GetxController {
     final Map res = await NetworkCalls.signup(data);
 
     if (res["status"] == "200") {
+      // Utils.showToast("Registered Successfully", color: Colors.green);
+      // Get.until((route) => route.settings.name == "/loginScreen");
+
+      _openOTPVerificationBottomSheet();
+    } else {
+      Utils.showToast("${res["message"]}");
+    }
+
+    loading.value = false;
+  }
+
+  Future<void> _verifyOTP() async {
+    final Map<String, dynamic> data = {
+      "mobile_no": mobileController.text,
+      "otp": otpController.text,
+    };
+
+    final Map res = await NetworkCalls.verifyOTP(data);
+
+    if (res["status"] == "200") {
       Utils.showToast("Registered Successfully", color: Colors.green);
       Get.until((route) => route.settings.name == "/loginScreen");
     } else {
       Utils.showToast("${res["message"]}");
     }
 
-    loading.value = false;
+    otpVerificationLoading.value = false;
+  }
+
+  Future<void> _resendOTP() async {
+    final Map<String, dynamic> data = {"mobile_no": mobileController.text};
+
+    await NetworkCalls.resendOTP(data);
   }
 
   Future<void> _sendForgotPasswordOTP() async {
@@ -329,6 +380,34 @@ class AuthController extends GetxController {
     });
   }
 
+  Future<void> listenOTPVerificationBottomSheetState(
+    Function showBottomSheet,
+  ) async {
+    _otpVerificationBottomSheetStateSubscription =
+        _otpVerificationSheet.listen((data) async {
+      if (_isOTPVerificationSheetOpen == null ||
+          !_isOTPVerificationSheetOpen!) {
+        // sheet is open
+        _isOTPVerificationSheetOpen = true;
+        resendOTPRemainingTime.value = "01:00";
+
+        await showBottomSheet();
+
+        // sheet is closed
+        _isOTPVerificationSheetOpen = false;
+      } else {
+        _isOTPVerificationSheetOpen = false;
+        resendOTPRemainingTime.value = "01:00";
+        Get.back(closeOverlays: true);
+      }
+    });
+  }
+
+  void _openOTPVerificationBottomSheet() {
+    _startResendOTPTimer();
+    _otpVerificationSheet.value = !_otpVerificationSheet.value;
+  }
+
   Future<void> onForgotOneContinuePressed() async {
     Utils.removeFocus();
 
@@ -338,13 +417,6 @@ class AuthController extends GetxController {
 
     fOneLoading.value = true;
     await _sendForgotPasswordOTP();
-
-    // if (_isForgotOneSheetOpen != null && _isForgotOneSheetOpen!) {
-    //   _forgotOneSheet.value = !_forgotOneSheet.value;
-    //   await Future.delayed(const Duration(milliseconds: 150));
-
-    //   _forgotTwoSheet.value = !_forgotTwoSheet.value;
-    // }
   }
 
   Future<void> onForgotTwoContinuePressed() async {
@@ -356,14 +428,6 @@ class AuthController extends GetxController {
 
     fTwoLoading.value = true;
     await _verifyForgotPasswordOTP();
-
-    // if (_isForgotTwoSheetOpen != null && _isForgotTwoSheetOpen!) {
-    //   _forgotTwoSheet.value = !_forgotTwoSheet.value;
-
-    //   await Future.delayed(const Duration(milliseconds: 150));
-
-    //   _forgotThreeSheet.value = !_forgotThreeSheet.value;
-    // }
   }
 
   Future<void> onForgotUpdatePasswordPressed() async {
@@ -377,10 +441,53 @@ class AuthController extends GetxController {
     await _resetPassword();
   }
 
+  Future<void> onVerifyPressed() async {
+    if (!_otpVerificationFormKey.currentState!.validate()) return;
+
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    otpVerificationLoading.value = true;
+
+    await _verifyOTP();
+  }
+
+  Future<void> onResendOTPPressed() async {
+    if (!enableResendOTP.value) return;
+
+    enableResendOTP.value = false;
+    await _resendOTP();
+    resendOTPRemainingTime.value = "01:00";
+    _startResendOTPTimer();
+  }
+
+  void _startResendOTPTimer() {
+    _timer?.cancel();
+
+    int seconds = 60;
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      --seconds;
+
+      if (seconds == 60) {
+        resendOTPRemainingTime.value = "01:00";
+      } else if (seconds >= 10) {
+        resendOTPRemainingTime.value = "00:$seconds";
+      } else {
+        resendOTPRemainingTime.value = "00:0$seconds";
+      }
+
+      if (seconds == 0) {
+        enableResendOTP.value = true;
+        timer.cancel();
+      }
+    });
+  }
+
   GlobalKey<FormState> get formKey => _formKey;
   GlobalKey<FormState> get forgotOneFormKey => _forgotOneFormKey;
   GlobalKey<FormState> get forgotTwoFormKey => _forgotTwoFormKey;
   GlobalKey<FormState> get forgotThreeFormKey => _forgotThreeFormKey;
+  GlobalKey<FormState> get otpVerificationFormKey => _otpVerificationFormKey;
 
   @override
   void onClose() {
@@ -390,6 +497,10 @@ class AuthController extends GetxController {
         mobileController.dispose();
         emailController.dispose();
         pwdController.dispose();
+        otpController.dispose();
+
+        _otpVerificationBottomSheetStateSubscription?.cancel();
+        _timer?.cancel();
         break;
 
       case "loginScreen":

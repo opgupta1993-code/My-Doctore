@@ -274,8 +274,6 @@ class SelectCityScreen extends StatelessWidget {
     _userController = Get.find<UserController>();
     _controller ??= Get.find<SelectCityController>();
 
-    print("_controller!.afterLogin --> ${_controller!.afterLogin}");
-
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: ThemeUtils.getStatusNavBarTheme(context),
       child: Scaffold(

@@ -102,11 +102,11 @@ class DoctorDetailsController extends GetxController {
   Future<void> onBookNowPressed() async {
     await Future.delayed(const Duration(milliseconds: 100));
 
-    if (data?.doctorDetails.isDoctorOnLeave == true) {
-      _toggleLeaveDialog.value = !_toggleLeaveDialog.value;
+    // if (data?.doctorDetails.isDoctorOnLeave == true) {
+    //   _toggleLeaveDialog.value = !_toggleLeaveDialog.value;
 
-      return;
-    }
+    //   return;
+    // }
 
     if (_data != null) {
       Routes.makeAppointmentScreen(_data!.doctorDetails);

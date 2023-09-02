@@ -4,23 +4,23 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 class HomeModel {
   late final List<SliderModel> _sliders;
   late final List<DoctorDetailsModel> _doctors;
-  late final List<VideoReviewModel> _doctorsReview;
-  late final List<VideoReviewModel> _customersReview;
+  late final List<List<VideoReviewModel>> _doctorsReview;
+  late final List<List<VideoReviewModel>> _customersReview;
   late final ServiceServedModel _serviceServed;
 
   HomeModel() {
     _sliders = <SliderModel>[];
     _doctors = <DoctorDetailsModel>[];
-    _doctorsReview = <VideoReviewModel>[];
-    _customersReview = <VideoReviewModel>[];
+    _doctorsReview = <List<VideoReviewModel>>[];
+    _customersReview = <List<VideoReviewModel>>[];
     _serviceServed = ServiceServedModel();
   }
 
   HomeModel.fromJson(Map json) {
     _sliders = <SliderModel>[];
     _doctors = <DoctorDetailsModel>[];
-    _doctorsReview = <VideoReviewModel>[];
-    _customersReview = <VideoReviewModel>[];
+    _doctorsReview = <List<VideoReviewModel>>[];
+    _customersReview = <List<VideoReviewModel>>[];
 
     if (json['service_served'] != null && json['service_served'] is Map) {
       _serviceServed = ServiceServedModel.fromJson(json['service_served']);
@@ -41,15 +41,49 @@ class HomeModel {
     }
 
     if (json['doctor_video'] != null && json['doctor_video'] is List) {
-      json['doctor_video'].forEach((v) {
-        _doctorsReview.add(VideoReviewModel.fromJson(v));
-      });
+      List<VideoReviewModel> dataList = [];
+
+      for (int i = 0; i < json['doctor_video'].length; i++) {
+        dataList.add(VideoReviewModel.fromJson(json['doctor_video'][i]));
+
+        if (dataList.length == 3 ||
+            ((dataList.length == 1 || dataList.length == 2) &&
+                json['doctor_video'].length == (i + 1))) {
+          _doctorsReview.add([...dataList]);
+
+          dataList.clear();
+        }
+      }
+
+      // json['doctor_video'].forEach((v) {
+      //   dataList.add(VideoReviewModel.fromJson(v));
+
+      //   if (dataList.length == 2 || (dataList.length==1 && ) ) {
+      //     _doctorsReview.add(dataList);
+
+      //     dataList.clear();
+      //   }
+      // });
     }
 
     if (json['customer_video'] != null && json['customer_video'] is List) {
-      json['customer_video'].forEach((v) {
-        _customersReview.add(VideoReviewModel.fromJson(v));
-      });
+      // json['customer_video'].forEach((v) {
+      //   _customersReview.add(VideoReviewModel.fromJson(v));
+      // });
+
+      List<VideoReviewModel> dataList = [];
+
+      for (int i = 0; i < json['customer_video'].length; i++) {
+        dataList.add(VideoReviewModel.fromJson(json['customer_video'][i]));
+
+        if (dataList.length == 2 ||
+            (dataList.length == 1 &&
+                json['customer_video'].length == (i + 1))) {
+          _customersReview.add([...dataList]);
+
+          dataList.clear();
+        }
+      }
     }
   }
 
@@ -62,8 +96,8 @@ class HomeModel {
 
   List<SliderModel> get sliders => _sliders;
   List<DoctorDetailsModel> get doctors => _doctors;
-  List<VideoReviewModel> get doctorsReview => _doctorsReview;
-  List<VideoReviewModel> get customersReview => _customersReview;
+  List<List<VideoReviewModel>> get doctorsReview => _doctorsReview;
+  List<List<VideoReviewModel>> get customersReview => _customersReview;
   ServiceServedModel get serviceServed => _serviceServed;
 }
 

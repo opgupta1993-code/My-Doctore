@@ -193,7 +193,7 @@ class SelectDoctorScreen extends StatelessWidget {
           ),
           elevation: const MaterialStatePropertyAll(0),
           backgroundColor: MaterialStatePropertyAll(
-            data.isDoctorOnLeave ? Colors.grey : HexColor(CustomColors.blue1),
+         HexColor(CustomColors.blue1),
           ),
           overlayColor: MaterialStatePropertyAll(
             Colors.white.withOpacity(0.4),

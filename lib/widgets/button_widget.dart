@@ -10,8 +10,14 @@ class ButtonWidget extends StatelessWidget {
 
   final String text;
   final VoidCallback onPressed;
+  final Color? bgColor;
 
-  ButtonWidget({super.key, required this.text, required this.onPressed});
+  ButtonWidget({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    this.bgColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +38,7 @@ class ButtonWidget extends StatelessWidget {
         ),
         elevation: const MaterialStatePropertyAll(0),
         backgroundColor: MaterialStatePropertyAll(
-          HexColor(CustomColors.blue1),
+          bgColor ?? HexColor(CustomColors.blue1),
         ),
         overlayColor: MaterialStatePropertyAll(
           Colors.white.withOpacity(0.4),
