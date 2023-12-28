@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_hello_my_doctor/constants/constants.dart';
 import 'dio_api.dart';
 
 class NetworkCalls {
@@ -50,6 +52,7 @@ class NetworkCalls {
   static Future<Map> _postRequest(
     String path, {
     Map<String, dynamic>? queryParam,
+    Map<String, dynamic>? headers,
     dynamic data,
     CancelToken? cancelToken,
     bool jsondecode = false,
@@ -69,6 +72,7 @@ class NetworkCalls {
         data: data,
         queryParameters: queryParam,
         options: Options(
+          headers: headers,
           responseType: ResponseType.json,
           validateStatus: (int? status) {
             return true;
@@ -76,8 +80,6 @@ class NetworkCalls {
         ),
         cancelToken: cancelToken,
       );
-
-      // log("Res :: $path :: ${response.data}");
 
       if (jsondecode) {
         res = jsonDecode(response.data);
@@ -124,6 +126,47 @@ class NetworkCalls {
       );
 
       // log("Res :: $path :: ${response.data}");
+
+      res = response.data;
+    } catch (err) {
+      debugPrint("Error - NetworkCalls - $path :- ${err.toString()}");
+      return res;
+    }
+
+    _cancelTokenList.remove(cancelToken);
+
+    return res;
+  }
+
+  static Future<Object?> _billDeskPostRequest(
+    String path, {
+    Map<String, dynamic>? queryParam,
+    Map<String, dynamic>? headers,
+    dynamic data,
+    CancelToken? cancelToken,
+  }) async {
+    cancelToken ??= CancelToken();
+    _cancelTokenList.add(cancelToken);
+
+    Object? res;
+
+    try {
+      final Dio? dio = DioAPI.getDioInstance();
+      final Response response = await dio!.post(
+        path,
+        data: data,
+        queryParameters: queryParam,
+        options: Options(
+          headers: headers,
+          responseType: ResponseType.json,
+          validateStatus: (int? status) {
+            return true;
+          },
+        ),
+        cancelToken: cancelToken,
+      );
+
+      log("Res :: $path :: ${response.data}");
 
       res = response.data;
     } catch (err) {
@@ -238,5 +281,17 @@ class NetworkCalls {
   static Future<Map> checkDoctorAvailability(Map<String, dynamic> data) async {
     const String path = "/wb/check_availability";
     return await _postRequest(path, data: FormData.fromMap(data));
+  }
+
+  // BillDesk
+  static Future<Object?> createOrder(
+    String jsonEncodedData,
+    Map<String, dynamic> headers,
+  ) async {
+    return await _billDeskPostRequest(
+      Constants.createOrderSandBoxAPI,
+      data: jsonEncodedData,
+      headers: headers,
+    );
   }
 }

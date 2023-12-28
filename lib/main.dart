@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hello_my_doctor/models/city_model.dart';
-import 'package:flutter_hello_my_doctor/utils/utils.dart';
+import 'package:flutter_hello_my_doctor/utils/payment_gateway.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,6 +37,9 @@ Future<void> main() async {
   } catch (err) {
     //print("ERROR :: main :: $err");
   }
+
+  final Map<dynamic, dynamic>? res = await PaymentGateway.createOrder("400");
+  log("RESPONSE -----> $res");
 
   runApp(const MyApp());
 }
