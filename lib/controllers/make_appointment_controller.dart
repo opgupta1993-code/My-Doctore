@@ -153,7 +153,7 @@ class MakeAppointmentController extends GetxController {
     final Map res = await NetworkCalls.bookAppointment(data);
 
     if (res["status"] == "200") {
-      // Utils.showToast("Appointment booked successfully", color: Colors.green);
+      Utils.showToast("Appointment booked successfully", color: Colors.green);
       _togglePaymentSuccessDialog.value = !_togglePaymentSuccessDialog.value;
     } else {
       Utils.showToast("${res["message"]}");
@@ -167,7 +167,7 @@ class MakeAppointmentController extends GetxController {
       {"location_id": _selectCityController.selectedCity?.id},
     );
 
-    if (res["status"] == "201") {
+    if (res["status"] == "200") {
       final Map data = res["data"] ?? {};
 
       if (data.containsKey("fee")) {
@@ -310,9 +310,6 @@ class MakeAppointmentController extends GetxController {
     if (res["status"] == "200") {
       final Map data = res["data"] ?? {};
 
-      // log("DATA ---> $data");
-      // log("User ID  ---> ${_userController.user.value.userId}");
-
       final Map<String, dynamic> sdkConfigJson = {
         "flowConfig": {
           "merchantId": data["mercid"],
@@ -340,7 +337,6 @@ class MakeAppointmentController extends GetxController {
           } else {
             // payment might have been done
             // verify from backend
-
             final Map<String, dynamic> data = {
               "user_id": _userController.user.value.userId,
               "location_id": _selectCityController.selectedCity?.id,
@@ -351,13 +347,16 @@ class MakeAppointmentController extends GetxController {
               "age_type": ageType.value.toLowerCase(),
               "father_name": fhNameController.text,
               "husband_name": fhNameController.text,
-              "hf_type": nameType.value,
               "mobile_number": mobileController.text,
               "address": addressController.text,
               "date": dateController.text,
               "fees": amount,
               "orderid": txnInfo.txnInfoMap["orderId"],
             };
+
+            if (_selectedDoctor?.categoryId == "19") {
+              data["hf_type"] = nameType.value;
+            }
 
             _bookAppointment(data);
           }

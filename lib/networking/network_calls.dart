@@ -40,7 +40,7 @@ class NetworkCalls {
 
       res = response.data;
     } catch (err) {
-      debugPrint("Error - NetworkCalls - $path :- ${err.toString()}");
+      // debugPrint("Error - NetworkCalls - $path :- ${err.toString()}");
       return res;
     }
 
@@ -86,8 +86,14 @@ class NetworkCalls {
       } else {
         res = response.data;
       }
-    } catch (err) {
-      debugPrint("Error - NetworkCalls - $path :- ${err.toString()}");
+    } on DioException catch (err) {
+      // log("Error - DioException - NetworkCalls - $path :- ${err.toString()}");
+      return res;
+    } on FormatException catch (err) {
+      // log("Error - FormatException - NetworkCalls - $path :- ${err.toString()}");
+      return res;
+    } on Exception catch (err) {
+      // log("Error - NetworkCalls - $path :- ${err.toString()}");
       return res;
     }
 
@@ -129,7 +135,7 @@ class NetworkCalls {
 
       res = response.data;
     } catch (err) {
-      debugPrint("Error - NetworkCalls - $path :- ${err.toString()}");
+      // debugPrint("Error - NetworkCalls - $path :- ${err.toString()}");
       return res;
     }
 
@@ -170,7 +176,7 @@ class NetworkCalls {
 
       res = response.data;
     } catch (err) {
-      debugPrint("Error - NetworkCalls - $path :- ${err.toString()}");
+      // debugPrint("Error - NetworkCalls - $path :- ${err.toString()}");
       return res;
     }
 
@@ -284,7 +290,7 @@ class NetworkCalls {
   }
 
   static Future<Map> createBillDeskOrder(Map<String, dynamic> data) async {
-    const String path = "/dev/wb/create_order";
+    const String path = "/wb/create_order";
     return await _postRequest(path, data: FormData.fromMap(data));
   }
 
