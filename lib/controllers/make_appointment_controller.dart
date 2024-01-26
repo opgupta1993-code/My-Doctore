@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:billDeskSDK/sdk.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hello_my_doctor/constants/constants.dart';
 import 'package:flutter_hello_my_doctor/constants/patient_type_enum.dart';
 import 'package:flutter_hello_my_doctor/controllers/select_city_controller.dart';
 import 'package:flutter_hello_my_doctor/controllers/user_controller.dart';
@@ -238,61 +241,142 @@ class MakeAppointmentController extends GetxController {
       }
     }
 
-    final Map? data = await _initiatePayment(amount);
+    // final Map? data = await _initiatePayment(amount);
 
-    if (data != null) {
-      final Map? res = await PaymentGateway.pay(
-        trnxToken: data["txnToken"],
-        amount: "$amount",
-        orderId: "${data["orderId"]}",
+    // if (data != null) {
+    //   final Map? res = await PaymentGateway.pay(
+    //     trnxToken: data["txnToken"],
+    //     amount: "$amount",
+    //     orderId: "${data["orderId"]}",
+    //   );
+
+    //   if (res == null) {
+    //     if (loading.value) {
+    //       loading.value = false;
+    //     }
+    //   } else {
+    //     late final Map gatewayResponse;
+
+    //     if (Platform.isAndroid) {
+    //       gatewayResponse = res;
+    //     } else if (Platform.isIOS) {
+    //       gatewayResponse = res["response"];
+    //     }
+
+    //     final Map<String, dynamic> data = {
+    //       "user_id": _userController.user.value.userId,
+    //       "location_id": _selectCityController.selectedCity?.id,
+    //       "category_id": _selectedDoctor?.categoryId,
+    //       "doctor_id": _selectedDoctor?.id,
+    //       "patient_name": nameController.text,
+    //       "age": ageController.text,
+    //       "age_type": ageType.value.toLowerCase(),
+    //       "father_name": fhNameController.text,
+    //       "husband_name": fhNameController.text,
+    //       "hf_type":nameType.value,
+    //       "mobile_number": mobileController.text,
+    //       "address": addressController.text,
+    //       "date": dateController.text,
+    //       "fees": amount,
+    //       "TXNAMOUNT": gatewayResponse["TXNAMOUNT"],
+    //       "TXNDATE": gatewayResponse["TXNDATE"],
+    //       "BANKNAME": gatewayResponse["BANKNAME"],
+    //       "BANKTXNID": gatewayResponse["BANKTXNID"],
+    //       "TXNID": gatewayResponse["TXNID"],
+    //       "GATEWAYNAME": gatewayResponse["GATEWAYNAME"],
+    //       "CHECKSUMHASH": gatewayResponse["CHECKSUMHASH"],
+    //       "STATUS": gatewayResponse["STATUS"],
+    //       "ORDERID": gatewayResponse["ORDERID"],
+    //       "MID": gatewayResponse["MID"],
+    //       "PAYMENTMODE": gatewayResponse["PAYMENTMODE"],
+    //       "RESPCODE": gatewayResponse["RESPCODE"],
+    //       "CURRENCY": gatewayResponse["CURRENCY"],
+    //       "RESPMSG": gatewayResponse["RESPMSG"],
+    //     };
+
+    //     await _bookAppointment(data);
+    //   }
+    // } else {
+    //   loading.value = false;
+    // }
+
+    // create order
+    final Map res = await NetworkCalls.createBillDeskOrder({
+      "user_id": _userController.user.value.userId,
+      "amount": amount,
+      // "amount": 1
+    });
+
+    if (res["status"] == "200") {
+      final Map data = res["data"] ?? {};
+
+      // log("DATA ---> $data");
+      // log("User ID  ---> ${_userController.user.value.userId}");
+
+      final Map<String, dynamic> sdkConfigJson = {
+        "flowConfig": {
+          "merchantId": data["mercid"],
+          "bdOrderId": data["bdorderid"],
+          "authToken": data["links"][1]["headers"]["authorization"],
+          "childWindow": false,
+          "retryCount": 0
+        },
+        "flowType": "payments",
+        "merchantLogo": "",
+      };
+
+      final ResponseHandler responseHandler = SdkResponseHandler(
+        onResponse: (TxnInfo txnInfo) {
+          // log("onResponse --> ${txnInfo.txnInfoMap}");
+
+          // {isCancelledByUser: false, orderId: 20240111166, customerRefId: , merchantId: HMYDOC2}
+
+          if (txnInfo.txnInfoMap.containsKey("isCancelledByUser") &&
+              txnInfo.txnInfoMap["isCancelledByUser"]) {
+            // cancelled by user
+            Utils.showToast("Payment cancelled");
+
+            loading.value = false;
+          } else {
+            // payment might have been done
+            // verify from backend
+
+            final Map<String, dynamic> data = {
+              "user_id": _userController.user.value.userId,
+              "location_id": _selectCityController.selectedCity?.id,
+              "category_id": _selectedDoctor?.categoryId,
+              "doctor_id": _selectedDoctor?.id,
+              "patient_name": nameController.text,
+              "age": ageController.text,
+              "age_type": ageType.value.toLowerCase(),
+              "father_name": fhNameController.text,
+              "husband_name": fhNameController.text,
+              "hf_type": nameType.value,
+              "mobile_number": mobileController.text,
+              "address": addressController.text,
+              "date": dateController.text,
+              "fees": amount,
+              "orderid": txnInfo.txnInfoMap["orderId"],
+            };
+
+            _bookAppointment(data);
+          }
+        },
+        onErrorResponse: (SdkError sdkError) {
+          // log("onErrorResponse --> $sdkError");
+          loading.value = false;
+        },
       );
 
-      if (res == null) {
-        if (loading.value) {
-          loading.value = false;
-        }
-      } else {
-        late final Map gatewayResponse;
+      final SdkConfig sdkConfig = SdkConfig(
+        responseHandler: responseHandler,
+        isUATEnv: false,
+        isDevModeAllowed: true,
+        isJailBreakAllowed: false,
+        sdkConfigJson: SdkConfiguration.fromJson(sdkConfigJson),
+      );
 
-        if (Platform.isAndroid) {
-          gatewayResponse = res;
-        } else if (Platform.isIOS) {
-          gatewayResponse = res["response"];
-        }
-
-        final Map<String, dynamic> data = {
-          "user_id": _userController.user.value.userId,
-          "location_id": _selectCityController.selectedCity?.id,
-          "category_id": _selectedDoctor?.categoryId,
-          "doctor_id": _selectedDoctor?.id,
-          "patient_name": nameController.text,
-          "age": ageController.text,
-          "age_type": ageType.value.toLowerCase(),
-          "father_name": fhNameController.text,
-          "husband_name": fhNameController.text,
-          "hf_type":nameType.value,
-          "mobile_number": mobileController.text,
-          "address": addressController.text,
-          "date": dateController.text,
-          "fees": amount,
-          "TXNAMOUNT": gatewayResponse["TXNAMOUNT"],
-          "TXNDATE": gatewayResponse["TXNDATE"],
-          "BANKNAME": gatewayResponse["BANKNAME"],
-          "BANKTXNID": gatewayResponse["BANKTXNID"],
-          "TXNID": gatewayResponse["TXNID"],
-          "GATEWAYNAME": gatewayResponse["GATEWAYNAME"],
-          "CHECKSUMHASH": gatewayResponse["CHECKSUMHASH"],
-          "STATUS": gatewayResponse["STATUS"],
-          "ORDERID": gatewayResponse["ORDERID"],
-          "MID": gatewayResponse["MID"],
-          "PAYMENTMODE": gatewayResponse["PAYMENTMODE"],
-          "RESPCODE": gatewayResponse["RESPCODE"],
-          "CURRENCY": gatewayResponse["CURRENCY"],
-          "RESPMSG": gatewayResponse["RESPMSG"],
-        };
-
-        await _bookAppointment(data);
-      }
+      Get.to(() => const SDKWebView(), arguments: sdkConfig);
     } else {
       loading.value = false;
     }

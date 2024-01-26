@@ -35,11 +35,13 @@ class Constants {
 
   static const String galleryUrl = "https://hellomydoctor.in/gallery?mobile=1";
 
-  static const String merchantId = "HMYDOC2UAT";
-  static const String clientId = "hmydoc2uat";
-  static const String hmacKey = "1YXBudOQ58VitjGn1MZjy81ACImJI3ai";
+  static const String merchantId = "HMYDOC2";
+  static const String clientId = "hmydoc2";
+  static const String hmacKey = "j6d5A8wBDjwvkj7bflmc1uwdxkDzecc1";
   static const String createOrderSandBoxAPI =
       "https://uat1.billdesk.com/u2/payments/ve1_2/orders/create";
   static const String createOrderProductionAPI =
       "https://api.billdesk.com/payments/ve1_2/orders/create";
+  static const String getTransactionDetailsProductionAPI =
+      "https://api.billdesk.com/payments/ve1_2/transactions/get";
 }

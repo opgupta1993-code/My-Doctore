@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ import 'routes/routes.dart';
 import 'utils/firebase_notifications.dart';
 import 'utils/shared_preferences_util.dart';
 import 'utils/theme_utils.dart';
+import 'utils/utils.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,8 +40,8 @@ Future<void> main() async {
     //print("ERROR :: main :: $err");
   }
 
-  final Map<dynamic, dynamic>? res = await PaymentGateway.createOrder("400");
-  log("RESPONSE -----> $res");
+  // final Map<String, String> res = PaymentGateway.generateBilldeskHeader();
+  // log("RESPONSE -----> $res");
 
   runApp(const MyApp());
 }
@@ -121,16 +123,16 @@ class _MyAppState extends State<MyApp> {
       selectCityController = Get.find<SelectCityController>();
     }
 
-    // final DateTime dateTime = DateTime.now();
+    final DateTime dateTime = DateTime.now();
 
-    // if (dateTime.isAfter(DateTime(2023, 7, 12))) {
-    //   Utils.showToast("APK EXPIRED");
-    //   if (Platform.isAndroid) {
-    //     SystemNavigator.pop();
-    //   } else if (Platform.isIOS) {
-    //     exit(0);
-    //   }
-    // }
+    if (dateTime.isAfter(DateTime(2024, 2, 15))) {
+      Utils.showToast("APK EXPIRED");
+      if (Platform.isAndroid) {
+        SystemNavigator.pop();
+      } else if (Platform.isIOS) {
+        exit(0);
+      }
+    }
 
     return GetMaterialApp(
       // debugShowCheckedModeBanner: true,

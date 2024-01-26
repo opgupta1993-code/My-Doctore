@@ -191,7 +191,7 @@ class Utils {
       "amount": "300.00",
       "order_date": DateTime.now().toString(),
       "currency": "356",
-      "ru": "https://www.merchant.com/",
+      // "ru": "https://www.merchant.com/",
       "itemcode": "DIRECT",
       "device": {
         "init_channel": "internet",

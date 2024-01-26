@@ -467,7 +467,12 @@ class MakeAppointmentScreen extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: _width * 0.1),
                     child: Obx(
                       () => _controller!.loading.value
-                          ? CircularLoadingWidget(_width, center: true)
+                          ? GestureDetector(
+                              onTap: () {
+                                _controller!.loading.value = false;
+                              },
+                              child:
+                                  CircularLoadingWidget(_width, center: true))
                           : ButtonWidget(
                               text: "Continue",
                               bgColor: !_controller!.enableContinue.value

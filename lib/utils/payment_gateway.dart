@@ -1,5 +1,7 @@
-import 'dart:math';
+import 'dart:developer';
+import 'dart:ui';
 
+import 'package:billDeskSDK/sdk.dart';
 import 'package:flutter_hello_my_doctor/constants/constants.dart';
 import 'package:flutter_hello_my_doctor/controllers/user_controller.dart';
 import 'package:flutter_hello_my_doctor/networking/network_calls.dart';
@@ -28,7 +30,7 @@ class PaymentGateway {
       "amount": amount,
       "order_date": timestamp,
       "currency": "356",
-      "ru": "https://www.merchant.com/",
+      // "ru": "https://www.merchant.com/",
       "additional_info": {
         "additional_info1": _userController.user.value.userId,
         "additional_info2": amount,
@@ -69,6 +71,21 @@ class PaymentGateway {
     return res;
   }
 
+  static Map<String, String> generateBilldeskHeader() {
+    final String traceId = Utils.generateTraceId(35);
+
+    final int timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    final Map<String, String> httpHeaders = {
+      "Content-Type": "application/jose",
+      "accept": "application/jose",
+      "BD-Traceid": traceId,
+      "BD-Timestamp": "$timestamp",
+    };
+
+    return httpHeaders;
+  }
+
   static Future<Map<dynamic, dynamic>?> pay({
     required String orderId,
     required String amount,
@@ -90,5 +107,22 @@ class PaymentGateway {
       // print("ERORR :: PaymentGateway :: pay :: $err");
       return null;
     }
+  }
+}
+
+class SdkResponseHandler extends ResponseHandler {
+  Function(TxnInfo txnInfo) onResponse;
+  Function(SdkError sdkError) onErrorResponse;
+
+  SdkResponseHandler({required this.onResponse, required this.onErrorResponse});
+
+  @override
+  void onTransactionResponse(TxnInfo txnInfo) {
+    onResponse(txnInfo);
+  }
+
+  @override
+  void onError(SdkError sdkError) {
+    onErrorResponse(sdkError);
   }
 }

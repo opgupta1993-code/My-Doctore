@@ -166,7 +166,7 @@ class NetworkCalls {
         cancelToken: cancelToken,
       );
 
-      log("Res :: $path :: ${response.data}");
+      // log("Res :: $path :: ${response.data}");
 
       res = response.data;
     } catch (err) {
@@ -283,13 +283,18 @@ class NetworkCalls {
     return await _postRequest(path, data: FormData.fromMap(data));
   }
 
+  static Future<Map> createBillDeskOrder(Map<String, dynamic> data) async {
+    const String path = "/dev/wb/create_order";
+    return await _postRequest(path, data: FormData.fromMap(data));
+  }
+
   // BillDesk
   static Future<Object?> createOrder(
     String jsonEncodedData,
     Map<String, dynamic> headers,
   ) async {
     return await _billDeskPostRequest(
-      Constants.createOrderSandBoxAPI,
+      Constants.createOrderProductionAPI,
       data: jsonEncodedData,
       headers: headers,
     );

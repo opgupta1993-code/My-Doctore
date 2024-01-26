@@ -14,13 +14,12 @@ class SdkConfig {
   bool isDevModeAllowed;
   bool isJailBreakAllowed;
 
-  SdkConfig({
-    required this.sdkConfigJson,
-    required this.responseHandler,
-    this.isUATEnv,
-    this.isDevModeAllowed = false,
-    this.isJailBreakAllowed = false
-  });
+  SdkConfig(
+      {required this.sdkConfigJson,
+      required this.responseHandler,
+      this.isUATEnv,
+      this.isDevModeAllowed = false,
+      this.isJailBreakAllowed = false});
 }
 
 class ResponseHandler {
@@ -52,9 +51,9 @@ class SdkState {
   const SdkState(this.code, this.description);
 
   static const SdkState USER_CANCELED =
-  SdkState("111", "User canceled payment");
+      SdkState("111", "User canceled payment");
   static const SdkState PAYMENT_ATTEMPTED =
-  SdkState("222", "Transaction journey was successful");
+      SdkState("222", "Transaction journey was successful");
   static const SdkState PAYMENT_ABORTED = SdkState("333", "Payment aborted");
 
   static final Map<String, SdkState> _map = {
