@@ -195,9 +195,9 @@ class MakeAppointmentController extends GetxController {
 
     if (dateTime != null) {
       enableContinue.value = false;
-      dateController.text = DateFormat("dd-MM-yyyy").format(dateTime);
+      dateController.text = DateFormat("yyyy-MM-dd").format(dateTime);
 
-      _checkDoctorAvailability(DateFormat("yyyy-MM-dd").format(dateTime));
+      _checkDoctorAvailability(dateController.text);
     }
   }
 

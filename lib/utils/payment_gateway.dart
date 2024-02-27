@@ -60,10 +60,10 @@ class PaymentGateway {
       "BD-Timestamp": "$timestamp",
     };
 
-    print("TRACE ID ---> $transactionId");
+    // print("TRACE ID ---> $transactionId");
 
     final Object? response = await NetworkCalls.createOrder(body, httpHeaders);
-    print("RES---> $response");
+    // print("RES---> $response");
     if (response == null) return null;
 
     final Map<String, dynamic>? res = Utils.decodeJwt(response as String);

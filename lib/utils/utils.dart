@@ -271,7 +271,7 @@ class Utils {
     final Digest digest = hmacSha256.convert(dataBytes);
 
     final String signedData = base64Url.encode(digest.bytes);
-    print("HERE----> ${signedData == encodedSignature}");
+    // print("HERE----> ${signedData == encodedSignature}");
     // if (signedData == encodedSignature) {
       // Signature is valid, proceed with decoding payload
       final String decodedPayload =

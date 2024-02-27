@@ -123,16 +123,16 @@ class _MyAppState extends State<MyApp> {
       selectCityController = Get.find<SelectCityController>();
     }
 
-    final DateTime dateTime = DateTime.now();
+    // final DateTime dateTime = DateTime.now();
 
-    if (dateTime.isAfter(DateTime(2024, 2, 15))) {
-      Utils.showToast("APK EXPIRED");
-      if (Platform.isAndroid) {
-        SystemNavigator.pop();
-      } else if (Platform.isIOS) {
-        exit(0);
-      }
-    }
+    // if (dateTime.isAfter(DateTime(2024, 2, 15))) {
+    //   Utils.showToast("APK EXPIRED");
+    //   if (Platform.isAndroid) {
+    //     SystemNavigator.pop();
+    //   } else if (Platform.isIOS) {
+    //     exit(0);
+    //   }
+    // }
 
     return GetMaterialApp(
       // debugShowCheckedModeBanner: true,
