@@ -1,12 +1,9 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hello_my_doctor/models/city_model.dart';
-import 'package:flutter_hello_my_doctor/utils/payment_gateway.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +15,6 @@ import 'routes/routes.dart';
 import 'utils/firebase_notifications.dart';
 import 'utils/shared_preferences_util.dart';
 import 'utils/theme_utils.dart';
-import 'utils/utils.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -93,7 +89,7 @@ Future<void> _dependencyInjection() async {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();

@@ -19,7 +19,7 @@ class HomeController extends GetxController {
 
   HomeModel? _data;
 
-  late final CarouselController _sliderCarouselController,
+  late final CarouselSliderController _sliderCarouselController,
       _dReviewCarouselController,
       _cReviewCarouselController;
 
@@ -37,9 +37,9 @@ class HomeController extends GetxController {
     dReviewSliderCurrentIndex = 0.obs;
     cReviewSliderCurrentIndex = 0.obs;
 
-    _sliderCarouselController = CarouselController();
-    _dReviewCarouselController = CarouselController();
-    _cReviewCarouselController = CarouselController();
+    _sliderCarouselController = CarouselSliderController();
+    _dReviewCarouselController = CarouselSliderController();
+    _cReviewCarouselController = CarouselSliderController();
 
     // _selectDoctorCategoryController =
     //     Get.find<SelectDoctorCategoryController>();
@@ -139,9 +139,9 @@ class HomeController extends GetxController {
   }
 
   HomeModel? get data => _data;
-  CarouselController get sliderCarouselController => _sliderCarouselController;
-  CarouselController get dReviewCarouselController =>
+  CarouselSliderController get sliderCarouselController => _sliderCarouselController;
+  CarouselSliderController get dReviewCarouselController =>
       _dReviewCarouselController;
-  CarouselController get cReviewCarouselController =>
+  CarouselSliderController get cReviewCarouselController =>
       _cReviewCarouselController;
 }
