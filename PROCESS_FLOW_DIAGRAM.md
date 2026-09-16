@@ -6,29 +6,29 @@
 
 ## 0. App Main Services, Purpose & Business Value
 
-### 🩺 1. Doctor Appointments (घर बैठे डॉक्टर अपॉइंटमेंट)
-- Apne city/location ke anusar kisi bhi speciality ke doctor (Cardiologist, Dentist, General Physician, Skin Specialist, etc.) ko search karna.
-- Doctor ki availability aur consulting fees check karke online time-slot book karna.
+### 🩺 1. Doctor Appointments
+- Search doctors by city/location and medical specialty (Cardiologist, Dentist, General Physician, Skin Specialist, etc.).
+- Check real-time doctor availability, consultation fees, and book online time slots.
 
-### 🧪 2. Pathology & Lab Tests (सैंपल कलेक्शन सर्विस)
-- India ke reputed pathology labs se lab test book karna.
-- Lab technicians dwara Ghar baite sample collection ki suvidha.
+### 🧪 2. Pathology & Lab Tests (Home Sample Collection)
+- Book lab diagnostic tests from accredited pathology labs across India.
+- Enjoy home sample collection by certified lab technicians.
 
-### 💊 3. Medicine Home Delivery (दवा डिलीवरी)
-- Doctor dwara likhi gayi medicine ko ghar par mangwana.
+### 💊 3. Prescription & Medicine Home Delivery
+- Doorstep delivery of prescribed medicines ordered directly through the app.
 
 ### 💳 4. Instant Online Payment & Confirmation
-- BillDesk / Paytm gateway se instant online consultation fee pay karna.
-- Automatic appointment confirmation ticket aur receipt praapt karna.
+- Secure instant consultation fee payments via BillDesk / Paytm payment gateways.
+- Receive automated digital appointment confirmation tickets and receipts.
 
 ### 🔔 5. Smart Notifications & Reminders
-- Upcoming appointments aur lab test reports ke updates Firebase Notifications dwara milna.
+- Get real-time updates and reminders for upcoming appointments and lab test reports via Firebase Push Notifications.
 
 ---
 
-### 🎯 Business Value (Client / Users ke liye)
-- **Patients ke liye**: Hospital me lambi lines me khade hue bina ghar se doctor book karna aur test karvana.
-- **Doctors / Hospitals ke liye**: Apni daily booking manage karna aur new patients tak pahunchna.
+### 🎯 Business Value (For Clients & End Users)
+- **For Patients**: Convenient access to book doctors and diagnostic tests from home without waiting in long hospital queues.
+- **For Doctors & Hospitals**: Effortlessly manage daily appointment schedules and expand patient reach.
 
 ---
 
