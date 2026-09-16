@@ -54,9 +54,11 @@ class IntroPageViewController extends GetxController {
   Future<void> onGetStartedPressed() async {
     await Future.delayed(const Duration(milliseconds: 100));
 
-    if (currentIndex.value == _screensList.length - 1) {
-      // final SharedPreferences preferences = Get.find();
-      // await preferences.setBool("intro", true);
+    final int currentPage = _pageController.hasClients
+        ? (_pageController.page?.round() ?? currentIndex.value)
+        : currentIndex.value;
+
+    if (currentPage >= _screensList.length - 1) {
       if (_userController.isLogin.value) {
         Routes.selectCityScreen(afterLogin: true);
       } else {

@@ -51,7 +51,7 @@ class SelectCityController extends GetxController {
         }
       }
     } else {
-      Utils.showToast("${res["message"]}");
+      Utils.showToast(res["message"]?.toString() ?? "Unable to fetch cities. Please check your internet connection.");
     }
 
     dataList.assignAll(_allDataList);

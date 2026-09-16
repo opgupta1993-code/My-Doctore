@@ -7,7 +7,6 @@ import 'package:flutter_hello_my_doctor/controllers/user_controller.dart';
 import 'package:flutter_hello_my_doctor/networking/network_calls.dart';
 import 'package:flutter_hello_my_doctor/utils/utils.dart';
 import 'package:get/get.dart';
-import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 
 class PaymentGateway {
   static final UserController _userController = Get.find<UserController>();
@@ -84,29 +83,6 @@ class PaymentGateway {
     };
 
     return httpHeaders;
-  }
-
-  static Future<Map<dynamic, dynamic>?> pay({
-    required String orderId,
-    required String amount,
-    required String trnxToken,
-  }) async {
-    try {
-      final Map<dynamic, dynamic>? response =
-          await AllInOneSdk.startTransaction(
-        Constants.paytmMID,
-        orderId,
-        amount,
-        trnxToken,
-        "${Constants.paytmProductionCallbackUrl}$orderId",
-        false,
-        false,
-      );
-      return response;
-    } catch (err) {
-      // print("ERORR :: PaymentGateway :: pay :: $err");
-      return null;
-    }
   }
 }
 

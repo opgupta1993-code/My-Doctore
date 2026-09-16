@@ -241,65 +241,6 @@ class MakeAppointmentController extends GetxController {
       }
     }
 
-    // final Map? data = await _initiatePayment(amount);
-
-    // if (data != null) {
-    //   final Map? res = await PaymentGateway.pay(
-    //     trnxToken: data["txnToken"],
-    //     amount: "$amount",
-    //     orderId: "${data["orderId"]}",
-    //   );
-
-    //   if (res == null) {
-    //     if (loading.value) {
-    //       loading.value = false;
-    //     }
-    //   } else {
-    //     late final Map gatewayResponse;
-
-    //     if (Platform.isAndroid) {
-    //       gatewayResponse = res;
-    //     } else if (Platform.isIOS) {
-    //       gatewayResponse = res["response"];
-    //     }
-
-    //     final Map<String, dynamic> data = {
-    //       "user_id": _userController.user.value.userId,
-    //       "location_id": _selectCityController.selectedCity?.id,
-    //       "category_id": _selectedDoctor?.categoryId,
-    //       "doctor_id": _selectedDoctor?.id,
-    //       "patient_name": nameController.text,
-    //       "age": ageController.text,
-    //       "age_type": ageType.value.toLowerCase(),
-    //       "father_name": fhNameController.text,
-    //       "husband_name": fhNameController.text,
-    //       "hf_type":nameType.value,
-    //       "mobile_number": mobileController.text,
-    //       "address": addressController.text,
-    //       "date": dateController.text,
-    //       "fees": amount,
-    //       "TXNAMOUNT": gatewayResponse["TXNAMOUNT"],
-    //       "TXNDATE": gatewayResponse["TXNDATE"],
-    //       "BANKNAME": gatewayResponse["BANKNAME"],
-    //       "BANKTXNID": gatewayResponse["BANKTXNID"],
-    //       "TXNID": gatewayResponse["TXNID"],
-    //       "GATEWAYNAME": gatewayResponse["GATEWAYNAME"],
-    //       "CHECKSUMHASH": gatewayResponse["CHECKSUMHASH"],
-    //       "STATUS": gatewayResponse["STATUS"],
-    //       "ORDERID": gatewayResponse["ORDERID"],
-    //       "MID": gatewayResponse["MID"],
-    //       "PAYMENTMODE": gatewayResponse["PAYMENTMODE"],
-    //       "RESPCODE": gatewayResponse["RESPCODE"],
-    //       "CURRENCY": gatewayResponse["CURRENCY"],
-    //       "RESPMSG": gatewayResponse["RESPMSG"],
-    //     };
-
-    //     await _bookAppointment(data);
-    //   }
-    // } else {
-    //   loading.value = false;
-    // }
-
     // create order
     final Map res = await NetworkCalls.createBillDeskOrder({
       "user_id": _userController.user.value.userId,

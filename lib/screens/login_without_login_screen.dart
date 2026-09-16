@@ -80,7 +80,7 @@ class LoginWithoutLoginScreen extends StatelessWidget {
                       SizedBox(width: _width * 0.02),
                       Text(
                         "or",
-                        style: Theme.of(Get.context!)
+                        style: Theme.of(context)
                             .textTheme
                             .bodyLarge!
                             .copyWith(

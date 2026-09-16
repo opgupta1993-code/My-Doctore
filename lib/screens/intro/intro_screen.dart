@@ -144,10 +144,42 @@ class IntroScreen extends StatelessWidget {
                   SizedBox(height: _height * 0.07),
                   ButtonWidget(
                     text: "Get Started",
-                    onPressed: _introPageViewController!.onGetStartedPressed,
+                    onPressed: () => _introPageViewController?.onGetStartedPressed(),
                   ),
                   SizedBox(height: _height * 0.01),
-                  _buildSkipButtonWidget,
+                  TextButton(
+                    style: ButtonStyle(
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      shape: MaterialStatePropertyAll(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(_width * 0.02),
+                        ),
+                      ),
+                      minimumSize: const MaterialStatePropertyAll(Size(double.infinity, 0)),
+                      padding: MaterialStatePropertyAll(
+                        EdgeInsets.symmetric(
+                          horizontal: _width * 0.015,
+                          vertical: _height * 0.0185,
+                        ),
+                      ),
+                      elevation: const MaterialStatePropertyAll(0),
+                      backgroundColor: const MaterialStatePropertyAll(Colors.transparent),
+                      foregroundColor: MaterialStatePropertyAll(
+                        HexColor(CustomColors.grey1),
+                      ),
+                      textStyle: MaterialStatePropertyAll(
+                        GoogleFonts.rubik(
+                          fontSize: _height * 0.018,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                    onPressed: () => _introPageViewController?.onSkipPressed(),
+                    child: const Text(
+                      "Skip",
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                   SizedBox(height: _height * 0.1),
                 ],
               ),
