@@ -1,16 +1,50 @@
-# API Reference & Parameter Specification Document
+# API Reference, Parameters & Third-Party SDK Documentation
 **Project:** Hello My Doctor (`flutter_hello_my_doctor`)  
 **Base URL:** `https://hellomydoctor.in`  
 **Date:** September 17, 2026  
 
 ---
 
-## Executive Summary
-This document provides a comprehensive list of all 22 API endpoints integrated into the `flutter_hello_my_doctor` application, including HTTP methods, endpoint paths, required/optional payload parameters, data types, and function references.
+## 1. Third-Party Libraries & SDKs Overview
+
+Below is the complete specification of all 30 third-party packages, SDKs, and plugins integrated into the application:
+
+| # | Package / SDK Name | Category | Purpose / Feature Description |
+|---|---|---|---|
+| 1 | **`billDeskSDK`** | Payment SDK | Local official BillDesk Payment Gateway SDK for native in-app checkout, payment sheet, and transaction response callbacks. |
+| 2 | **`get` (GetX)** | Architecture | State management (`RxBool`, `RxList`), dependency injection (`Get.put`, `Get.find`), and smart navigation (`Get.toNamed`). |
+| 3 | **`dio`** | Networking | HTTP client featuring global base URL, custom interceptors, 15s connection/receive timeouts, FormData payloads, and error handling. |
+| 4 | **`firebase_core`** | Backend | Core Firebase SDK initialization for cross-platform app integration. |
+| 5 | **`firebase_messaging`** | Push Notifications | Firebase Cloud Messaging (FCM) for background and foreground push notification delivery. |
+| 6 | **`flutter_local_notifications`** | Push Notifications | Displays native system notifications on Android and iOS devices. |
+| 7 | **`shared_preferences`** | Storage | Persistent local key-value storage for user sessions, auth tokens, selected city, and onboarding completion states. |
+| 8 | **`google_fonts`** | Typography | Dynamic font loader for custom typography (`Rubik`, `PT Sans`). |
+| 9 | **`cached_network_image`** | UI / Media | High-performance network image caching with progress loaders and fallback error widgets. |
+| 10 | **`image_picker`** | Media | Native device camera and gallery image selector for profile picture uploads. |
+| 11 | **`permission_handler`** | Device OS | Manages OS runtime permissions (Notification, Camera, Gallery, Location). |
+| 12 | **`webview_flutter`** | UI | Native in-app WebView renderer for Privacy Policy, Terms & Conditions, and Help web pages. |
+| 13 | **`url_launcher`** | OS Utility | Launches external URLs, phone dialer (`tel:`), email (`mailto:`), and maps. |
+| 14 | **`youtube_player_flutter`** | Media | Embedded YouTube video player for doctor video reviews and promotional clips. |
+| 15 | **`fluttertoast`** | UI Feedback | Cross-platform toast notifications for status alerts and error feedback. |
+| 16 | **`intl`** | Utility | Date formatting (`DateFormat("yyyy-MM-dd")`) and internationalization. |
+| 17 | **`pin_code_fields`** | UI Widget | Customized pin input widget for OTP verification screens. |
+| 18 | **`flutter_rating_bar`** | UI Widget | Star rating rating widget for doctor reviews and patient feedback. |
+| 19 | **`dropdown_search`** | UI Widget | Searchable dropdown selector for doctor specialty categories and locations. |
+| 20 | **`carousel_slider`** | UI Widget | Auto-playing banner carousel slider for promotional offers on the home feed. |
+| 21 | **`smooth_page_indicator`** | UI Widget | PageView dot indicators for onboarding intro screens. |
+| 22 | **`modal_bottom_sheet`** | UI Widget | Customizable modal bottom sheets for image source pickers and forgot password dialogs. |
+| 23 | **`hexcolor`** | Styling | Utility for converting Hex color strings (`#00458E`) into Flutter `Color` objects. |
+| 24 | **`syncfusion_flutter_gauges`** | Analytics / Data | Syncfusion circular and linear gauge widgets for health indicators. |
+| 25 | **`crypto`** | Security | Cryptographic algorithms (SHA-256, HMAC) for payment signature verification. |
+| 26 | **`mime`** | File Utility | Determines MIME types for multipart profile image uploads. |
+| 27 | **`get_ip_address`** | Network Utility | Fetches user public IP address for payment fraud checks. |
+| 28 | **`path`** | File Utility | Path manipulation helper (`basename`, `dirname`). |
+| 29 | **`cupertino_icons`** | UI Icons | Apple iOS style Cupertino icons asset pack. |
+| 30 | **`flutter_lints`** | Dev Utility | Recommended linter rules for clean and consistent Dart code. |
 
 ---
 
-## API Summary Table
+## 2. API Summary Table
 
 | # | Feature Module | Function Name | Endpoint Path | Method | Payload Type |
 |---|---|---|---|---|---|
@@ -39,7 +73,7 @@ This document provides a comprehensive list of all 22 API endpoints integrated i
 
 ---
 
-## Detailed API Endpoints & Parameters
+## 3. Detailed API Endpoints & Parameters
 
 ### 1. User Authentication APIs
 
